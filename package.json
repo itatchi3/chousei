@@ -9,9 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@line/liff": "^2.12.0",
+    "@material-ui/core": "^4.12.3",
+    "firebase": "^8.9.1",
     "next": "11.0.1",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-multi-date-picker": "^3.1.1",
+    "react-sticky-table": "^5.1.11",
+    "recoil": "^0.4.0"
   },
   "devDependencies": {
     "@types/react": "17.0.17",

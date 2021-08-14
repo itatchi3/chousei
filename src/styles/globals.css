@@ -1,16 +1,75 @@
-html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Hiragino Sans;
+  color: #707070;
+  touch-action: pan-x pan-y;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.app-header {
+  text-align: center;
+  font-size: 30px;
+  color: #1fb3c7;
 }
 
-* {
-  box-sizing: border-box;
+.app-content {
+  font-family: ヒラギノ角ゴシック;
+}
+
+#attendance-table .Guide-message {
+  font-size: 24px;
+}
+
+#attendance-table .guide-title {
+  font-size: 24px;
+  text-align: center;
+}
+
+#attendance-table .guide-message {
+  font-size: 16px;
+}
+
+#attendance-table .guide-title__chip {
+  margin-right: 16px;
+}
+
+#attendance-table .table {
+  border-color: #707070;
+  border-style: solid;
+  border-width: thin;
+}
+
+#event .Guide-message {
+  font-size: 24px;
+}
+
+#event .guide-title {
+  font-size: 24px;
+  padding-bottom: 20px;
+}
+
+#event .guide-message {
+  font-size: 16px;
+}
+
+#event .guide-title__chip {
+  margin-right: 16px;
+}
+
+#event .table {
+  border-color: #707070;
+  border-style: solid;
+  border-width: thin;
+}
+
+#event-entry .guide-title {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#event-entry .guide-title__chip {
+  margin-right: 10px;
+}
+
+#event-entry .button-area {
+  padding-top: 30px;
 }
