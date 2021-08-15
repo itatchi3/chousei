@@ -16,7 +16,7 @@ const firebaseDb = firebaseApp.database();
 export default function Event() {
   const [liff, setLiff] = useState<typeof Liff>();
   const router = useRouter();
-  const eventId = router.query;
+  const eventId = router.query.id;
   // const { error, liff, isLoggedIn, ready } = useLiff();
 
   const [event, setEvent] = useRecoilState(eventState);
@@ -30,7 +30,7 @@ export default function Event() {
     firebaseDb.ref(`events/${eventId}`).on('value', (snapshot) => {
       const eventData = snapshot.val();
       setEvent({
-        eventId: eventId,
+        eventId: eventId as string,
         eventName: eventData.name,
         description: eventData.description,
         dates: eventData.dates,
