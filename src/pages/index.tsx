@@ -152,7 +152,7 @@ export default function Home() {
 
       const eventPush = await firebaseDb.ref('events').push(eventData);
       const eventId = eventPush.key;
-      await liff
+      await liff!
         .sendMessages([
           {
             type: 'text',
@@ -180,7 +180,7 @@ export default function Home() {
         });
       // props.history.push(`/event/${eventId}`);
       // liffアプリを閉じる
-      // liff.closeWindow();
+      // liff!.closeWindow();
       // router.push(`/event/${eventId}`);
     }
   };
