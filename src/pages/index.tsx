@@ -171,20 +171,17 @@ export default function Home() {
               '\n' +
               'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
               eventId,
-            // wrap: true,
           },
         ])
         .then(() => {
           console.log('message sent');
-          alert('message sent');
         })
         .catch((err) => {
           console.log('error', err);
           alert(err);
         });
-      // props.history.push(`/event/${eventId}`);
       // liffアプリを閉じる
-      // liff!.closeWindow();
+      liff!.closeWindow();
       // router.push(`/event/${eventId}`);
     }
   };
