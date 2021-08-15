@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type Liff from '@line/liff';
+// import type Liff from '@line/liff';
 import { firebaseApp } from 'src/config/firebase';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
+import { useLiff } from 'react-liff';
 
 const firebaseDb = firebaseApp.database();
 
@@ -26,7 +27,8 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-  const [liff, setLiff] = useState<typeof Liff>();
+  // const [liff, setLiff] = useState<typeof Liff>();
+  const { error, liff, isLoggedIn, ready } = useLiff();
   const classes = useStyles();
 
   // const [event, setEvent] = useRecoilState(eventState);
@@ -186,14 +188,14 @@ export default function Home() {
       // router.push(`/event/${eventId}`);
     }
   };
-  useEffect(() => {
-    const liffImport = async () => {
-      // liffにwindowが含まれるため，ここで定義
-      const liff = (await import('@line/liff')).default;
-      setLiff(liff);
-    };
-    liffImport();
-  }, []);
+  // useEffect(() => {
+  //   const liffImport = async () => {
+  //     // liffにwindowが含まれるため，ここで定義
+  //     const liff = (await import('@line/liff')).default;
+  //     setLiff(liff);
+  //   };
+  //   liffImport();
+  // }, []);
 
   useEffect(() => {
     const errorCheck = () => {
