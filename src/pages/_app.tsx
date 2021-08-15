@@ -19,7 +19,6 @@ const theme = createTheme({
   },
 });
 
-const liffId = '1656098585-v7VEeZ7Q';
 const stubEnabled = process.env.NODE_ENV !== 'production';
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -27,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   // 開発用に一時的にコメントアウト
   useEffect(() => {
     // const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
+    const liffId = '1656098585-v7VEeZ7Q';
     const liffLogin = async () => {
       // liffにwindowが含まれるため，ここで定義
       const liff = (await import('@line/liff')).default;
