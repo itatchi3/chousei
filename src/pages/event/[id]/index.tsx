@@ -16,15 +16,17 @@ const firebaseDb = firebaseApp.database();
 export default function Event() {
   const [liff, setLiff] = useState<typeof Liff>();
   const router = useRouter();
-
+  const eventId = router.query;
   // const { error, liff, isLoggedIn, ready } = useLiff();
 
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
   useEffect(() => {
-    const splitedURL = router.asPath.split('/').filter((e) => Boolean(e));
-    const eventId = splitedURL[splitedURL.length - 1];
+    // const splitedURL = router.asPath.split('/').filter((e) => Boolean(e));
     //Realtime Databaseからデータを取得
+    if (!eventId) {
+      return;
+    }
     firebaseDb.ref(`events/${eventId}`).on('value', (snapshot) => {
       const eventData = snapshot.val();
       setEvent({
@@ -37,7 +39,8 @@ export default function Event() {
         attendees: attendeesObjectToArray(eventData.attendees),
       });
     });
-  }, [setEvent, router.asPath]);
+    console.log(event);
+  }, [setEvent, eventId]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
@@ -53,7 +56,7 @@ export default function Event() {
             event.description +
             '\n' +
             'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
-            event.eventId,
+            eventId,
           // wrap: true,
         },
       ]);
@@ -63,7 +66,7 @@ export default function Event() {
   //時間候補入力へ移動
   const answerDates = () => {
     router.push({
-      pathname: `/event/${event.eventId}/input`,
+      pathname: `/event/${eventId}/input`,
     });
   };
 

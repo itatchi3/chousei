@@ -1,7 +1,8 @@
 import { atom } from 'recoil';
+import { ParsedUrlQuery } from 'node:querystring';
 
 type Event = {
-  eventId: string;
+  eventId: ParsedUrlQuery;
   eventName: string;
   description: string;
   dates: string[];
@@ -19,7 +20,7 @@ type Attendee = {
 export const eventState = atom<Event>({
   key: 'eventState',
   default: {
-    eventId: '',
+    eventId: {},
     eventName: '',
     description: '',
     dates: [''],
