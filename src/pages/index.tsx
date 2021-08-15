@@ -158,19 +158,19 @@ export default function Home() {
             type: 'text',
             text: '出欠表が完成したよ！',
           },
-          {
-            type: 'text',
-            text:
-              '【イベント名】\n' +
-              eventName +
-              '\n' +
-              '【概要】\n' +
-              description +
-              '\n' +
-              'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
-              eventId,
-            // wrap: true,
-          },
+          // {
+          //   type: 'text',
+          //   text:
+          //     '【イベント名】\n' +
+          //     eventName +
+          //     '\n' +
+          //     '【概要】\n' +
+          //     description +
+          //     '\n' +
+          //     'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
+          //     eventId,
+          //   wrap: true,
+          // },
         ])
         .then(() => {
           console.log('message sent');
