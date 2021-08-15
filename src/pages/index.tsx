@@ -181,8 +181,8 @@ export default function Home() {
           alert(err);
         });
       // liffアプリを閉じる
-      liff!.closeWindow();
-      // router.push(`/event/${eventId}`);
+      // liff!.closeWindow();
+      router.push(`/event/${eventId}`);
     }
   };
   useEffect(() => {
