@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import liff from '@line/liff';
+import liff from '@line/liff';
 import { firebaseApp } from 'src/config/firebase';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -151,36 +151,36 @@ export default function Home() {
 
       const eventPush = await firebaseDb.ref('events').push(eventData);
       const eventId = eventPush.key;
-      // await liff
-      //   .sendMessages([
-      //     {
-      //       type: 'text',
-      //       text: '出欠表が完成したよ！',
-      //     },
-      //     {
-      //       type: 'text',
-      //       text:
-      //         '【イベント名】\n' +
-      //         eventName +
-      //         '\n' +
-      //         '【概要】\n' +
-      //         description +
-      //         '\n' +
-      //         'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
-      //         eventId,
-      //       // wrap: true,
-      //     },
-      //   ])
-      //   .then(() => {
-      //     console.log('message sent');
-      //   })
-      //   .catch((err) => {
-      //     console.log('error', err);
-      //   });
+      await liff
+        .sendMessages([
+          {
+            type: 'text',
+            text: '出欠表が完成したよ！',
+          },
+          {
+            type: 'text',
+            text:
+              '【イベント名】\n' +
+              eventName +
+              '\n' +
+              '【概要】\n' +
+              description +
+              '\n' +
+              'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
+              eventId,
+            // wrap: true,
+          },
+        ])
+        .then(() => {
+          console.log('message sent');
+        })
+        .catch((err) => {
+          console.log('error', err);
+        });
       // props.history.push(`/event/${eventId}`);
       // liffアプリを閉じる
-      // liff.closeWindow();
-      router.push(`/event/${eventId}`);
+      liff.closeWindow();
+      // router.push(`/event/${eventId}`);
     }
   };
 

@@ -30,65 +30,77 @@ const AttendanceTable = (props: Props) => {
   });
 
   return (
-    <TableContainer className="table" id="attendance-table">
-      <Table size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <TableCell size="small">日程</TableCell>
-            <TableCell align="center" size="small" padding="none">
-              ○
-            </TableCell>
-            <TableCell align="center" size="small" padding="none">
-              △
-            </TableCell>
-            <TableCell align="center" size="small" padding="none">
-              ×
-            </TableCell>
-            {props.attendees.map((atendee, i) => (
-              <TableCell key={i} align="center">
-                {atendee.name}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {attendanceCounts.map((count, i) => (
-            <TableRow key={i}>
-              <TableCell component="th" scope="row">
-                {props.columns[i]}
+    <>
+      <TableContainer className="table" id="attendance-table">
+        <Table size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell size="small">日程</TableCell>
+              <TableCell align="center" size="small" padding="none">
+                ○
               </TableCell>
               <TableCell align="center" size="small" padding="none">
-                {count.positiveCounts}
+                △
               </TableCell>
               <TableCell align="center" size="small" padding="none">
-                {count.evenCounts}
+                ×
               </TableCell>
-              <TableCell align="center" size="small" padding="none">
-                {count.negativeCounts}
-              </TableCell>
-              {props.attendees.map((atendee, index) => (
-                <TableCell key={index} align="center">
-                  {atendee.votes[i]}
+              {props.attendees.map((atendee, i) => (
+                <TableCell key={i} align="center" size="small" padding="none">
+                  {atendee.name}
                 </TableCell>
               ))}
             </TableRow>
-          ))}
-          <TableRow>
-            <TableCell component="th" scope="row">
-              コメント
-            </TableCell>
-            <TableCell align="center"></TableCell>
-            <TableCell align="center"></TableCell>
-            <TableCell align="center"></TableCell>
-            {props.attendees.map((atendee, i) => (
-              <TableCell key={i} align="center">
-                {atendee.comment}
-              </TableCell>
+          </TableHead>
+          <TableBody>
+            {attendanceCounts.map((count, i) => (
+              <TableRow key={i}>
+                <TableCell component="th" scope="row">
+                  {props.columns[i]}
+                </TableCell>
+                <TableCell align="center" size="small" padding="none">
+                  {count.positiveCounts}
+                </TableCell>
+                <TableCell align="center" size="small" padding="none">
+                  {count.evenCounts}
+                </TableCell>
+                <TableCell align="center" size="small" padding="none">
+                  {count.negativeCounts}
+                </TableCell>
+                {props.attendees.map((atendee, index) => (
+                  <TableCell key={index} align="center" size="small" padding="none">
+                    {atendee.votes[i]}
+                  </TableCell>
+                ))}
+              </TableRow>
             ))}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TableContainer className="table" id="attendance-table">
+        <Table size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell size="small">コメント</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.attendees.map(
+              (atendee, i) =>
+                atendee.comment !== '' && (
+                  <TableRow key={i}>
+                    <TableCell component="th" scope="row">
+                      {atendee.name}
+                    </TableCell>
+                    <TableCell align="center">{atendee.comment}</TableCell>
+                  </TableRow>
+                ),
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 

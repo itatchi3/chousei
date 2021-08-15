@@ -21,26 +21,26 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   // 開発用に一時的にコメントアウト
 
-  // useEffect(() => {
-  //   const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
-  //   const liffLogin = async () => {
-  //     // 必要ないときに@line/liffをインポートしないことで，パフォーマンス改善
-  //     const liff = (await import('@line/liff')).default;
-  //     try {
-  //       if (typeof liffId === 'string') {
-  //         await liff.init({ liffId });
-  //       } else {
-  //         throw 'NEXT_PUBLIC_LIFF_ID is undefined!';
-  //       }
-  //     } catch (error) {
-  //       console.error('liff init error', error.message);
-  //     }
-  //     if (!liff.isLoggedIn()) {
-  //       liff.login();
-  //     }
-  //   };
-  //   liffLogin();
-  // }, []);
+  useEffect(() => {
+    const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
+    const liffLogin = async () => {
+      // 必要ないときに@line/liffをインポートしないことで，パフォーマンス改善
+      const liff = (await import('@line/liff')).default;
+      try {
+        if (typeof liffId === 'string') {
+          await liff.init({ liffId });
+        } else {
+          throw 'NEXT_PUBLIC_LIFF_ID is undefined!';
+        }
+      } catch (error) {
+        console.error('liff init error', error.message);
+      }
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      }
+    };
+    liffLogin();
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <RecoilRoot>
