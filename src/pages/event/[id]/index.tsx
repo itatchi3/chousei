@@ -5,13 +5,16 @@ import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
 import AttendanceTable from 'src/components/AttendanceTable';
 import { attendeesObjectToArray } from 'src/utils/DataConvert';
-import liff from '@line/liff';
+// import liff from '@line/liff';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { eventState, attendeeState } from 'src/atoms/eventState';
+import { useLiff } from 'react-liff';
+
 const firebaseDb = firebaseApp.database();
 
 export default function Event() {
+  const { error, liff, isLoggedIn, ready } = useLiff();
   const router = useRouter();
   const splitedURL = router.asPath.split('/').filter((e) => Boolean(e));
   const eventId = splitedURL[splitedURL.length - 1];

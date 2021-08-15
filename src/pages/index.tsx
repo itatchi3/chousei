@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import liff from '@line/liff';
+// import liff from '@line/liff';
 import { firebaseApp } from 'src/config/firebase';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
+import { useLiff } from 'react-liff';
 
 const firebaseDb = firebaseApp.database();
 
@@ -26,6 +27,7 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
+  const { error, liff, isLoggedIn, ready } = useLiff();
   const classes = useStyles();
 
   // const [event, setEvent] = useRecoilState(eventState);
