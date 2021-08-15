@@ -174,9 +174,11 @@ export default function Home() {
         ])
         .then(() => {
           console.log('message sent');
+          alert('message sent');
         })
         .catch((err) => {
           console.log('error', err);
+          alert(err);
         });
       // props.history.push(`/event/${eventId}`);
       // liffアプリを閉じる
