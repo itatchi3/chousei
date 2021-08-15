@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import type Liff from '@line/liff';
+import type Liff from '@line/liff';
 import { firebaseApp } from 'src/config/firebase';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-  // const [liff, setLiff] = useState<typeof Liff>();
+  const [liff, setLiff] = useState<typeof Liff>();
   // const { error, liff, isLoggedIn, ready } = useLiff();
   const classes = useStyles();
 
@@ -92,8 +92,6 @@ export default function Home() {
 
   const router = useRouter();
   const registerEvent = async () => {
-    const liff = (await import('@line/liff')).default;
-    await liff.ready;
     if (eventName !== '' && dates !== null) {
       //入力した値の整形
       const possibleDates = (dates as DateObject[]).map(
@@ -162,19 +160,19 @@ export default function Home() {
             type: 'text',
             text: '出欠表が完成したよ！',
           },
-          // {
-          //   type: 'text',
-          //   text:
-          //     '【イベント名】\n' +
-          //     eventName +
-          //     '\n' +
-          //     '【概要】\n' +
-          //     description +
-          //     '\n' +
-          //     'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
-          //     eventId,
-          //   wrap: true,
-          // },
+          {
+            type: 'text',
+            text:
+              '【イベント名】\n' +
+              eventName +
+              '\n' +
+              '【概要】\n' +
+              description +
+              '\n' +
+              'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
+              eventId,
+            // wrap: true,
+          },
         ])
         .then(() => {
           console.log('message sent');
@@ -190,14 +188,14 @@ export default function Home() {
       // router.push(`/event/${eventId}`);
     }
   };
-  // useEffect(() => {
-  //   const liffImport = async () => {
-  //     // liffにwindowが含まれるため，ここで定義
-  //     const liff = (await import('@line/liff')).default;
-  //     // setLiff(liff);
-  //   };
-  //   liffImport();
-  // }, []);
+  useEffect(() => {
+    const liffImport = async () => {
+      // liffにwindowが含まれるため，ここで定義
+      const liff = (await import('@line/liff')).default;
+      setLiff(liff);
+    };
+    liffImport();
+  }, []);
 
   useEffect(() => {
     const errorCheck = () => {
