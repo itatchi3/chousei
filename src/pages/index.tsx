@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import { useLiff } from 'react-liff';
+// import { useLiff } from 'react-liff';
 
 const firebaseDb = firebaseApp.database();
 
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 
 export default function Home() {
   // const [liff, setLiff] = useState<typeof Liff>();
-  const { error, liff, isLoggedIn, ready } = useLiff();
+  // const { error, liff, isLoggedIn, ready } = useLiff();
   const classes = useStyles();
 
   // const [event, setEvent] = useRecoilState(eventState);
@@ -92,6 +92,8 @@ export default function Home() {
 
   const router = useRouter();
   const registerEvent = async () => {
+    const liff = (await import('@line/liff')).default;
+    await liff.ready;
     if (eventName !== '' && dates !== null) {
       //入力した値の整形
       const possibleDates = (dates as DateObject[]).map(
@@ -192,7 +194,7 @@ export default function Home() {
   //   const liffImport = async () => {
   //     // liffにwindowが含まれるため，ここで定義
   //     const liff = (await import('@line/liff')).default;
-  //     setLiff(liff);
+  //     // setLiff(liff);
   //   };
   //   liffImport();
   // }, []);
