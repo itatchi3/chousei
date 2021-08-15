@@ -5,16 +5,15 @@ import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
 import AttendanceTable from 'src/components/AttendanceTable';
 import { attendeesObjectToArray } from 'src/utils/DataConvert';
-// import liff from '@line/liff';
+import type Liff from '@line/liff';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { eventState, attendeeState } from 'src/atoms/eventState';
-import { useLiff } from 'react-liff';
 
 const firebaseDb = firebaseApp.database();
 
 export default function Event() {
-  const { error, liff, isLoggedIn, ready } = useLiff();
+  const [liff, setLiff] = useState<typeof Liff>();
   const router = useRouter();
   const splitedURL = router.asPath.split('/').filter((e) => Boolean(e));
   const eventId = splitedURL[splitedURL.length - 1];
@@ -39,8 +38,8 @@ export default function Event() {
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
-    if (liff.isApiAvailable('shareTargetPicker')) {
-      liff.shareTargetPicker([
+    if (liff!.isApiAvailable('shareTargetPicker')) {
+      liff!.shareTargetPicker([
         {
           type: 'text',
           text:
@@ -64,6 +63,15 @@ export default function Event() {
       pathname: `/event/${eventId}/input`,
     });
   };
+
+  useEffect(() => {
+    const liffImport = async () => {
+      // liffにwindowが含まれるため，ここで定義
+      const liff = (await import('@line/liff')).default;
+      setLiff(liff);
+    };
+    liffImport();
+  }, []);
 
   return (
     <Grid id="event" container alignItems="center" xs={12} justify="center" spacing={3}>
