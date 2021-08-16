@@ -7,37 +7,52 @@ import AttendanceTable from 'src/components/AttendanceTable';
 import { attendeesObjectToArray } from 'src/utils/DataConvert';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { eventState, attendeeState } from 'src/atoms/eventState';
+import { eventState, attendeeState, Event } from 'src/atoms/eventState';
 import { useAuth } from 'src/hooks/auth';
+import { GetServerSideProps } from 'next';
 
-const firebaseDb = firebaseApp.database();
+type Props = {
+  eventId: string;
+  eventData: Event;
+};
 
-export default function Event() {
+export default function Event({ eventId, eventData }: Props) {
   const { liff } = useAuth();
   const router = useRouter();
-  const eventId = router.query.id;
+  // const eventId = router.query.id;
 
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
+  // useEffect(() => {
+  //   //Realtime Databaseからデータを取得
+  //   if (!eventId) {
+  //     return;
+  //   }
+  //   firebaseDb.ref(`events/${eventId}`).on('value', (snapshot) => {
+  //     const eventData = snapshot.val();
+  //     setEvent({
+  //       eventId: eventId as string,
+  //       eventName: eventData.name,
+  //       description: eventData.description,
+  //       dates: eventData.dates,
+  //       times: eventData.times,
+  //       prospectiveDates: eventData.prospectiveDates,
+  //       attendees: attendeesObjectToArray(eventData.attendees),
+  //     });
+  //   });
+  //   // console.log(event);
+  // }, [setEvent, eventId]);
   useEffect(() => {
-    //Realtime Databaseからデータを取得
-    if (!eventId) {
-      return;
-    }
-    firebaseDb.ref(`events/${eventId}`).on('value', (snapshot) => {
-      const eventData = snapshot.val();
-      setEvent({
-        eventId: eventId as string,
-        eventName: eventData.name,
-        description: eventData.description,
-        dates: eventData.dates,
-        times: eventData.times,
-        prospectiveDates: eventData.prospectiveDates,
-        attendees: attendeesObjectToArray(eventData.attendees),
-      });
+    setEvent({
+      eventId: eventId,
+      name: eventData.name,
+      description: eventData.description,
+      dates: eventData.dates,
+      times: eventData.times,
+      prospectiveDates: eventData.prospectiveDates,
+      attendees: attendeesObjectToArray(eventData.attendees),
     });
-    // console.log(event);
-  }, [setEvent, eventId]);
+  }, [eventData, setEvent, eventId]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
@@ -47,7 +62,7 @@ export default function Event() {
           type: 'text',
           text:
             '【イベント名】\n' +
-            event.eventName +
+            event.name +
             '\n' +
             '【概要】\n' +
             event.description +
@@ -71,7 +86,7 @@ export default function Event() {
     <Grid id="event" container alignItems="center" xs={12} justify="center" spacing={3}>
       <Grid container item xs={12} direction="column" justify="center" alignItems="flex-start">
         <Grid item className="guide-title">
-          {event.eventName}
+          {event.name}
         </Grid>
         <Grid item className="guide-message">
           {event.description}
@@ -130,3 +145,14 @@ export default function Event() {
     </Grid>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const eventId = context.query.id;
+  const firebaseDb = firebaseApp.database();
+  const ref = firebaseDb.ref(`events/${eventId}`);
+
+  return ref.once('value').then((snapshot) => {
+    const eventData = snapshot.val();
+    return { props: { eventId, eventData } };
+  });
+};
