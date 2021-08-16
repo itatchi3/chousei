@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+// import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -47,9 +47,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     liffLogin();
   }, []);
   return (
-    <ThemeProvider theme={theme}>
-      <RecoilRoot>
-        <Grid container direction="column" justify="space-between" alignItems="center" spacing={3}>
+    // <ThemeProvider theme={theme}>
+    <RecoilRoot>
+      {/* <Grid container direction="column" justify="space-between" alignItems="center" spacing={3}>
           <Grid
             container
             item
@@ -57,12 +57,12 @@ function MyApp({ Component, pageProps }: AppProps) {
             direction="column"
             alignItems="center"
             justify="flex-start"
-          >
-            <Component {...pageProps} />
-          </Grid>
-        </Grid>
-      </RecoilRoot>
-    </ThemeProvider>
+          > */}
+      <Component {...pageProps} />
+      {/* </Grid>
+        </Grid> */}
+    </RecoilRoot>
+    // </ThemeProvider>
   );
 }
 export default MyApp;
