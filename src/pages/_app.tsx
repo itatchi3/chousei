@@ -43,6 +43,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       if (!liff.isLoggedIn()) {
         liff.login();
       }
+      const _sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      await _sleep(2000);
     };
     liffLogin();
   }, []);
