@@ -1,28 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { firebaseApp } from 'src/config/firebase';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
 import AttendanceTable from 'src/components/AttendanceTable';
 import { attendeesObjectToArray } from 'src/utils/DataConvert';
-import type Liff from '@line/liff';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { eventState, attendeeState } from 'src/atoms/eventState';
-// import { useLiff } from 'react-liff';
+import { useAuth } from 'src/hooks/auth';
+import { FC } from 'react';
 
 const firebaseDb = firebaseApp.database();
 
+const Layout: FC = ({ children }) => {
+  const { initialized } = useAuth();
+
+  if (!initialized) {
+    return <p>loading...</p>;
+  }
+
+  return <>{children}</>;
+};
+
 export default function Event() {
-  const [liff, setLiff] = useState<typeof Liff>();
+  const { liff } = useAuth();
   const router = useRouter();
   const eventId = router.query.id;
-  // const { error, liff, isLoggedIn, ready } = useLiff();
 
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
   useEffect(() => {
-    // const splitedURL = router.asPath.split('/').filter((e) => Boolean(e));
     //Realtime Databaseからデータを取得
     if (!eventId) {
       return;
@@ -69,15 +77,6 @@ export default function Event() {
       pathname: `/event/${eventId}/input`,
     });
   };
-
-  useEffect(() => {
-    const liffImport = async () => {
-      // liffにwindowが含まれるため，ここで定義
-      const liff = (await import('@line/liff')).default;
-      setLiff(liff);
-    };
-    liffImport();
-  }, []);
 
   return (
     <Grid id="event" container alignItems="center" xs={12} justify="center" spacing={3}>

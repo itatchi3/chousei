@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import type Liff from '@line/liff';
 import { firebaseApp } from 'src/config/firebase';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import { Calendar, DateObject } from 'react-multi-date-picker';
 import { TextField } from '@material-ui/core';
 import { useRouter } from 'next/router';
-// import { useRecoilState } from 'recoil';
-// import { eventState } from 'src/atoms/eventState';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-// import { useLiff } from 'react-liff';
 import { useAuth } from 'src/hooks/auth';
 
 const firebaseDb = firebaseApp.database();
@@ -28,12 +23,8 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-  // const [liff, setLiff] = useState<typeof Liff>();
-  // const { error, liff, isLoggedIn, ready } = useLiff();
   const { liff } = useAuth();
   const classes = useStyles();
-
-  // const [event, setEvent] = useRecoilState(eventState);
   // イベント名
   const [eventName, setEventName] = useState('');
   // 説明
@@ -54,9 +45,6 @@ export default function Home() {
   const changeTimeInterval = (event: any, newTimeInterval: number | number[]) => {
     setTimeInterval(newTimeInterval as number[]);
   };
-  // const changeDates = (newDates: DateObject | DateObject[] | null) => {
-  //   setEvent((state) => ({ ...state, dates: newDates }));
-  // };
   const marksTimeWidth = [
     {
       value: 0,
@@ -183,18 +171,10 @@ export default function Home() {
           alert(err);
         });
       // liffアプリを閉じる
-      // liff!.closeWindow();
-      router.push(`/event/${eventId}`);
+      liff!.closeWindow();
+      // router.push(`/event/${eventId}`);
     }
   };
-  // useEffect(() => {
-  //   const liffImport = async () => {
-  //     // liffにwindowが含まれるため，ここで定義
-  //     const liff = (await import('@line/liff')).default;
-  //     setLiff(liff);
-  //   };
-  //   liffImport();
-  // }, []);
 
   useEffect(() => {
     const errorCheck = () => {

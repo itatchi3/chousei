@@ -29,8 +29,6 @@ export const AuthProvider: FC = ({ children }) => {
 
 type UseAuthReturn = {
   initialized: boolean;
-  loggedIn: boolean;
-  login: () => void;
   liff?: typeof Liff;
 };
 
@@ -40,15 +38,11 @@ export const useAuth = (): UseAuthReturn => {
   if (!liff) {
     return {
       initialized: false,
-      loggedIn: false,
-      login: () => {},
     };
   }
 
   return {
     initialized: true,
-    loggedIn: liff.isLoggedIn(),
-    login: liff.login,
     liff: liff,
   };
 };
