@@ -46,6 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
     liffLogin();
     setFlag(true);
+    return setFlag(false);
   }, []);
   return (
     <ThemeProvider theme={theme}>
