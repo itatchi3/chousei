@@ -9,19 +9,8 @@ import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { eventState, attendeeState } from 'src/atoms/eventState';
 import { useAuth } from 'src/hooks/auth';
-import { FC } from 'react';
 
 const firebaseDb = firebaseApp.database();
-
-const Layout: FC = ({ children }) => {
-  const { initialized } = useAuth();
-
-  if (!initialized) {
-    return <p>loading...</p>;
-  }
-
-  return <>{children}</>;
-};
 
 export default function Event() {
   const { liff } = useAuth();
