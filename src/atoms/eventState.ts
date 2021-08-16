@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 import { ParsedUrlQuery } from 'node:querystring';
 
-export type Event = {
+export type EventType = {
   eventId: string;
   name: string;
   description: string;
@@ -17,7 +17,7 @@ type Attendee = {
   comment: string;
 };
 
-export const eventState = atom<Event>({
+export const eventState = atom<EventType>({
   key: 'eventState',
   default: {
     eventId: '',

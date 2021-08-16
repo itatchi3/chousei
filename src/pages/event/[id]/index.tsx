@@ -7,13 +7,13 @@ import AttendanceTable from 'src/components/AttendanceTable';
 import { attendeesObjectToArray } from 'src/utils/DataConvert';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { eventState, attendeeState, Event } from 'src/atoms/eventState';
+import { eventState, attendeeState, EventType } from 'src/atoms/eventState';
 import { useAuth } from 'src/hooks/auth';
 import { GetServerSideProps } from 'next';
 
 type Props = {
   eventId: string;
-  eventData: Event;
+  eventData: EventType;
 };
 
 export default function Event({ eventId, eventData }: Props) {
