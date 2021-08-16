@@ -79,7 +79,7 @@ export default function Event() {
       try {
         if (typeof liffId === 'string') {
           await liff.init({ liffId });
-          // setLiff(liff);
+          setLiff(liff);
         } else {
           throw 'NEXT_PUBLIC_LIFF_ID is undefined!';
         }
