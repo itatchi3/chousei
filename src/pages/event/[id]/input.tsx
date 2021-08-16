@@ -178,7 +178,7 @@ export default function Input() {
       comment: attendee.comment,
     };
     // 出欠情報をRealTimeDatabaseに登録
-    firebaseDb.ref(`events/${event.eventId}/attendees`).push(attendeeData);
+    await firebaseDb.ref(`events/${event.eventId}/attendees`).push(attendeeData);
 
     router.push(`/event/${event.eventId}`);
   };
