@@ -1,4 +1,4 @@
-// import '../styles/globals.css';
+import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -8,16 +8,16 @@ import { ThemeProvider } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 // import { LiffProvider } from 'react-liff';
 
-// const theme = createTheme({
-//   palette: {
-//     primary: {
-//       light: '#4bc2d2',
-//       main: '#1FB3C7',
-//       dark: '#157d8b',
-//       contrastText: '#fff',
-//     },
-//   },
-// });
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: '#4bc2d2',
+      main: '#1FB3C7',
+      dark: '#157d8b',
+      contrastText: '#fff',
+    },
+  },
+});
 
 const stubEnabled = process.env.NODE_ENV !== 'production';
 
@@ -43,15 +43,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   //     if (!liff.isLoggedIn()) {
   //       liff.login();
   //     }
-  //     const _sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-  //     await _sleep(2000);
   //   };
   //   liffLogin();
   // }, []);
   return (
-    // <ThemeProvider theme={theme}>
-    <RecoilRoot>
-      {/* <Grid container direction="column" justify="space-between" alignItems="center" spacing={3}>
+    <ThemeProvider theme={theme}>
+      <RecoilRoot>
+        <Grid container direction="column" justify="space-between" alignItems="center" spacing={3}>
           <Grid
             container
             item
@@ -59,12 +57,12 @@ function MyApp({ Component, pageProps }: AppProps) {
             direction="column"
             alignItems="center"
             justify="flex-start"
-          > */}
-      <Component {...pageProps} />
-      {/* </Grid>
-        </Grid> */}
-    </RecoilRoot>
-    // </ThemeProvider>
+          >
+            <Component {...pageProps} />
+          </Grid>
+        </Grid>
+      </RecoilRoot>
+    </ThemeProvider>
   );
 }
 export default MyApp;
