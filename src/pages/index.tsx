@@ -185,14 +185,14 @@ export default function Home() {
       router.push(`/event/${eventId}`);
     }
   };
-  // useEffect(() => {
-  //   const liffImport = async () => {
-  //     // liffにwindowが含まれるため，ここで定義
-  //     const liff = (await import('@line/liff')).default;
-  //     setLiff(liff);
-  //   };
-  //   liffImport();
-  // }, []);
+  useEffect(() => {
+    const liffImport = async () => {
+      // liffにwindowが含まれるため，ここで定義
+      const liff = (await import('@line/liff')).default;
+      setLiff(liff);
+    };
+    liffImport();
+  }, []);
 
   useEffect(() => {
     const errorCheck = () => {

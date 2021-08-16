@@ -22,30 +22,31 @@ const theme = createTheme({
 const stubEnabled = process.env.NODE_ENV !== 'production';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // const [liff, setLiff] = useState<typeof Liff>();
+  const [flag, setFlag] = useState(false);
   // 開発用に一時的にコメントアウト
-  // useEffect(() => {
-  //   // const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
-  //   const liffId = '1656098585-v7VEeZ7Q';
-  //   const liffLogin = async () => {
-  //     // liffにwindowが含まれるため，ここで定義
-  //     const liff = (await import('@line/liff')).default;
-  //     try {
-  //       if (typeof liffId === 'string') {
-  //         await liff.init({ liffId });
-  //         // setLiff(liff);
-  //       } else {
-  //         throw 'NEXT_PUBLIC_LIFF_ID is undefined!';
-  //       }
-  //     } catch (error) {
-  //       console.error('liff init error', error.message);
-  //     }
-  //     if (!liff.isLoggedIn()) {
-  //       liff.login();
-  //     }
-  //   };
-  //   liffLogin();
-  // }, []);
+  useEffect(() => {
+    // const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
+    const liffId = '1656098585-v7VEeZ7Q';
+    const liffLogin = async () => {
+      // liffにwindowが含まれるため，ここで定義
+      const liff = (await import('@line/liff')).default;
+      try {
+        if (typeof liffId === 'string') {
+          await liff.init({ liffId });
+          // setLiff(liff);
+        } else {
+          throw 'NEXT_PUBLIC_LIFF_ID is undefined!';
+        }
+      } catch (error) {
+        console.error('liff init error', error.message);
+      }
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      }
+    };
+    liffLogin();
+    setFlag(true);
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <RecoilRoot>
@@ -58,7 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             alignItems="center"
             justify="flex-start"
           >
-            <Component {...pageProps} />
+            {flag && <Component {...pageProps} />}
           </Grid>
         </Grid>
       </RecoilRoot>
