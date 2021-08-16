@@ -39,7 +39,7 @@ export default function Event() {
         attendees: attendeesObjectToArray(eventData.attendees),
       });
     });
-    console.log(event);
+    // console.log(event);
   }, [setEvent, eventId]);
 
   // Lineで友達にイベントリンクを共有
