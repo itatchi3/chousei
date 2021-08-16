@@ -71,26 +71,12 @@ export default function Event() {
   };
 
   useEffect(() => {
-    // const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
-    const liffId = '1656098585-v7VEeZ7Q';
-    const liffLogin = async () => {
+    const liffImport = async () => {
       // liffにwindowが含まれるため，ここで定義
       const liff = (await import('@line/liff')).default;
-      try {
-        if (typeof liffId === 'string') {
-          await liff.init({ liffId });
-          setLiff(liff);
-        } else {
-          throw 'NEXT_PUBLIC_LIFF_ID is undefined!';
-        }
-      } catch (error) {
-        console.error('liff init error', error.message);
-      }
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      }
+      setLiff(liff);
     };
-    liffLogin();
+    liffImport();
   }, []);
 
   return (
