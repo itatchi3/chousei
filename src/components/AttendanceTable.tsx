@@ -21,9 +21,9 @@ const AttendanceTable = (props: Props) => {
   const attendanceCounts = props.columns.map((column, i) => {
     return {
       date: column,
-      positiveCounts: props.attendees.filter((attendee) => attendee.votes![i] === '○').length,
-      evenCounts: props.attendees.filter((attendee) => attendee.votes![i] === '△').length,
-      negativeCounts: props.attendees.filter((attendee) => attendee.votes![i] === '×').length,
+      positiveCounts: props.attendees.filter((attendee) => attendee.votes[i] === '○').length,
+      evenCounts: props.attendees.filter((attendee) => attendee.votes[i] === '△').length,
+      negativeCounts: props.attendees.filter((attendee) => attendee.votes[i] === '×').length,
     };
   });
 
@@ -67,7 +67,7 @@ const AttendanceTable = (props: Props) => {
                 </TableCell>
                 {props.attendees.map((atendee, index) => (
                   <TableCell key={index} align="center" size="small" padding="none">
-                    {atendee.votes![i]}
+                    {atendee.votes[i]}
                   </TableCell>
                 ))}
               </TableRow>

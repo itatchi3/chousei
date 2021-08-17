@@ -52,7 +52,7 @@ export default function Input() {
   const attendee = useRecoilValue(attendeeState);
 
   const [possibleDates, setPossibleDates] = useState<{ date: string; vote: '○' | '△' | '×' }[]>(
-    typeof attendee.votes === undefined
+    !attendee.votes.length
       ? event.prospectiveDates.map((date) => {
           return {
             date: date,
