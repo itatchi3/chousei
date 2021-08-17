@@ -173,9 +173,11 @@ export default function Input() {
     //出欠情報登録機能
     const votes = possibleDates.map((possibleDate) => possibleDate.vote);
     const attendeeData = {
+      userId: attendee.userId,
       name: attendee.name,
       votes: votes,
       comment: attendee.comment,
+      profileImg: attendee.profileImg,
     };
     // 出欠情報をRealTimeDatabaseに登録
     await firebaseDb.ref(`events/${event.eventId}/attendees`).push(attendeeData);

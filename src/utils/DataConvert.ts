@@ -1,3 +1,5 @@
+import { AttendeeType } from 'src/atoms/eventState';
+
 /*
 
 attendees: {
@@ -30,20 +32,16 @@ attendees: {
 
 */
 
-export function attendeesObjectToArray(
-  attendees: {
-    name: string;
-    votes: string[];
-    comment: string;
-  }[],
-) {
+export function attendeesObjectToArray(attendees: AttendeeType[]) {
   if (!attendees) {
     return [];
   }
   const attendeesArray = Object.entries(attendees).map((entry) => ({
+    userId: entry[1].userId,
     name: entry[1].name,
     comment: entry[1].comment,
     votes: entry[1].votes,
+    profileImg: entry[1].profileImg,
   }));
   return attendeesArray;
 }

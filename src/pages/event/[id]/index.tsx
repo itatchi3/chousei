@@ -10,8 +10,7 @@ import { useRecoilState } from 'recoil';
 import { eventState, attendeeState, EventType } from 'src/atoms/eventState';
 import { useAuth } from 'src/hooks/auth';
 import { GetServerSideProps } from 'next';
-import { Avatar } from '@chakra-ui/react';
-import getProfile from '@line/liff/dist/lib/api/getProfile';
+
 type Props = {
   eventId: string;
   eventData: EventType;
@@ -23,8 +22,7 @@ export default function Event({ eventId, eventData }: Props) {
 
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
-  const [profileImg, setProfileImg] = useState<string>();
-  const [userId, setUserId] = useState<string>();
+
   useEffect(() => {
     setEvent({
       eventId: eventId,
@@ -37,16 +35,10 @@ export default function Event({ eventId, eventData }: Props) {
     });
     const getProfile = async () => {
       const profile = await liff!.getProfile();
-      if (profile.pictureUrl) {
-        setProfileImg(profile.pictureUrl);
-        setUserId(profile.userId);
-      } else {
-        setProfileImg('');
-        setUserId('');
-      }
+      setAttendee((state) => ({ ...state, name: profile.userId, userId: profile.userId }));
     };
     getProfile();
-  }, [eventData, setEvent, eventId, liff, profileImg]);
+  }, [eventData, setEvent, eventId, liff, setAttendee]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
@@ -90,7 +82,6 @@ export default function Event({ eventId, eventData }: Props) {
           <Button variant="contained" color="primary" onClick={() => sharedScheduleByLine()}>
             友達へ共有する
           </Button>
-          <Avatar src={profileImg} />
         </Grid>
         <Grid item container>
           <AttendanceTable columns={event.prospectiveDates} attendees={event.attendees} />

@@ -6,14 +6,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { AttendeeType, EventType } from 'src/atoms/eventState';
+import { Avatar } from '@chakra-ui/react';
 
 type Props = {
   columns: string[];
-  attendees: {
-    name: string;
-    votes: string[];
-    comment: string;
-  }[];
+  attendees: AttendeeType[];
 };
 
 const AttendanceTable = (props: Props) => {
@@ -47,7 +45,7 @@ const AttendanceTable = (props: Props) => {
               </TableCell>
               {props.attendees.map((atendee, i) => (
                 <TableCell key={i} align="center" size="small" padding="none">
-                  {atendee.name}
+                  <Avatar src={atendee.profileImg} />
                 </TableCell>
               ))}
             </TableRow>
