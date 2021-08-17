@@ -57,11 +57,12 @@ export default function Event({ eventId, eventData }: Props) {
       const profile = await liff!.getProfile();
       if (profile.pictureUrl) {
         setProfileImg(profile.pictureUrl);
+        alert(profileImg);
       } else {
         setProfileImg('');
       }
     };
-  }, [eventData, setEvent, eventId, liff]);
+  }, [eventData, setEvent, eventId, liff, profileImg]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
