@@ -19,35 +19,13 @@ type Props = {
 
 export default function Event({ eventId, eventData }: Props) {
   const { liff } = useAuth();
-  console.log(2);
   const router = useRouter();
-  // const eventId = router.query.id;
 
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
   const [profileImg, setProfileImg] = useState<string>();
   const [userId, setUserId] = useState<string>();
-  // useEffect(() => {
-  //   //Realtime Databaseからデータを取得
-  //   if (!eventId) {
-  //     return;
-  //   }
-  //   firebaseDb.ref(`events/${eventId}`).on('value', (snapshot) => {
-  //     const eventData = snapshot.val();
-  //     setEvent({
-  //       eventId: eventId as string,
-  //       eventName: eventData.name,
-  //       description: eventData.description,
-  //       dates: eventData.dates,
-  //       times: eventData.times,
-  //       prospectiveDates: eventData.prospectiveDates,
-  //       attendees: attendeesObjectToArray(eventData.attendees),
-  //     });
-  //   });
-  //   // console.log(event);
-  // }, [setEvent, eventId]);
   useEffect(() => {
-    console.log(1);
     setEvent({
       eventId: eventId,
       name: eventData.name,
@@ -63,8 +41,8 @@ export default function Event({ eventId, eventData }: Props) {
         setProfileImg(profile.pictureUrl);
         setUserId(profile.userId);
       } else {
-        setProfileImg('取れてないよimg');
-        setUserId('取れてないよid');
+        setProfileImg('');
+        setUserId('');
       }
     };
     getProfile();
@@ -85,7 +63,6 @@ export default function Event({ eventId, eventData }: Props) {
             '\n' +
             'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
             eventId,
-          // wrap: true,
         },
       ]);
     }
@@ -113,8 +90,6 @@ export default function Event({ eventId, eventData }: Props) {
           <Button variant="contained" color="primary" onClick={() => sharedScheduleByLine()}>
             友達へ共有する
           </Button>
-          <div>{profileImg}</div>
-          <div>{userId}</div>
           <Avatar src={profileImg} />
         </Grid>
         <Grid item container>
