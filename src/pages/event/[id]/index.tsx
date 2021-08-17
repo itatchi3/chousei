@@ -11,6 +11,7 @@ import { eventState, attendeeState, EventType } from 'src/atoms/eventState';
 import { useAuth } from 'src/hooks/auth';
 import { GetServerSideProps } from 'next';
 import { Avatar } from '@chakra-ui/react';
+import getProfile from '@line/liff/dist/lib/api/getProfile';
 type Props = {
   eventId: string;
   eventData: EventType;
@@ -56,7 +57,7 @@ export default function Event({ eventId, eventData }: Props) {
       prospectiveDates: eventData.prospectiveDates,
       attendees: attendeesObjectToArray(eventData.attendees),
     });
-    async () => {
+    const getProfile = async () => {
       const profile = await liff!.getProfile();
       if (profile.pictureUrl) {
         setProfileImg(profile.pictureUrl);
@@ -66,6 +67,7 @@ export default function Event({ eventId, eventData }: Props) {
         setUserId('取れてないよid');
       }
     };
+    getProfile();
   }, [eventData, setEvent, eventId, liff, profileImg]);
 
   // Lineで友達にイベントリンクを共有
