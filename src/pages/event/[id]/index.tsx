@@ -24,6 +24,7 @@ export default function Event({ eventId, eventData }: Props) {
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
   const [profileImg, setProfileImg] = useState<string>();
+  const [userId, setUserId] = useState<string>();
   // useEffect(() => {
   //   //Realtime Databaseからデータを取得
   //   if (!eventId) {
@@ -57,6 +58,7 @@ export default function Event({ eventId, eventData }: Props) {
       const profile = await liff!.getProfile();
       if (profile.pictureUrl) {
         setProfileImg(profile.pictureUrl);
+        setUserId(profile.userId);
         alert(profileImg);
       } else {
         setProfileImg('');
@@ -107,6 +109,8 @@ export default function Event({ eventId, eventData }: Props) {
           <Button variant="contained" color="primary" onClick={() => sharedScheduleByLine()}>
             友達へ共有する
           </Button>
+          <div>{profileImg}</div>
+          <div>{userId}</div>
           <Avatar src={profileImg} />
         </Grid>
         <Grid item container>
