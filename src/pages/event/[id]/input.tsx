@@ -52,12 +52,19 @@ export default function Input() {
   const attendee = useRecoilValue(attendeeState);
 
   const [possibleDates, setPossibleDates] = useState<{ date: string; vote: '○' | '△' | '×' }[]>(
-    event.prospectiveDates.map((date) => {
-      return {
-        date: date,
-        vote: '△',
-      };
-    }),
+    typeof attendee.votes === undefined
+      ? event.prospectiveDates.map((date) => {
+          return {
+            date: date,
+            vote: '△',
+          };
+        })
+      : event.prospectiveDates.map((date, i) => {
+          return {
+            date: date,
+            vote: attendee.votes![i],
+          };
+        }),
   );
 
   const router = useRouter();
@@ -180,7 +187,9 @@ export default function Input() {
       profileImg: attendee.profileImg,
     };
     // 出欠情報をRealTimeDatabaseに登録
-    await firebaseDb.ref(`events/${event.eventId}/attendees`).push(attendeeData);
+    await firebaseDb
+      .ref(`events/${event.eventId}/attendees/${attendeeData.userId}`)
+      .set(attendeeData);
 
     router.push(`/event/${event.eventId}`);
   };

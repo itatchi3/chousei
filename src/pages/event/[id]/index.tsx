@@ -19,7 +19,7 @@ type Props = {
 export default function Event({ eventId, eventData }: Props) {
   const { liff } = useAuth();
   const router = useRouter();
-
+  const [answerFlag, setAnswerFlag] = useState(false);
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
 
@@ -50,7 +50,16 @@ export default function Event({ eventId, eventData }: Props) {
       }));
     };
     getProfile();
-  }, [eventData, setEvent, eventId, liff, setAttendee]);
+    event.attendees.map((answeredAttendee) => {
+      if (answeredAttendee.userId === attendee.userId) {
+        setAnswerFlag(true);
+        setAttendee((state) => ({
+          ...state,
+          comment: answeredAttendee.comment,
+        }));
+      }
+    });
+  }, [eventData, setEvent, eventId, liff, setAttendee, attendee, event]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
@@ -135,9 +144,15 @@ export default function Event({ eventId, eventData }: Props) {
         ></Grid>
       </Grid>
       <Grid container item xs={12} justify="center">
+        (answerFlag ?(
         <Button variant="contained" color="primary" onClick={() => answerDates()}>
           時間候補を入力する
         </Button>
+        ): (
+        <Button variant="contained" color="primary" onClick={() => answerDates()}>
+          解答を修正する
+        </Button>
+        ))
       </Grid>
     </Grid>
   );

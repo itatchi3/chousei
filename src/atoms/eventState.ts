@@ -13,7 +13,7 @@ export type EventType = {
 export type AttendeeType = {
   userId: string;
   name: string;
-  votes: string[];
+  votes?: ('○' | '△' | '×')[];
   comment: string;
   profileImg: string;
 };
@@ -31,7 +31,7 @@ export const eventState = atom<EventType>({
       {
         userId: '',
         name: '',
-        votes: [''],
+        votes: undefined,
         comment: '',
         profileImg: '',
       },
@@ -44,7 +44,7 @@ export const attendeeState = atom<AttendeeType>({
   default: {
     userId: '',
     name: '',
-    votes: [''],
+    votes: undefined,
     comment: '',
     profileImg: '',
   },
