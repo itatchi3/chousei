@@ -35,7 +35,19 @@ export default function Event({ eventId, eventData }: Props) {
     });
     const getProfile = async () => {
       const profile = await liff!.getProfile();
-      setAttendee((state) => ({ ...state, name: profile.userId, userId: profile.userId }));
+      let profileImg: string;
+      if (profile.pictureUrl) {
+        profileImg = profile.pictureUrl;
+      } else {
+        profileImg = '';
+      }
+
+      setAttendee((state) => ({
+        ...state,
+        name: profile.displayName,
+        userId: profile.userId,
+        profileImg: profileImg,
+      }));
     };
     getProfile();
   }, [eventData, setEvent, eventId, liff, setAttendee]);
