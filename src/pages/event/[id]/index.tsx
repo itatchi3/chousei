@@ -50,6 +50,9 @@ export default function Event({ eventId, eventData }: Props) {
       }));
     };
     getProfile();
+  }, [eventData, setEvent, eventId, liff, setAttendee, attendee, event]);
+
+  useEffect(() => {
     if (!event.attendees.length) {
       return;
     }
@@ -62,7 +65,7 @@ export default function Event({ eventId, eventData }: Props) {
         }));
       }
     });
-  }, [eventData, setEvent, eventId, liff, setAttendee, attendee, event]);
+  }, [attendee.userId, event.attendees, setAttendee]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
