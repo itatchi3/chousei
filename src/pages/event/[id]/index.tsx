@@ -50,18 +50,18 @@ export default function Event({ eventId, eventData }: Props) {
       }));
     };
     getProfile();
-    if (!event.attendees) {
-      return;
-    }
-    event.attendees.map((answeredAttendee) => {
-      if (answeredAttendee.userId === attendee.userId) {
-        setAnswerFlag(true);
-        setAttendee((state) => ({
-          ...state,
-          comment: answeredAttendee.comment,
-        }));
-      }
-    });
+    // if (!event.attendees) {
+    //   return;
+    // }
+    // event.attendees.map((answeredAttendee) => {
+    //   if (answeredAttendee.userId === attendee.userId) {
+    //     setAnswerFlag(true);
+    //     setAttendee((state) => ({
+    //       ...state,
+    //       comment: answeredAttendee.comment,
+    //     }));
+    //   }
+    // });
   }, [eventData, setEvent, eventId, liff, setAttendee, attendee, event]);
 
   // Lineで友達にイベントリンクを共有
@@ -147,7 +147,7 @@ export default function Event({ eventId, eventData }: Props) {
         ></Grid>
       </Grid>
       <Grid container item xs={12} justify="center">
-        (answerFlag ?(
+        (!answerFlag ?(
         <Button variant="contained" color="primary" onClick={() => answerDates()}>
           時間候補を入力する
         </Button>
