@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import { FC } from 'react';
 import { AuthProvider, useAuth } from 'src/hooks/auth';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const theme = createTheme({
   palette: {
@@ -32,28 +33,30 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <Layout>
-        <ThemeProvider theme={theme}>
-          <RecoilRoot>
-            <Grid
-              container
-              direction="column"
-              justify="space-between"
-              alignItems="center"
-              spacing={3}
-            >
+        <ChakraProvider>
+          <ThemeProvider theme={theme}>
+            <RecoilRoot>
               <Grid
                 container
-                item
-                className="app-content"
                 direction="column"
+                justify="space-between"
                 alignItems="center"
-                justify="flex-start"
+                spacing={3}
               >
-                <Component {...pageProps} />
+                <Grid
+                  container
+                  item
+                  className="app-content"
+                  direction="column"
+                  alignItems="center"
+                  justify="flex-start"
+                >
+                  <Component {...pageProps} />
+                </Grid>
               </Grid>
-            </Grid>
-          </RecoilRoot>
-        </ThemeProvider>
+            </RecoilRoot>
+          </ThemeProvider>
+        </ChakraProvider>
       </Layout>
     </AuthProvider>
   );

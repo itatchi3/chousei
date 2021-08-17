@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { firebaseApp } from 'src/config/firebase';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,7 +10,7 @@ import { useRecoilState } from 'recoil';
 import { eventState, attendeeState, EventType } from 'src/atoms/eventState';
 import { useAuth } from 'src/hooks/auth';
 import { GetServerSideProps } from 'next';
-
+import { Avatar } from '@chakra-ui/react';
 type Props = {
   eventId: string;
   eventData: EventType;
@@ -23,6 +23,7 @@ export default function Event({ eventId, eventData }: Props) {
 
   const [event, setEvent] = useRecoilState(eventState);
   const [attendee, setAttendee] = useRecoilState(attendeeState);
+  const [profileImg, setProfileImg] = useState<string>();
   // useEffect(() => {
   //   //Realtime Databaseからデータを取得
   //   if (!eventId) {
@@ -52,7 +53,15 @@ export default function Event({ eventId, eventData }: Props) {
       prospectiveDates: eventData.prospectiveDates,
       attendees: attendeesObjectToArray(eventData.attendees),
     });
-  }, [eventData, setEvent, eventId]);
+    async () => {
+      const profile = await liff!.getProfile();
+      if (profile.pictureUrl) {
+        setProfileImg(profile.pictureUrl);
+      } else {
+        setProfileImg('');
+      }
+    };
+  }, [eventData, setEvent, eventId, liff]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
@@ -97,6 +106,7 @@ export default function Event({ eventId, eventData }: Props) {
           <Button variant="contained" color="primary" onClick={() => sharedScheduleByLine()}>
             友達へ共有する
           </Button>
+          <Avatar src={profileImg} />
         </Grid>
         <Grid item container>
           <AttendanceTable columns={event.prospectiveDates} attendees={event.attendees} />
