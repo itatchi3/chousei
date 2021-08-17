@@ -18,6 +18,7 @@ type Props = {
 
 export default function Event({ eventId, eventData }: Props) {
   const { liff } = useAuth();
+  console.log(2);
   const router = useRouter();
   // const eventId = router.query.id;
 
@@ -45,6 +46,7 @@ export default function Event({ eventId, eventData }: Props) {
   //   // console.log(event);
   // }, [setEvent, eventId]);
   useEffect(() => {
+    console.log(1);
     setEvent({
       eventId: eventId,
       name: eventData.name,
@@ -59,9 +61,9 @@ export default function Event({ eventId, eventData }: Props) {
       if (profile.pictureUrl) {
         setProfileImg(profile.pictureUrl);
         setUserId(profile.userId);
-        alert(profileImg);
       } else {
-        setProfileImg('');
+        setProfileImg('取れてないよimg');
+        setUserId('取れてないよid');
       }
     };
   }, [eventData, setEvent, eventId, liff, profileImg]);
