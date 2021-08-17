@@ -50,6 +50,9 @@ export default function Event({ eventId, eventData }: Props) {
       }));
     };
     getProfile();
+    if (!event.attendees) {
+      return;
+    }
     event.attendees.map((answeredAttendee) => {
       if (answeredAttendee.userId === attendee.userId) {
         setAnswerFlag(true);
