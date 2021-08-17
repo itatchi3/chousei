@@ -147,15 +147,15 @@ export default function Event({ eventId, eventData }: Props) {
         ></Grid>
       </Grid>
       <Grid container item xs={12} justify="center">
-        (!{answerFlag} ?(
-        <Button variant="contained" color="primary" onClick={() => answerDates()}>
-          時間候補を入力する
-        </Button>
-        ): (
-        <Button variant="contained" color="primary" onClick={() => answerDates()}>
-          解答を修正する
-        </Button>
-        ))
+        {!answerFlag ? (
+          <Button variant="contained" color="primary" onClick={() => answerDates()}>
+            時間候補を入力する
+          </Button>
+        ) : (
+          <Button variant="contained" color="primary" onClick={() => answerDates()}>
+            解答を修正する
+          </Button>
+        )}
       </Grid>
     </Grid>
   );
