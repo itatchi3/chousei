@@ -1,13 +1,22 @@
 // import "../assets/styles/AttendanceTable.css";
 import React from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import { AttendeeType, EventType } from 'src/atoms/eventState';
+// import Table from '@material-ui/core/Table';
+import { AttendeeType } from 'src/atoms/eventState';
 import { Avatar } from '@chakra-ui/react';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Center,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
+} from '@chakra-ui/react';
 
 type Props = {
   columns: string[];
@@ -29,75 +38,65 @@ const AttendanceTable = (props: Props) => {
 
   return (
     <>
-      <TableContainer className="table" id="attendance-table">
-        <Table size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell size="small">日程</TableCell>
-              <TableCell align="center" size="small" padding="none">
-                ○
-              </TableCell>
-              <TableCell align="center" size="small" padding="none">
-                △
-              </TableCell>
-              <TableCell align="center" size="small" padding="none">
-                ×
-              </TableCell>
-              {props.attendees.map((atendee, i) => (
-                <TableCell key={i} align="center" size="small" padding="none">
-                  <Avatar src={atendee.profileImg} />
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {attendanceCounts.map((count, i) => (
-              <TableRow key={i}>
-                <TableCell component="th" scope="row">
-                  {props.columns[i]}
-                </TableCell>
-                <TableCell align="center" size="small" padding="none">
-                  {count.positiveCounts}
-                </TableCell>
-                <TableCell align="center" size="small" padding="none">
-                  {count.evenCounts}
-                </TableCell>
-                <TableCell align="center" size="small" padding="none">
-                  {count.negativeCounts}
-                </TableCell>
-                {props.attendees.map((atendee, index) => (
-                  <TableCell key={index} align="center" size="small" padding="none">
-                    {atendee.votes[i]}
-                  </TableCell>
-                ))}
-              </TableRow>
+      <Table size="sm">
+        <Thead>
+          <Tr>
+            <Th>日程</Th>
+            <Th>○</Th>
+            <Th>△</Th>
+            <Th>×</Th>
+            {props.attendees.map((atendee, i) => (
+              <Th key={i} p="2">
+                <Popover placement="top">
+                  <PopoverTrigger>
+                    <Center>
+                      <Avatar src={atendee.profileImg} size="sm" />
+                    </Center>
+                  </PopoverTrigger>
+                  <PopoverContent w="auto">
+                    <PopoverArrow />
+                    <PopoverBody>{atendee.name}</PopoverBody>
+                  </PopoverContent>
+                </Popover>
+              </Th>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TableContainer className="table" id="attendance-table">
-        <Table size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell size="small">コメント</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.attendees.map(
-              (atendee, i) =>
-                atendee.comment !== '' && (
-                  <TableRow key={i}>
-                    <TableCell component="th" scope="row">
-                      {atendee.name}
-                    </TableCell>
-                    <TableCell align="center">{atendee.comment}</TableCell>
-                  </TableRow>
-                ),
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {attendanceCounts.map((count, i) => (
+            <Tr key={i}>
+              <Td>{props.columns[i]}</Td>
+              <Td>{count.positiveCounts}</Td>
+              <Td>{count.evenCounts}</Td>
+              <Td>{count.negativeCounts}</Td>
+              {props.attendees.map((atendee, index) => (
+                <Td key={index}>{atendee.votes[i]}</Td>
+              ))}
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th size="small">コメント</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {props.attendees.map(
+            (atendee, i) =>
+              atendee.comment !== '' && (
+                <Tr key={i}>
+                  <Th component="th" scope="row">
+                    {atendee.name}
+                  </Th>
+                  <Th align="center">{atendee.comment}</Th>
+                </Tr>
+              ),
+          )}
+        </Tbody>
+      </Table>
     </>
   );
 };

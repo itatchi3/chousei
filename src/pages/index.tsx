@@ -84,9 +84,7 @@ export default function Home() {
   const registerEvent = async () => {
     if (eventName !== '' && dates !== null) {
       //入力した値の整形
-      const possibleDates = (dates as DateObject[]).map(
-        (date) => date.year + '/' + date.month + '/' + date.day,
-      );
+      const possibleDates = (dates as DateObject[]).map((date) => date.month + '/' + date.day);
 
       const sortedPossibleDates = possibleDates.sort((a, b) => {
         return a > b ? 1 : -1;
