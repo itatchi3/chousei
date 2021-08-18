@@ -50,7 +50,7 @@ export default function Event({ eventId, eventData }: Props) {
       }));
     };
     getProfile();
-  }, [eventData, setEvent, eventId, liff, setAttendee, attendee, event]);
+  }, [eventData, setEvent, eventId, liff, setAttendee]);
 
   useEffect(() => {
     if (!event.attendees.length) {
