@@ -41,7 +41,9 @@ const AttendanceTable = (props: Props) => {
       <Table size="sm">
         <Thead>
           <Tr>
-            <Th>日程</Th>
+            <Th>
+              <Center>日程</Center>
+            </Th>
             <Th>
               <Center>○</Center>
             </Th>
@@ -96,7 +98,6 @@ const AttendanceTable = (props: Props) => {
         <Thead>
           <Tr>
             <Th size="small">コメント</Th>
-            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -104,8 +105,18 @@ const AttendanceTable = (props: Props) => {
             (atendee, i) =>
               atendee.comment !== '' && (
                 <Tr key={i}>
-                  <Th component="th" scope="row">
-                    {atendee.name}
+                  <Th key={i} p="2">
+                    <Popover placement="top">
+                      <PopoverTrigger>
+                        <Center>
+                          <Avatar src={atendee.profileImg} size="sm" />
+                        </Center>
+                      </PopoverTrigger>
+                      <PopoverContent w="auto">
+                        <PopoverArrow />
+                        <PopoverBody>{atendee.name}</PopoverBody>
+                      </PopoverContent>
+                    </Popover>
                   </Th>
                   <Th align="center">{atendee.comment}</Th>
                 </Tr>
