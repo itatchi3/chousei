@@ -62,6 +62,7 @@ export default function Event({ eventId, eventData }: Props) {
         setAttendee((state) => ({
           ...state,
           comment: answeredAttendee.comment,
+          votes: answeredAttendee.votes,
         }));
       }
     });

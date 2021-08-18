@@ -62,7 +62,7 @@ export default function Input() {
       : event.prospectiveDates.map((date, i) => {
           return {
             date: date,
-            vote: attendee.votes![i],
+            vote: attendee.votes[i],
           };
         }),
   );
