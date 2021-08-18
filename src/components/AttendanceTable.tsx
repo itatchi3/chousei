@@ -95,17 +95,17 @@ const AttendanceTable = (props: Props) => {
         </Tbody>
       </Table>
       <Table>
-        <Thead>
-          <Tr>
-            <Th size="small">コメント</Th>
-          </Tr>
-        </Thead>
+        <Tr>
+          <Th size="small">コメント</Th>
+        </Tr>
+      </Table>
+      <Table>
         <Tbody>
           {props.attendees.map(
             (atendee, i) =>
               atendee.comment !== '' && (
                 <Tr key={i}>
-                  <Th key={i} p="2">
+                  <Td key={i} p="2">
                     <Popover placement="top">
                       <PopoverTrigger>
                         <Center>
@@ -117,8 +117,8 @@ const AttendanceTable = (props: Props) => {
                         <PopoverBody>{atendee.name}</PopoverBody>
                       </PopoverContent>
                     </Popover>
-                  </Th>
-                  <Th align="center">{atendee.comment}</Th>
+                  </Td>
+                  <Td align="center">{atendee.comment}</Td>
                 </Tr>
               ),
           )}
