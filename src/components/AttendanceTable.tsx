@@ -68,6 +68,123 @@ const AttendanceTable = (props: Props) => {
                 </Popover>
               </Th>
             ))}
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
+            <Th p="2">
+              <Popover placement="top">
+                <PopoverTrigger>
+                  <Center>
+                    <Avatar size="sm" />
+                  </Center>
+                </PopoverTrigger>
+                <PopoverContent w="auto">
+                  <PopoverArrow />
+                  <PopoverBody>板井俊樹</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -90,6 +207,33 @@ const AttendanceTable = (props: Props) => {
                   <Center>{atendee.votes[i]}</Center>
                 </Td>
               ))}
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
+              <Td>
+                <Center>○</Center>
+              </Td>
             </Tr>
           ))}
         </Tbody>
