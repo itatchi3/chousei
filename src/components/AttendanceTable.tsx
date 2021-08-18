@@ -105,7 +105,7 @@ const AttendanceTable = (props: Props) => {
             (atendee, i) =>
               atendee.comment !== '' && (
                 <Tr key={i}>
-                  <Td key={i} p="2">
+                  <Td key={i} p="2" w="24">
                     <Popover placement="top">
                       <PopoverTrigger>
                         <Center>
