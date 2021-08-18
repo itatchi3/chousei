@@ -42,9 +42,15 @@ const AttendanceTable = (props: Props) => {
         <Thead>
           <Tr>
             <Th>日程</Th>
-            <Th>○</Th>
-            <Th>△</Th>
-            <Th>×</Th>
+            <Th>
+              <Center>○</Center>
+            </Th>
+            <Th>
+              <Center>△</Center>
+            </Th>
+            <Th>
+              <Center>×</Center>
+            </Th>
             {props.attendees.map((atendee, i) => (
               <Th key={i} p="2">
                 <Popover placement="top">
@@ -65,12 +71,22 @@ const AttendanceTable = (props: Props) => {
         <Tbody>
           {attendanceCounts.map((count, i) => (
             <Tr key={i}>
-              <Td>{props.columns[i]}</Td>
-              <Td>{count.positiveCounts}</Td>
-              <Td>{count.evenCounts}</Td>
-              <Td>{count.negativeCounts}</Td>
+              <Td>
+                <Center>{props.columns[i]}</Center>
+              </Td>
+              <Td>
+                <Center>{count.positiveCounts}</Center>
+              </Td>
+              <Td>
+                <Center>{count.evenCounts}</Center>
+              </Td>
+              <Td>
+                <Center>{count.negativeCounts}</Center>
+              </Td>
               {props.attendees.map((atendee, index) => (
-                <Td key={index}>{atendee.votes[i]}</Td>
+                <Td key={index}>
+                  <Center>{atendee.votes[i]}</Center>
+                </Td>
               ))}
             </Tr>
           ))}
