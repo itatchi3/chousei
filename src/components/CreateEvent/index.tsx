@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid';
-import { EventPost } from 'src/components/CreateEvent/EventPost';
+import { EventPush } from 'src/components/CreateEvent/EventPosh';
 import { InputTimeInterval } from 'src/components/CreateEvent/InputTimeInterval';
 import { InputTimeWidth } from 'src/components/CreateEvent/InputTimeWidth';
 import { InputDates } from 'src/components/CreateEvent/InputDates';
@@ -21,7 +21,7 @@ export const CreateEvent = () => {
       <InputDates />
       <InputTimeWidth />
       <InputTimeInterval />
-      <EventPost />
+      <EventPush />
     </Grid>
   );
 };

@@ -7,7 +7,7 @@ import { useAuth } from 'src/hooks/auth';
 import { useRecoilValue } from 'recoil';
 import { editingEventState } from 'src/atoms/eventState';
 
-export const EventPost = () => {
+export const EventPush = () => {
   const firebaseDb = firebaseApp.database();
   const event = useRecoilValue(editingEventState);
   const { liff } = useAuth();
