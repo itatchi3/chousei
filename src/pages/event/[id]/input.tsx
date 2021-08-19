@@ -38,7 +38,7 @@ const bluetheme = createTheme({
   },
 });
 
-export default function Input() {
+const Input = () => {
   //ボタンの色
   const [color, setColor] = useState('Red');
   //入力ボタンが選択されているかどうか
@@ -290,4 +290,5 @@ export default function Input() {
       </Grid>
     </>
   );
-}
+};
+export default Input;

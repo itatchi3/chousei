@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Home() {
+const Home = () => {
   const { liff } = useAuth();
   const classes = useStyles();
   // イベント名
@@ -308,4 +308,5 @@ export default function Home() {
       </Grid>
     </Grid>
   );
-}
+};
+export default Home;

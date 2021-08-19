@@ -16,7 +16,7 @@ type Props = {
   eventData: EventType;
 };
 
-export default function Event({ eventId, eventData }: Props) {
+const Event = ({ eventId, eventData }: Props) => {
   const { liff } = useAuth();
   const router = useRouter();
   const [answerFlag, setAnswerFlag] = useState(false);
@@ -163,7 +163,7 @@ export default function Event({ eventId, eventData }: Props) {
       </Grid>
     </Grid>
   );
-}
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const eventId = context.query.id;
@@ -175,3 +175,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: { eventId, eventData } };
   });
 };
+export default Event;

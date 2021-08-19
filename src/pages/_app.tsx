@@ -29,7 +29,7 @@ const Layout: FC = ({ children }) => {
   return <>{children}</>;
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AuthProvider>
       <Layout>
@@ -60,5 +60,5 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Layout>
     </AuthProvider>
   );
-}
+};
 export default MyApp;
