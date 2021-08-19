@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { DateObject } from 'react-multi-date-picker';
 
 export type EventType = {
   eventId: string;
@@ -16,6 +17,14 @@ export type AttendeeType = {
   votes: ('○' | '△' | '×')[];
   comment: string;
   profileImg: string;
+};
+
+export type EditingEventType = {
+  eventName: string;
+  description: string;
+  dates: DateObject | DateObject[] | Date[] | null;
+  timeWidth: number[];
+  timeInterval: number[];
 };
 
 export const eventState = atom<EventType>({
@@ -47,5 +56,16 @@ export const attendeeState = atom<AttendeeType>({
     votes: [],
     comment: '',
     profileImg: '',
+  },
+});
+
+export const editingEventState = atom<EditingEventType>({
+  key: 'editingEventState',
+  default: {
+    eventName: '',
+    description: '',
+    dates: [],
+    timeWidth: [0, 24],
+    timeInterval: [60],
   },
 });
