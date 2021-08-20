@@ -32,7 +32,7 @@ attendees: {
 
 */
 
-export function attendeesVotesObjectToArray(attendees: AttendeeVotesType[]) {
+export function attendeeVotesObjectToArray(attendees: AttendeeVotesType[]) {
   if (!attendees) {
     return [];
   }
@@ -45,7 +45,7 @@ export function attendeesVotesObjectToArray(attendees: AttendeeVotesType[]) {
   return attendeesArray;
 }
 
-export function attendeesCommentObjectToArray(attendees: AttendeeCommentType[]) {
+export function attendeeCommentObjectToArray(attendees: AttendeeCommentType[]) {
   if (!attendees) {
     return [];
   }

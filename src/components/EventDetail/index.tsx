@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 // import Button from '@material-ui/core/Button';
 import { database } from 'src/utils/firebase';
 import AttendanceTable from 'src/components/EventDetail/AttendanceTable';
-import { attendeesObjectToArray } from 'src/utils/DataConvert';
+import { attendeeVotesObjectToArray, attendeeCommentObjectToArray } from 'src/utils/DataConvert';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import {
@@ -76,8 +76,8 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       dates: eventData.dates,
       times: eventData.times,
       prospectiveDates: eventData.prospectiveDates,
-      attendeeVotes: attendeesObjectToArray(eventData.attendeeVotes),
-      attendeeComment: attendeesObjectToArray(eventData.attendeeComment),
+      attendeeVotes: attendeeVotesObjectToArray(eventData.attendeeVotes),
+      attendeeComment: attendeeCommentObjectToArray(eventData.attendeeComment),
     });
     const getProfile = async () => {
       const profile = await liff!.getProfile();
