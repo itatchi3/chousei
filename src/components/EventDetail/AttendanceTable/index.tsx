@@ -1,7 +1,7 @@
 // import "../assets/styles/AttendanceTable.css";
 import React from 'react';
 // import Table from '@material-ui/core/Table';
-import { AttendeeType } from 'src/atoms/eventState';
+import { AttendeeVotesType, eventState } from 'src/atoms/eventState';
 import { Avatar } from '@chakra-ui/react';
 import {
   Table,
@@ -17,22 +17,19 @@ import {
   PopoverBody,
   PopoverArrow,
 } from '@chakra-ui/react';
+import { useRecoilValue } from 'recoil';
 
-type Props = {
-  columns: string[];
-  attendees: AttendeeType[];
-};
-
-const AttendanceTable = (props: Props) => {
-  if (!props.columns) {
+const AttendanceTable = () => {
+  const event = useRecoilValue(eventState);
+  if (!event.prospectiveDates) {
     return <></>;
   }
-  const attendanceCounts = props.columns.map((column, i) => {
+  const attendanceCounts = event.prospectiveDates.map((column, i) => {
     return {
       date: column,
-      positiveCounts: props.attendees.filter((attendee) => attendee.votes[i] === '○').length,
-      evenCounts: props.attendees.filter((attendee) => attendee.votes[i] === '△').length,
-      negativeCounts: props.attendees.filter((attendee) => attendee.votes[i] === '×').length,
+      positiveCounts: event.attendeeVotes.filter((attendee) => attendee.votes[i] === '○').length,
+      evenCounts: event.attendeeVotes.filter((attendee) => attendee.votes[i] === '△').length,
+      negativeCounts: event.attendeeVotes.filter((attendee) => attendee.votes[i] === '×').length,
     };
   });
 
@@ -53,7 +50,7 @@ const AttendanceTable = (props: Props) => {
             <Th>
               <Center>×</Center>
             </Th>
-            {props.attendees.map((atendee, i) => (
+            {event.attendeeVotes.map((atendee, i) => (
               <Th key={i} p="2">
                 <Popover placement="top">
                   <PopoverTrigger>
@@ -74,7 +71,7 @@ const AttendanceTable = (props: Props) => {
           {attendanceCounts.map((count, i) => (
             <Tr key={i}>
               <Td>
-                <Center>{props.columns[i]}</Center>
+                <Center>{event.prospectiveDates[i]}</Center>
               </Td>
               <Td>
                 <Center>{count.positiveCounts}</Center>
@@ -85,7 +82,7 @@ const AttendanceTable = (props: Props) => {
               <Td>
                 <Center>{count.negativeCounts}</Center>
               </Td>
-              {props.attendees.map((atendee, index) => (
+              {event.attendeeVotes.map((atendee, index) => (
                 <Td key={index}>
                   <Center>{atendee.votes[i]}</Center>
                 </Td>
@@ -101,7 +98,7 @@ const AttendanceTable = (props: Props) => {
       </Table>
       <Table>
         <Tbody>
-          {props.attendees.map(
+          {event.attendeeComment.map(
             (atendee, i) =>
               atendee.comment !== '' && (
                 <Tr key={i}>

@@ -8,15 +8,22 @@ export type EventType = {
   dates: string[];
   times: string[];
   prospectiveDates: string[];
-  attendees: AttendeeType[];
+  attendeeVotes: AttendeeVotesType[];
+  attendeeComment: AttendeeCommentType[];
 };
 
-export type AttendeeType = {
+export type AttendeeVotesType = {
   userId: string;
   name: string;
-  votes: ('○' | '△' | '×')[];
-  comment: string;
   profileImg: string;
+  votes: ('○' | '△' | '×')[];
+};
+
+export type AttendeeCommentType = {
+  userId: string;
+  name: string;
+  profileImg: string;
+  comment: string;
 };
 
 export type EditingEventType = {
@@ -36,26 +43,42 @@ export const eventState = atom<EventType>({
     dates: [''],
     times: [''],
     prospectiveDates: [''],
-    attendees: [
+    attendeeVotes: [
       {
         userId: '',
         name: '',
-        votes: [],
-        comment: '',
         profileImg: '',
+        votes: [],
+      },
+    ],
+    attendeeComment: [
+      {
+        userId: '',
+        name: '',
+        profileImg: '',
+        comment: '',
       },
     ],
   },
 });
 
-export const attendeeState = atom<AttendeeType>({
-  key: 'attendeeState',
+export const attendeeVotesState = atom<AttendeeVotesType>({
+  key: 'attendeeVotesState',
   default: {
     userId: '',
     name: '',
     votes: [],
-    comment: '',
     profileImg: '',
+  },
+});
+
+export const attendeeCommentState = atom<AttendeeCommentType>({
+  key: 'attendeeCommentState',
+  default: {
+    userId: '',
+    name: '',
+    profileImg: '',
+    comment: '',
   },
 });
 

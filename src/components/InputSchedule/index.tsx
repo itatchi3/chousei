@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green, red, blue } from '@material-ui/core/colors';
 import { firebaseApp } from 'src/config/firebase';
 import { useRecoilValue } from 'recoil';
-import { eventState, attendeeState } from 'src/atoms/eventState';
+import { eventState, attendeeVotesState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 
 const firebaseDb = firebaseApp.database();
@@ -49,7 +49,7 @@ export const InputSchedule = () => {
 
   //解答
   const event = useRecoilValue(eventState);
-  const attendee = useRecoilValue(attendeeState);
+  const attendee = useRecoilValue(attendeeVotesState);
 
   const [possibleDates, setPossibleDates] = useState<{ date: string; vote: '○' | '△' | '×' }[]>(
     !attendee.votes.length
@@ -183,12 +183,11 @@ export const InputSchedule = () => {
       userId: attendee.userId,
       name: attendee.name,
       votes: votes,
-      comment: attendee.comment,
       profileImg: attendee.profileImg,
     };
     // 出欠情報をRealTimeDatabaseに登録
     await firebaseDb
-      .ref(`events/${event.eventId}/attendees/${attendeeData.userId}`)
+      .ref(`events/${event.eventId}/attendeeVotes/${attendeeData.userId}`)
       .set(attendeeData);
 
     router.push(`/event/${event.eventId}`);
