@@ -40,7 +40,8 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   const [attendeeVotes, setAttendeeVotes] = useRecoilState(attendeeVotesState);
   const [attendeeComment, setAttendeeComment] = useRecoilState(attendeeCommentState);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [loading, setLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [scheduleLoading, setScheduleLoading] = useState(false);
 
   const initialRef = useRef(null);
 
@@ -52,7 +53,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   };
 
   const registerAttendeeComment = async () => {
-    setLoading(true);
+    setCommentLoading(true);
     const attendeeData = {
       userId: attendeeComment.userId,
       name: attendeeComment.name,
@@ -159,7 +160,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
 
   //時間候補入力へ移動
   const answerDates = () => {
-    setLoading(true);
+    setScheduleLoading(true);
     router.push({
       pathname: `/event/${eventId}/input`,
     });
@@ -178,7 +179,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       </Box>
       <VStack justify="center" p="6">
         {!answerVotesFlag ? (
-          loading ? (
+          scheduleLoading ? (
             <Box>
               <Button w="44" isLoading onClick={() => answerDates()}>
                 予定を入力する
@@ -191,7 +192,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
               </Button>
             </Box>
           )
-        ) : loading ? (
+        ) : scheduleLoading ? (
           <Box>
             <Button w="44" isLoading onClick={() => answerDates()}>
               予定を修正する
@@ -232,7 +233,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             </ModalBody>
 
             <ModalFooter>
-              {loading ? (
+              {commentLoading ? (
                 <Button colorScheme="blue" mr={3} isLoading>
                   保存
                 </Button>
