@@ -113,7 +113,7 @@ export const InputSchedule = () => {
   };
 
   const registerAttendances = async () => {
-    //出欠情報登録機能
+    setLoading(true);
     const votes = possibleDates.map((possibleDate) => possibleDate.vote);
     const attendeeData = {
       userId: attendee.userId,
@@ -121,7 +121,7 @@ export const InputSchedule = () => {
       votes: votes,
       profileImg: attendee.profileImg,
     };
-    // 出欠情報をRealTimeDatabaseに登録
+
     await database
       .ref(`events/${event.eventId}/attendeeVotes/${attendeeData.userId}`)
       .set(attendeeData);
