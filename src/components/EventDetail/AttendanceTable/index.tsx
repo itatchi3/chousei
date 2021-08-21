@@ -68,7 +68,7 @@ const AttendanceTable = () => {
       <Box overflowX="scroll">
         <Table size="sm" borderWidth="2px">
           <Thead>
-            <Tr>
+            <Tr h="50px">
               <Th fontSize="md" w="100px" px="0">
                 <Center w="100px">日程</Center>
               </Th>
