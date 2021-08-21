@@ -76,8 +76,14 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       dates: eventData.dates,
       times: eventData.times,
       prospectiveDates: eventData.prospectiveDates,
-      attendeeVotes: attendeeVotesObjectToArray(eventData.attendeeVotes),
-      attendeeComment: attendeeCommentObjectToArray(eventData.attendeeComment),
+      attendeeVotes:
+        eventData.attendeeVotes !== undefined
+          ? attendeeVotesObjectToArray(eventData.attendeeVotes)
+          : undefined,
+      attendeeComment:
+        eventData.attendeeComment !== undefined
+          ? attendeeCommentObjectToArray(eventData.attendeeComment)
+          : undefined,
     });
     const getProfile = async () => {
       const profile = await liff!.getProfile();
@@ -105,10 +111,10 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   }, [eventData, setEvent, eventId, liff, setAttendeeVotes, setAttendeeComment]);
 
   useEffect(() => {
-    if (!event.attendeeVotes.length) {
+    if (event.attendeeVotes === undefined) {
       return;
     }
-    event.attendeeVotes.map((answeredAttendee) => {
+    event.attendeeVotes!.map((answeredAttendee) => {
       if (answeredAttendee.userId === attendeeVotes.userId) {
         setAnswerVotesFlag(true);
         setAttendeeVotes((state) => ({
@@ -120,10 +126,10 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   }, [attendeeVotes.userId, event.attendeeVotes, setAttendeeVotes]);
 
   useEffect(() => {
-    if (!event.attendeeComment.length) {
+    if (event.attendeeComment === undefined) {
       return;
     }
-    event.attendeeComment.map((answeredAttendee) => {
+    event.attendeeComment!.map((answeredAttendee) => {
       if (answeredAttendee.userId === attendeeComment.userId) {
         setAnswerCommentFlag(true);
         setAttendeeComment((state) => ({
@@ -202,7 +208,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             <Button onClick={() => answerDates()}>解答を修正する</Button>
           </Grid>
         )}
-        {!answerVotesFlag ? (
+        {!answerCommentFlag ? (
           <Grid item>
             <Grid item>
               <Button onClick={onOpen}>コメントを入力する</Button>

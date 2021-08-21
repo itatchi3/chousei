@@ -8,8 +8,8 @@ export type EventType = {
   dates: string[];
   times: string[];
   prospectiveDates: string[];
-  attendeeVotes: AttendeeVotesType[];
-  attendeeComment: AttendeeCommentType[];
+  attendeeVotes?: AttendeeVotesType[];
+  attendeeComment?: AttendeeCommentType[];
 };
 
 export type AttendeeVotesType = {
@@ -43,22 +43,8 @@ export const eventState = atom<EventType>({
     dates: [''],
     times: [''],
     prospectiveDates: [''],
-    attendeeVotes: [
-      {
-        userId: '',
-        name: '',
-        profileImg: '',
-        votes: [],
-      },
-    ],
-    attendeeComment: [
-      {
-        userId: '',
-        name: '',
-        profileImg: '',
-        comment: '',
-      },
-    ],
+    attendeeVotes: undefined,
+    attendeeComment: undefined,
   },
 });
 

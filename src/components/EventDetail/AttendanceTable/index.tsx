@@ -27,9 +27,18 @@ const AttendanceTable = () => {
   const attendanceCounts = event.prospectiveDates.map((column, i) => {
     return {
       date: column,
-      positiveCounts: event.attendeeVotes.filter((attendee) => attendee.votes[i] === '○').length,
-      evenCounts: event.attendeeVotes.filter((attendee) => attendee.votes[i] === '△').length,
-      negativeCounts: event.attendeeVotes.filter((attendee) => attendee.votes[i] === '×').length,
+      positiveCounts:
+        event.attendeeVotes !== undefined
+          ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '○').length
+          : 0,
+      evenCounts:
+        event.attendeeVotes !== undefined
+          ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '△').length
+          : 0,
+      negativeCounts:
+        event.attendeeVotes !== undefined
+          ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '×').length
+          : 0,
     };
   });
 
@@ -50,21 +59,22 @@ const AttendanceTable = () => {
             <Th>
               <Center>×</Center>
             </Th>
-            {event.attendeeVotes.map((atendee, i) => (
-              <Th key={i} p="2">
-                <Popover placement="top">
-                  <PopoverTrigger>
-                    <Center>
-                      <Avatar src={atendee.profileImg} size="sm" />
-                    </Center>
-                  </PopoverTrigger>
-                  <PopoverContent w="auto">
-                    <PopoverArrow />
-                    <PopoverBody>{atendee.name}</PopoverBody>
-                  </PopoverContent>
-                </Popover>
-              </Th>
-            ))}
+            {event.attendeeVotes !== undefined &&
+              event.attendeeVotes.map((atendee, i) => (
+                <Th key={i} p="2">
+                  <Popover placement="top">
+                    <PopoverTrigger>
+                      <Center>
+                        <Avatar src={atendee.profileImg} size="sm" />
+                      </Center>
+                    </PopoverTrigger>
+                    <PopoverContent w="auto">
+                      <PopoverArrow />
+                      <PopoverBody>{atendee.name}</PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Th>
+              ))}
           </Tr>
         </Thead>
         <Tbody>
@@ -82,11 +92,12 @@ const AttendanceTable = () => {
               <Td>
                 <Center>{count.negativeCounts}</Center>
               </Td>
-              {event.attendeeVotes.map((atendee, index) => (
-                <Td key={index}>
-                  <Center>{atendee.votes[i]}</Center>
-                </Td>
-              ))}
+              {event.attendeeVotes !== undefined &&
+                event.attendeeVotes.map((atendee, index) => (
+                  <Td key={index}>
+                    <Center>{atendee.votes[i]}</Center>
+                  </Td>
+                ))}
             </Tr>
           ))}
         </Tbody>
@@ -98,27 +109,28 @@ const AttendanceTable = () => {
       </Table>
       <Table>
         <Tbody>
-          {event.attendeeComment.map(
-            (atendee, i) =>
-              atendee.comment !== '' && (
-                <Tr key={i}>
-                  <Td key={i} p="2" w="24">
-                    <Popover placement="top">
-                      <PopoverTrigger>
-                        <Center>
-                          <Avatar src={atendee.profileImg} size="sm" />
-                        </Center>
-                      </PopoverTrigger>
-                      <PopoverContent w="auto">
-                        <PopoverArrow />
-                        <PopoverBody>{atendee.name}</PopoverBody>
-                      </PopoverContent>
-                    </Popover>
-                  </Td>
-                  <Td align="center">{atendee.comment}</Td>
-                </Tr>
-              ),
-          )}
+          {event.attendeeComment !== undefined &&
+            event.attendeeComment.map(
+              (atendee, i) =>
+                atendee.comment !== '' && (
+                  <Tr key={i}>
+                    <Td key={i} p="2" w="24">
+                      <Popover placement="top">
+                        <PopoverTrigger>
+                          <Center>
+                            <Avatar src={atendee.profileImg} size="sm" />
+                          </Center>
+                        </PopoverTrigger>
+                        <PopoverContent w="auto">
+                          <PopoverArrow />
+                          <PopoverBody>{atendee.name}</PopoverBody>
+                        </PopoverContent>
+                      </Popover>
+                    </Td>
+                    <Td align="center">{atendee.comment}</Td>
+                  </Tr>
+                ),
+            )}
         </Tbody>
       </Table>
     </>
