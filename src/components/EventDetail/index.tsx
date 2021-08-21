@@ -170,7 +170,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         <Heading>{event.name}</Heading>
         <Box p="2">{event.description}</Box>
       </Box>
-      <Box>
+      <Box pt="4">
         <Box>
           <AttendanceTable />
         </Box>
