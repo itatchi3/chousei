@@ -168,10 +168,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
     <Box p="3">
       <Box>
         <Heading>{event.name}</Heading>
-        {/* <Box p="2">{event.description}</Box> */}
-        <Box p="2">
-          aaaaaaaaaaaああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-        </Box>
+        <Box p="2">{event.description}</Box>
       </Box>
       <Box>
         <Box>
