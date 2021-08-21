@@ -6,7 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import { FC } from 'react';
 import { AuthProvider, useAuth } from 'src/hooks/auth';
-import { ChakraProvider } from '@chakra-ui/react';
+import { Center, ChakraProvider, Spinner } from '@chakra-ui/react';
 
 const theme = createTheme({
   palette: {
@@ -23,7 +23,13 @@ const Layout: FC = ({ children }) => {
   const { initialized } = useAuth();
 
   if (!initialized) {
-    return <p>loading...</p>;
+    return (
+      <ChakraProvider>
+        <Center p="8">
+          <Spinner color="green.400" />
+        </Center>
+      </ChakraProvider>
+    );
   }
 
   return <>{children}</>;
