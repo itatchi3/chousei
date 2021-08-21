@@ -1,5 +1,5 @@
 // import "../assets/styles/AttendanceTable.css";
-import React from 'react';
+import { useState, useEffect } from 'react';
 // import Table from '@material-ui/core/Table';
 import { AttendeeVotesType, eventState } from 'src/atoms/eventState';
 import { Avatar } from '@chakra-ui/react';
@@ -19,28 +19,55 @@ import {
 } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 
+type Count = {
+  date: string;
+  positiveCount: number;
+  evenCount: number;
+  negativeCount: number;
+};
+
 const AttendanceTable = () => {
   const event = useRecoilValue(eventState);
-  if (!event.prospectiveDates) {
-    return <></>;
-  }
-  const attendanceCounts = event.prospectiveDates.map((column, i) => {
-    return {
-      date: column,
-      positiveCounts:
-        event.attendeeVotes !== undefined
-          ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '○').length
-          : 0,
-      evenCounts:
-        event.attendeeVotes !== undefined
-          ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '△').length
-          : 0,
-      negativeCounts:
-        event.attendeeVotes !== undefined
-          ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '×').length
-          : 0,
-    };
-  });
+  const [counts, setCounts] = useState<Count[]>([]);
+  const [colours, setColours] = useState<string[]>([]);
+
+  useEffect(() => {
+    const attendanceCounts = event.prospectiveDates.map((column, i) => {
+      return {
+        date: column,
+        positiveCount:
+          event.attendeeVotes !== undefined
+            ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '○').length
+            : 0,
+        evenCount:
+          event.attendeeVotes !== undefined
+            ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '△').length
+            : 0,
+        negativeCount:
+          event.attendeeVotes !== undefined
+            ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '×').length
+            : 0,
+      };
+    });
+    const scores = attendanceCounts.map((count) => {
+      return count.positiveCount * 3 + count.evenCount * 2;
+    });
+
+    let index = 0;
+    let value = -Infinity;
+    for (let i = 0, l = scores.length; i < l; i++) {
+      if (value < scores[i]) {
+        value = scores[i];
+        index = i;
+      }
+    }
+
+    const evaluations = scores.map((score) => {
+      return score === index ? 'green.400' : 'black';
+    });
+    setCounts(attendanceCounts);
+    setColours(evaluations);
+  }, [event.attendeeVotes, event.prospectiveDates]);
 
   return (
     <>
@@ -78,19 +105,19 @@ const AttendanceTable = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {attendanceCounts.map((count, i) => (
-            <Tr key={i}>
+          {counts.map((count, i) => (
+            <Tr key={i} color={colours[i]}>
               <Td>
                 <Center>{event.prospectiveDates[i]}</Center>
               </Td>
               <Td>
-                <Center>{count.positiveCounts}</Center>
+                <Center>{count.positiveCount}</Center>
               </Td>
               <Td>
-                <Center>{count.evenCounts}</Center>
+                <Center>{count.evenCount}</Center>
               </Td>
               <Td>
-                <Center>{count.negativeCounts}</Center>
+                <Center>{count.negativeCount}</Center>
               </Td>
               {event.attendeeVotes !== undefined &&
                 event.attendeeVotes.map((atendee, index) => (
