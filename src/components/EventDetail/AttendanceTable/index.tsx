@@ -56,18 +56,9 @@ const AttendanceTable = () => {
     const scores = attendanceCounts.map((count) => {
       return count.positiveCount * 3 + count.evenCount * 2;
     });
-
-    let index = 0;
-    let value = -Infinity;
-    for (let i = 0, l = scores.length; i < l; i++) {
-      if (value < scores[i]) {
-        value = scores[i];
-        index = i;
-      }
-    }
-
+    const max = Math.max(...scores);
     const evaluations = scores.map((score) => {
-      return score === index ? 'green.400' : 'black';
+      return score === max ? 'green.400' : 'black';
     });
     setCounts(attendanceCounts);
     setColours(evaluations);
