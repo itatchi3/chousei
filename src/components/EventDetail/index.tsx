@@ -40,6 +40,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   const [attendeeVotes, setAttendeeVotes] = useRecoilState(attendeeVotesState);
   const [attendeeComment, setAttendeeComment] = useRecoilState(attendeeCommentState);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loading, setLoading] = useState(false);
 
   const initialRef = useRef(null);
 
@@ -51,14 +52,13 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   };
 
   const registerAttendeeComment = async () => {
-    //出欠情報登録機能
+    setLoading(true);
     const attendeeData = {
       userId: attendeeComment.userId,
       name: attendeeComment.name,
       profileImg: attendeeComment.profileImg,
       comment: attendeeComment.comment,
     };
-    // 出欠情報をRealTimeDatabaseに登録
     await database
       .ref(`events/${event.eventId}/attendeeComment/${attendeeData.userId}`)
       .set(attendeeData);
@@ -159,6 +159,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
 
   //時間候補入力へ移動
   const answerDates = () => {
+    setLoading(true);
     router.push({
       pathname: `/event/${eventId}/input`,
     });
@@ -177,9 +178,23 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       </Box>
       <VStack justify="center" p="6">
         {!answerVotesFlag ? (
+          loading ? (
+            <Box>
+              <Button w="44" isLoading onClick={() => answerDates()}>
+                予定を入力する
+              </Button>
+            </Box>
+          ) : (
+            <Box>
+              <Button w="44" onClick={() => answerDates()}>
+                予定を入力する
+              </Button>
+            </Box>
+          )
+        ) : loading ? (
           <Box>
-            <Button w="44" onClick={() => answerDates()}>
-              予定を入力する
+            <Button w="44" isLoading onClick={() => answerDates()}>
+              予定を修正する
             </Button>
           </Box>
         ) : (
@@ -217,9 +232,15 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={registerAttendeeComment}>
-                保存
-              </Button>
+              {loading ? (
+                <Button colorScheme="blue" mr={3} isLoading>
+                  保存
+                </Button>
+              ) : (
+                <Button colorScheme="blue" mr={3} onClick={registerAttendeeComment}>
+                  保存
+                </Button>
+              )}
               <Button onClick={onClose}>閉じる</Button>
             </ModalFooter>
           </ModalContent>

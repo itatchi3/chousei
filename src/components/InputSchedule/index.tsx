@@ -24,6 +24,7 @@ export const InputSchedule = () => {
   const [redVarient, setRedVarient] = useState<'solid' | 'outline'>('solid');
   const [greenVarient, setGreenVarient] = useState<'solid' | 'outline'>('outline');
   const [blueVarient, setBlueVarient] = useState<'solid' | 'outline'>('outline');
+  const [loading, setLoading] = useState(false);
 
   const event = useRecoilValue(eventState);
   const attendee = useRecoilValue(attendeeVotesState);
@@ -183,7 +184,11 @@ export const InputSchedule = () => {
             </Button>
           </HStack>
           <Box pb="4">
-            <Button onClick={() => registerAttendances()}>出欠を回答する</Button>
+            {loading ? (
+              <Button isLoading>出欠を回答する</Button>
+            ) : (
+              <Button onClick={() => registerAttendances()}>出欠を回答する</Button>
+            )}
           </Box>
         </VStack>
       </Center>
