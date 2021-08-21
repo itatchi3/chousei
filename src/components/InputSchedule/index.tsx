@@ -130,7 +130,7 @@ export const InputSchedule = () => {
 
   return (
     <Box p="3">
-      <Box overflowX="scroll">
+      <Box overflowX="scroll" pb="36">
         <Table variant="unstyled">
           <Thead>
             <Tr>
