@@ -49,6 +49,10 @@ const AttendanceTable = () => {
             : 0,
       };
     });
+    setCounts(attendanceCounts);
+    if (event.attendeeVotes === undefined) {
+      return;
+    }
     const scores = attendanceCounts.map((count) => {
       return count.positiveCount * 3 + count.evenCount * 2;
     });
