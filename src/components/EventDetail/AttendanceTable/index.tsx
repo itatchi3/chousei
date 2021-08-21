@@ -151,7 +151,9 @@ const AttendanceTable = () => {
                         </PopoverContent>
                       </Popover>
                     </Td>
-                    <Td align="center">{atendee.comment}</Td>
+                    <Td align="center" pl="0">
+                      {atendee.comment}
+                    </Td>
                   </Tr>
                 ),
             )}
