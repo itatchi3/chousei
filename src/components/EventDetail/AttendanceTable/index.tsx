@@ -1,7 +1,5 @@
-// import "../assets/styles/AttendanceTable.css";
 import { useState, useEffect } from 'react';
-// import Table from '@material-ui/core/Table';
-import { AttendeeVotesType, eventState } from 'src/atoms/eventState';
+import { eventState } from 'src/atoms/eventState';
 import { Avatar } from '@chakra-ui/react';
 import {
   Table,
@@ -16,6 +14,7 @@ import {
   PopoverContent,
   PopoverBody,
   PopoverArrow,
+  Box,
 } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 
@@ -66,64 +65,67 @@ const AttendanceTable = () => {
 
   return (
     <>
-      <Table size="sm">
-        <Thead>
-          <Tr>
-            <Th>
-              <Center>日程</Center>
-            </Th>
-            <Th>
-              <Center>○</Center>
-            </Th>
-            <Th>
-              <Center>△</Center>
-            </Th>
-            <Th>
-              <Center>×</Center>
-            </Th>
-            {event.attendeeVotes !== undefined &&
-              event.attendeeVotes.map((atendee, i) => (
-                <Th key={i} p="2">
-                  <Popover placement="top">
-                    <PopoverTrigger>
-                      <Center>
-                        <Avatar src={atendee.profileImg} size="sm" />
-                      </Center>
-                    </PopoverTrigger>
-                    <PopoverContent w="auto">
-                      <PopoverArrow />
-                      <PopoverBody>{atendee.name}</PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Th>
-              ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {counts.map((count, i) => (
-            <Tr key={i} bg={colours[i]}>
-              <Td>
-                <Center>{event.prospectiveDates[i]}</Center>
-              </Td>
-              <Td>
-                <Center>{count.positiveCount}</Center>
-              </Td>
-              <Td>
-                <Center>{count.evenCount}</Center>
-              </Td>
-              <Td>
-                <Center>{count.negativeCount}</Center>
-              </Td>
+      <Box overflowX="scroll">
+        <Table size="sm" borderWidth="2px">
+          <Thead>
+            <Tr>
+              <Th fontSize="md" w="100px" px="0">
+                <Center w="100px">日程</Center>
+              </Th>
+              <Th fontSize="md">
+                <Center>○</Center>
+              </Th>
+              <Th fontSize="md">
+                <Center>△</Center>
+              </Th>
+              <Th fontSize="md">
+                <Center>×</Center>
+              </Th>
               {event.attendeeVotes !== undefined &&
-                event.attendeeVotes.map((atendee, index) => (
-                  <Td key={index}>
-                    <Center>{atendee.votes[i]}</Center>
-                  </Td>
+                event.attendeeVotes.map((atendee, i) => (
+                  <Th key={i} p="2">
+                    <Popover placement="top">
+                      <PopoverTrigger>
+                        <Center>
+                          <Avatar src={atendee.profileImg} size="sm" />
+                        </Center>
+                      </PopoverTrigger>
+                      <PopoverContent w="auto">
+                        <PopoverArrow />
+                        <PopoverBody>{atendee.name}</PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  </Th>
                 ))}
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {counts.map((count, i) => (
+              <Tr key={i} bg={colours[i]}>
+                <Td pl="20px" pr="2px">
+                  <Box>{event.prospectiveDates[i]}</Box>
+                </Td>
+                <Td>
+                  <Center>{count.positiveCount}</Center>
+                </Td>
+                <Td>
+                  <Center>{count.evenCount}</Center>
+                </Td>
+                <Td>
+                  <Center>{count.negativeCount}</Center>
+                </Td>
+                {event.attendeeVotes !== undefined &&
+                  event.attendeeVotes.map((atendee, index) => (
+                    <Td key={index}>
+                      <Center>{atendee.votes[i]}</Center>
+                    </Td>
+                  ))}
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
+
       <Table>
         <Tr>
           <Th size="small">コメント</Th>

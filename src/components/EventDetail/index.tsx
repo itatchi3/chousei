@@ -1,6 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import Grid from '@material-ui/core/Grid';
-// import Button from '@material-ui/core/Button';
 import { database } from 'src/utils/firebase';
 import AttendanceTable from 'src/components/EventDetail/AttendanceTable';
 import { attendeeVotesObjectToArray, attendeeCommentObjectToArray } from 'src/utils/DataConvert';
@@ -20,13 +18,12 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
   useDisclosure,
   Button,
-  FormControl,
-  FormLabel,
-  Input,
   Textarea,
+  Box,
+  Heading,
+  VStack,
 } from '@chakra-ui/react';
 
 type Props = {
@@ -168,58 +165,45 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   };
 
   return (
-    <Grid id="event" container alignItems="center" xs={12} justify="center" spacing={3}>
-      <Grid container item xs={12} direction="column" justify="center" alignItems="flex-start">
-        <Grid item className="guide-title">
-          {event.name}
-        </Grid>
-        <Grid item className="guide-message">
-          {event.description}
-        </Grid>
-      </Grid>
-      <Grid container item spacing={3} direction="column" justify="center" alignItems="center">
-        <Grid item container>
+    <Box p="3">
+      <Box>
+        <Heading>{event.name}</Heading>
+        {/* <Box p="2">{event.description}</Box> */}
+        <Box p="2">
+          aaaaaaaaaaaああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+        </Box>
+      </Box>
+      <Box>
+        <Box>
           <AttendanceTable />
-        </Grid>
-      </Grid>
-      {/* <Grid container item xs={12} justify="center" alignItems="center" spacing={3}>
-        <Grid container item xs={11} direction="column">
-          <Grid item className="guide-title">
-            出欠を入力してください
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          item
-          xs={10}
-          spacing={1}
-          justify="center"
-          alignItems="center"
-          direction="row"
-        ></Grid>
-      </Grid> */}
-      <Grid container item xs={12} justify="center">
+        </Box>
+      </Box>
+      <VStack justify="center" p="6">
         {!answerVotesFlag ? (
-          <Grid item>
-            <Button onClick={() => answerDates()}>時間候補を入力する</Button>
-          </Grid>
+          <Box>
+            <Button w="44" onClick={() => answerDates()}>
+              予定を入力する
+            </Button>
+          </Box>
         ) : (
-          <Grid item>
-            <Button onClick={() => answerDates()}>解答を修正する</Button>
-          </Grid>
+          <Box>
+            <Button w="44" onClick={() => answerDates()}>
+              予定を修正する
+            </Button>
+          </Box>
         )}
         {!answerCommentFlag ? (
-          <Grid item>
-            <Grid item>
+          <Box>
+            <Box>
               <Button onClick={onOpen}>コメントを入力する</Button>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         ) : (
-          <Grid item>
-            <Grid item>
+          <Box>
+            <Box>
               <Button onClick={onOpen}>コメントを修正する</Button>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         )}
 
         <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} size="xs">
@@ -243,10 +227,12 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <Grid item>
-          <Button onClick={() => sharedScheduleByLine()}>友達へ共有する</Button>
-        </Grid>
-      </Grid>
-    </Grid>
+        <Box pt="4">
+          <Button bg="green.300" onClick={() => sharedScheduleByLine()}>
+            友達へ共有する
+          </Button>
+        </Box>
+      </VStack>
+    </Box>
   );
 };

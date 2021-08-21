@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+// import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
 import { createTheme } from '@material-ui/core/styles';
@@ -34,28 +34,28 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <AuthProvider>
       <Layout>
         <ChakraProvider>
-          <ThemeProvider theme={theme}>
-            <RecoilRoot>
+          {/* <ThemeProvider theme={theme}> */}
+          <RecoilRoot>
+            {/* <Grid
+              container
+              direction="column"
+              justify="space-between"
+              alignItems="center"
+              spacing={3}
+            >
               <Grid
                 container
+                item
+                className="app-content"
                 direction="column"
-                justify="space-between"
                 alignItems="center"
-                spacing={3}
-              >
-                <Grid
-                  container
-                  item
-                  className="app-content"
-                  direction="column"
-                  alignItems="center"
-                  justify="flex-start"
-                >
-                  <Component {...pageProps} />
-                </Grid>
-              </Grid>
-            </RecoilRoot>
-          </ThemeProvider>
+                justify="flex-start"
+              > */}
+            <Component {...pageProps} />
+            {/* </Grid>
+            </Grid> */}
+          </RecoilRoot>
+          {/* </ThemeProvider> */}
         </ChakraProvider>
       </Layout>
     </AuthProvider>
