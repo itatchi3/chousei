@@ -1,52 +1,30 @@
 import React, { useState } from 'react';
-import { StickyTable, Row, Cell } from 'react-sticky-table';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { green, red, blue } from '@material-ui/core/colors';
 import { useRecoilValue } from 'recoil';
 import { eventState, attendeeVotesState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 import { database } from 'src/utils/firebase';
-// import { Button } from '@chakra-ui/react';
-
-// ボタンの赤色
-const redtheme = createTheme({
-  palette: {
-    primary: {
-      main: red[500],
-    },
-  },
-});
-
-// ボタンの緑色
-const greentheme = createTheme({
-  palette: {
-    primary: {
-      main: green[500],
-    },
-  },
-});
-
-// ボタンの青色
-const bluetheme = createTheme({
-  palette: {
-    primary: {
-      main: blue[500],
-    },
-  },
-});
+import {
+  Button,
+  Box,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  HStack,
+  VStack,
+  Center,
+} from '@chakra-ui/react';
 
 export const InputSchedule = () => {
   //ボタンの色
   const [color, setColor] = useState('Red');
   //入力ボタンが選択されているかどうか
-  const [redVarient, setRedVarient] = useState<'contained' | 'outlined'>('contained');
-  const [greenVarient, setGreenVarient] = useState<'contained' | 'outlined'>('outlined');
-  const [blueVarient, setBlueVarient] = useState<'contained' | 'outlined'>('outlined');
-  // const [scrollCheck, setScrollCheck] = useState(false);
+  const [redVarient, setRedVarient] = useState<'solid' | 'outline'>('solid');
+  const [greenVarient, setGreenVarient] = useState<'solid' | 'outline'>('outline');
+  const [blueVarient, setBlueVarient] = useState<'solid' | 'outline'>('outline');
 
-  //解答
   const event = useRecoilValue(eventState);
   const attendee = useRecoilValue(attendeeVotesState);
 
@@ -66,39 +44,18 @@ export const InputSchedule = () => {
         }),
   );
 
+  const [buttonColors, setButtonColors] = useState([]);
+
   const router = useRouter();
-
-  // // スクロール関連メソッド
-  // //アロー関数だとバグる
-  // var scrollControl = function (event) {
-  //   event.preventDefault();
-  // };
-
-  // // スクロール禁止
-  // const noScroll = () => {
-  //   setScrollCheck(false);
-  //   // スマホでのタッチ操作でのスクロール禁止
-  //   document.addEventListener("touchmove", scrollControl, { passive: false });
-  //   console.log(scrollCheck);
-  // };
-  // // スクロール禁止解除
-  // const returnScroll = () => {
-  //   setScrollCheck(true);
-  //   // スマホでのタッチ操作でのスクロール禁止解除
-  //   document.removeEventListener("touchmove", scrollControl, {
-  //     passive: false,
-  //   });
-  //   console.log(scrollCheck);
-  // };
 
   const checkColor = (vote: '○' | '△' | '×') => {
     switch (vote) {
       case '○':
-        return redtheme;
+        return 'red';
       case '△':
-        return greentheme;
+        return 'green';
       case '×':
-        return bluetheme;
+        return 'blue';
     }
   };
 
@@ -112,50 +69,29 @@ export const InputSchedule = () => {
   };
 
   const handleClickRed = () => {
-    if (color === 'Red') {
-      // setRedVarient("outlined");
-      // setGreenVarient("outlined");
-      // setBlueVarient("outlined");
-      // setColor("");
-      // returnScroll();
-    } else {
-      setRedVarient('contained');
-      setGreenVarient('outlined');
-      setBlueVarient('outlined');
+    if (color !== 'Red') {
+      setRedVarient('solid');
+      setGreenVarient('outline');
+      setBlueVarient('outline');
       setColor('Red');
-      // noScroll();
     }
   };
 
   const handleClickGreen = () => {
-    if (color === 'Green') {
-      // setRedVarient("outlined");
-      // setGreenVarient("outlined");
-      // setBlueVarient("outlined");
-      // setColor("");
-      // returnScroll();
-    } else {
-      setRedVarient('outlined');
-      setGreenVarient('contained');
-      setBlueVarient('outlined');
+    if (color !== 'Green') {
+      setRedVarient('outline');
+      setGreenVarient('solid');
+      setBlueVarient('outline');
       setColor('Green');
-      // noScroll();
     }
   };
 
   const handleClickBlue = () => {
-    if (color === 'Blue') {
-      // setRedVarient("outlined");
-      // setGreenVarient("outlined");
-      // setBlueVarient("outlined");
-      // setColor("");
-      // returnScroll();
-    } else {
-      setRedVarient('outlined');
-      setGreenVarient('outlined');
-      setBlueVarient('contained');
+    if (color !== 'Blue') {
+      setRedVarient('outline');
+      setGreenVarient('outline');
+      setBlueVarient('solid');
       setColor('Blue');
-      // noScroll();
     }
   };
 
@@ -193,100 +129,65 @@ export const InputSchedule = () => {
   };
 
   return (
-    // <div className={scrollCheck ? classes.scrollOn : classes.scrollOff}>
-    <>
-      <Grid
-        container
-        item
-        direction="column"
-        justify="center"
-        alignItems="center"
-        xs={12}
-        spacing={4}
-      >
-        <Grid
-          container
-          item
-          style={{ width: '375px', height: '480px' }}
-          // className={classes.scrollOff}
-        >
-          <StickyTable stickyHeaderCount={1} borderWidth={0} leftStickyColumnCount={0}>
-            <Row>
+    <Box p="3">
+      <Box overflowX="scroll">
+        <Table variant="unstyled">
+          <Thead>
+            <Tr>
               {event.dates.map((date) => (
-                <Cell key={date}>{date}</Cell>
+                <Th key={date}>
+                  <Center>{date}</Center>
+                </Th>
               ))}
-            </Row>
-            {event.times.map((time, i) => (
-              <Row key={time}>
-                {event.dates.map((date, j) => (
-                  <Cell key={date}>
-                    <ThemeProvider
-                      theme={checkColor(possibleDates[j * event.times.length + i].vote)}
+            </Tr>
+          </Thead>
+          {event.times.map((time, i) => (
+            <Tr key={time}>
+              {event.dates.map((date, j) => (
+                <Th key={date} px="3" py="2">
+                  <Center>
+                    <Button
+                      colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
+                      onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
                     >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
-                        // onTouchEnd={() => console.log("Button touched.")}
-                        // onTouchStart={() => console.log("Button touche.")}
-                      >
-                        {time}
-                      </Button>
-                    </ThemeProvider>
-                  </Cell>
-                ))}
-              </Row>
-            ))}
-          </StickyTable>
-        </Grid>
-
-        <Grid
-          container
-          item
-          direction="column"
-          justify="center"
-          alignItems="center"
-          xs={12}
-          spacing={5}
-        ></Grid>
-        <Grid
-          container
-          item
-          direction="row"
-          justify="center"
-          alignItems="center"
-          xs={12}
-          spacing={5}
-        >
-          <Grid item xs={4}>
-            <ThemeProvider theme={redtheme}>
-              <Button variant={redVarient} color="primary" onClick={() => handleClickRed()}>
-                ○
-              </Button>
-            </ThemeProvider>
-          </Grid>
-          <Grid item xs={4}>
-            <ThemeProvider theme={greentheme}>
-              <Button variant={greenVarient} color="primary" onClick={() => handleClickGreen()}>
-                △
-              </Button>
-            </ThemeProvider>
-          </Grid>
-          <Grid item xs={4}>
-            <ThemeProvider theme={bluetheme}>
-              <Button variant={blueVarient} color="primary" onClick={() => handleClickBlue()}>
-                ×
-              </Button>
-            </ThemeProvider>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={() => registerAttendances()}>
-            出欠を回答する
-          </Button>
-        </Grid>
-      </Grid>
-    </>
+                      {time}
+                    </Button>
+                  </Center>
+                </Th>
+              ))}
+            </Tr>
+          ))}
+        </Table>
+      </Box>
+      <Center>
+        <VStack pos="fixed" bottom="0" bg="white" w="100%">
+          <HStack p="4" spacing={4}>
+            <Button variant={redVarient} colorScheme="red" w="24" onClick={() => handleClickRed()}>
+              ○
+            </Button>
+            <Button
+              variant={greenVarient}
+              colorScheme="green"
+              w="24"
+              onClick={() => handleClickGreen()}
+            >
+              △
+            </Button>
+            <Button
+              variant={blueVarient}
+              colorScheme="blue"
+              w="24"
+              onClick={() => handleClickBlue()}
+            >
+              ×
+            </Button>
+          </HStack>
+          <Box pb="4">
+            <Button onClick={() => registerAttendances()}>出欠を回答する</Button>
+          </Box>
+        </VStack>
+      </Center>
+    </Box>
   );
 };
 export default InputSchedule;

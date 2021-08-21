@@ -1,4 +1,4 @@
-import { firebaseApp } from 'src/config/firebase';
+import { database } from 'src/utils/firebase';
 import { EventType } from 'src/atoms/eventState';
 import { GetServerSideProps } from 'next';
 import { EventDetail } from 'src/components/EventDetail';
@@ -14,8 +14,7 @@ const Event = (props: Props) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const eventId = context.query.id;
-  const firebaseDb = firebaseApp.database();
-  const ref = firebaseDb.ref(`events/${eventId}`);
+  const ref = database.ref(`events/${eventId}`);
 
   return ref.once('value').then((snapshot) => {
     const eventData = snapshot.val();
