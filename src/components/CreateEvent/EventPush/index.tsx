@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { firebaseApp } from 'src/config/firebase';
+import { database } from 'src/utils/firebase';
 import { DateObject } from 'react-multi-date-picker';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -8,7 +8,6 @@ import { useRecoilValue } from 'recoil';
 import { editingEventState } from 'src/atoms/eventState';
 
 export const EventPush = () => {
-  const firebaseDb = firebaseApp.database();
   const event = useRecoilValue(editingEventState);
   const { liff } = useAuth();
   const [eventNameValidation, setEventNameValidation] = useState(true);
@@ -71,7 +70,7 @@ export const EventPush = () => {
       //Realtime Databaseに整形した値を書き込む
       //LINEに出欠表のURLを送信する
 
-      const eventPush = await firebaseDb.ref('events').push(eventData);
+      const eventPush = await database.ref('events').push(eventData);
       const eventId = eventPush.key;
       await liff!
         .sendMessages([
