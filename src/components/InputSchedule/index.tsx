@@ -4,12 +4,11 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green, red, blue } from '@material-ui/core/colors';
-import { firebaseApp } from 'src/config/firebase';
 import { useRecoilValue } from 'recoil';
 import { eventState, attendeeVotesState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
-
-const firebaseDb = firebaseApp.database();
+import { database } from 'src/utils/firebase';
+// import { Button } from '@chakra-ui/react';
 
 // ボタンの赤色
 const redtheme = createTheme({
@@ -186,7 +185,7 @@ export const InputSchedule = () => {
       profileImg: attendee.profileImg,
     };
     // 出欠情報をRealTimeDatabaseに登録
-    await firebaseDb
+    await database
       .ref(`events/${event.eventId}/attendeeVotes/${attendeeData.userId}`)
       .set(attendeeData);
 
