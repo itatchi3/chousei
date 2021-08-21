@@ -58,7 +58,7 @@ const AttendanceTable = () => {
     });
     const max = Math.max(...scores);
     const evaluations = scores.map((score) => {
-      return score === max ? 'green.400' : 'black';
+      return score === max ? 'green.100' : 'white';
     });
     setCounts(attendanceCounts);
     setColours(evaluations);
@@ -101,7 +101,7 @@ const AttendanceTable = () => {
         </Thead>
         <Tbody>
           {counts.map((count, i) => (
-            <Tr key={i} color={colours[i]}>
+            <Tr key={i} bg={colours[i]}>
               <Td>
                 <Center>{event.prospectiveDates[i]}</Center>
               </Td>
