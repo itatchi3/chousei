@@ -59,7 +59,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       userId: attendeeComment.userId,
       name: attendeeComment.name,
       profileImg: attendeeComment.profileImg,
-      Comment: attendeeComment.comment,
+      comment: attendeeComment.comment,
     };
     // 出欠情報をRealTimeDatabaseに登録
     await database
@@ -94,9 +94,15 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         userId: profile.userId,
         profileImg: profileImg,
       }));
+      setAttendeeComment((state) => ({
+        ...state,
+        name: profile.displayName,
+        userId: profile.userId,
+        profileImg: profileImg,
+      }));
     };
     getProfile();
-  }, [eventData, setEvent, eventId, liff, setAttendeeVotes]);
+  }, [eventData, setEvent, eventId, liff, setAttendeeVotes, setAttendeeComment]);
 
   useEffect(() => {
     if (!event.attendeeVotes.length) {
@@ -122,7 +128,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         setAnswerCommentFlag(true);
         setAttendeeComment((state) => ({
           ...state,
-          votes: answeredAttendee.comment,
+          comment: answeredAttendee.comment,
         }));
       }
     });
