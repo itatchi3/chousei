@@ -181,26 +181,44 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         {!answerVotesFlag ? (
           scheduleLoading ? (
             <Box>
-              <Button w="44" isLoading onClick={() => answerDates()}>
+              <Button
+                sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                w="44"
+                isLoading
+                onClick={() => answerDates()}
+              >
                 予定を入力する
               </Button>
             </Box>
           ) : (
             <Box>
-              <Button w="44" onClick={() => answerDates()}>
+              <Button
+                sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                w="44"
+                onClick={() => answerDates()}
+              >
                 予定を入力する
               </Button>
             </Box>
           )
         ) : scheduleLoading ? (
           <Box>
-            <Button w="44" isLoading onClick={() => answerDates()}>
+            <Button
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              w="44"
+              isLoading
+              onClick={() => answerDates()}
+            >
               予定を修正する
             </Button>
           </Box>
         ) : (
           <Box>
-            <Button w="44" onClick={() => answerDates()}>
+            <Button
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              w="44"
+              onClick={() => answerDates()}
+            >
               予定を修正する
             </Button>
           </Box>
@@ -208,13 +226,17 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         {!answerCommentFlag ? (
           <Box>
             <Box>
-              <Button onClick={onOpen}>コメントを入力する</Button>
+              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} onClick={onOpen}>
+                コメントを入力する
+              </Button>
             </Box>
           </Box>
         ) : (
           <Box>
             <Box>
-              <Button onClick={onOpen}>コメントを修正する</Button>
+              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} onClick={onOpen}>
+                コメントを修正する
+              </Button>
             </Box>
           </Box>
         )}
@@ -234,20 +256,36 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
 
             <ModalFooter>
               {commentLoading ? (
-                <Button colorScheme="blue" mr={3} isLoading>
+                <Button
+                  sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                  colorScheme="blue"
+                  mr={3}
+                  isLoading
+                >
                   保存
                 </Button>
               ) : (
-                <Button colorScheme="blue" mr={3} onClick={registerAttendeeComment}>
+                <Button
+                  sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={registerAttendeeComment}
+                >
                   保存
                 </Button>
               )}
-              <Button onClick={onClose}>閉じる</Button>
+              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} onClick={onClose}>
+                閉じる
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
         <Box pt="4">
-          <Button bg="green.300" onClick={() => sharedScheduleByLine()}>
+          <Button
+            sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+            bg="green.300"
+            onClick={() => sharedScheduleByLine()}
+          >
             友達へ共有する
           </Button>
         </Box>

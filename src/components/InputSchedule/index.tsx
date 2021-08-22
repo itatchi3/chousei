@@ -148,6 +148,7 @@ export const InputSchedule = () => {
                 <Th key={date} px="3" py="2">
                   <Center>
                     <Button
+                      sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
                       colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
                       onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
                     >
@@ -163,10 +164,17 @@ export const InputSchedule = () => {
       <Center>
         <VStack pos="fixed" bottom="0" bg="white" w="100%">
           <HStack p="4" spacing={4}>
-            <Button variant={redVarient} colorScheme="red" w="24" onClick={() => handleClickRed()}>
+            <Button
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              variant={redVarient}
+              colorScheme="red"
+              w="24"
+              onClick={() => handleClickRed()}
+            >
               ○
             </Button>
             <Button
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
               variant={greenVarient}
               colorScheme="green"
               w="24"
@@ -175,6 +183,7 @@ export const InputSchedule = () => {
               △
             </Button>
             <Button
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
               variant={blueVarient}
               colorScheme="blue"
               w="24"
@@ -185,9 +194,16 @@ export const InputSchedule = () => {
           </HStack>
           <Box pb="4">
             {loading ? (
-              <Button isLoading>出欠を回答する</Button>
+              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} isLoading>
+                出欠を回答する
+              </Button>
             ) : (
-              <Button onClick={() => registerAttendances()}>出欠を回答する</Button>
+              <Button
+                sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                onClick={() => registerAttendances()}
+              >
+                出欠を回答する
+              </Button>
             )}
           </Box>
         </VStack>
