@@ -1,4 +1,3 @@
-import Grid from '@material-ui/core/Grid';
 import { EventPush } from 'src/components/CreateEvent/EventPush';
 import { InputTimeInterval } from 'src/components/CreateEvent/InputTimeInterval';
 import { InputTimeWidth } from 'src/components/CreateEvent/InputTimeWidth';

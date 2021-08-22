@@ -1,8 +1,17 @@
-import { TextField } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
 import { useRecoilState } from 'recoil';
 import { editingEventState } from 'src/atoms/eventState';
+import {
+  Box,
+  Center,
+  Circle,
+  Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+  Text,
+  Textarea,
+} from '@chakra-ui/react';
 
 export const InputEventOverview = () => {
   const [event, setEvent] = useRecoilState(editingEventState);
@@ -12,35 +21,40 @@ export const InputEventOverview = () => {
       eventName: evt.target.value,
     }));
   };
-  const changeDescription = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const changeDescription = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEvent((state) => ({
       ...state,
       description: evt.target.value,
     }));
   };
   return (
-    <Grid container item xs={11} justify="flex-start">
-      <div className="guide-title">
-        <Chip color="primary" label="1" className="guide-title__chip" />
-        イベント概要を入力
-      </div>
-      <TextField
-        placeholder="イベント名"
-        onChange={changeEventname}
-        value={event.eventName}
-        fullWidth={true}
-        variant="outlined"
-      />
-      <TextField
-        placeholder="説明"
-        onChange={changeDescription}
-        value={event.description}
-        margin="normal"
-        multiline
-        rows={7}
-        fullWidth={true}
-        variant="outlined"
-      />
-    </Grid>
+    <>
+      <Flex align="center">
+        <Circle size="30px" bg="green.500" color="white" fontWeight="bold">
+          1
+        </Circle>
+        <Text fontSize="lg" fontWeight="bold" pl="4">
+          イベント概要を入力
+        </Text>
+      </Flex>
+      <Box p="3">
+        <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg" isRequired>
+          <FormLabel fontWeight="bold" fontSize="sm">
+            イベント名
+          </FormLabel>
+          <Input onChange={changeEventname} value={event.eventName} />
+          <FormHelperText fontSize="xs">ミーティング、練習日程、シフト調整など</FormHelperText>
+        </FormControl>
+      </Box>
+      <Box px="3">
+        <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg">
+          <FormLabel fontWeight="bold" fontSize="sm">
+            補足・備考
+          </FormLabel>
+          <Textarea onChange={changeDescription} value={event.description} rows={4} />
+          <FormHelperText fontSize="xs">〆切は○日など</FormHelperText>
+        </FormControl>
+      </Box>
+    </>
   );
 };
