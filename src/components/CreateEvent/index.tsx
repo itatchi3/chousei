@@ -4,24 +4,16 @@ import { InputTimeInterval } from 'src/components/CreateEvent/InputTimeInterval'
 import { InputTimeWidth } from 'src/components/CreateEvent/InputTimeWidth';
 import { InputDates } from 'src/components/CreateEvent/InputDates';
 import { InputEventOverview } from 'src/components/CreateEvent/InputOverview';
+import { Box } from '@chakra-ui/react';
 
 export const CreateEvent = () => {
   return (
-    <Grid
-      id="event-entry"
-      container
-      item
-      direction="column"
-      justify="space-between"
-      alignItems="center"
-      xs={12}
-      spacing={3}
-    >
+    <Box p="3">
       <InputEventOverview />
       <InputDates />
       <InputTimeWidth />
       <InputTimeInterval />
       <EventPush />
-    </Grid>
+    </Box>
   );
 };

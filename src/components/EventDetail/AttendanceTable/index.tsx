@@ -15,6 +15,7 @@ import {
   PopoverBody,
   PopoverArrow,
   Box,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 
@@ -84,17 +85,11 @@ const AttendanceTable = () => {
               {event.attendeeVotes !== undefined &&
                 event.attendeeVotes.map((atendee, i) => (
                   <Th key={i} p="2">
-                    <Popover placement="top">
-                      <PopoverTrigger>
-                        <Center>
-                          <Avatar src={atendee.profileImg} size="sm" />
-                        </Center>
-                      </PopoverTrigger>
-                      <PopoverContent w="auto">
-                        <PopoverArrow />
-                        <PopoverBody>{atendee.name}</PopoverBody>
-                      </PopoverContent>
-                    </Popover>
+                    <Tooltip label={atendee.name} placement="top-start">
+                      <Center>
+                        <Avatar src={atendee.profileImg} size="sm" />
+                      </Center>
+                    </Tooltip>
                   </Th>
                 ))}
             </Tr>
@@ -139,17 +134,11 @@ const AttendanceTable = () => {
                 atendee.comment !== '' && (
                   <Tr key={i}>
                     <Td key={i} p="2" w="24">
-                      <Popover placement="top">
-                        <PopoverTrigger>
-                          <Center>
-                            <Avatar src={atendee.profileImg} size="sm" />
-                          </Center>
-                        </PopoverTrigger>
-                        <PopoverContent w="auto">
-                          <PopoverArrow />
-                          <PopoverBody>{atendee.name}</PopoverBody>
-                        </PopoverContent>
-                      </Popover>
+                      <Tooltip label={atendee.name} placement="top-start">
+                        <Center>
+                          <Avatar src={atendee.profileImg} size="sm" />
+                        </Center>
+                      </Tooltip>
                     </Td>
                     <Td align="center" pl="0">
                       {atendee.comment}
