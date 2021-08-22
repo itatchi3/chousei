@@ -183,7 +183,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             <Box>
               <Button
                 sx={{
-                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
                 }}
                 w="44"
@@ -197,7 +197,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             <Box>
               <Button
                 sx={{
-                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
                 }}
                 w="44"
@@ -210,7 +210,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         ) : scheduleLoading ? (
           <Box>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               w="44"
               isLoading
               onClick={() => answerDates()}
@@ -221,7 +221,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         ) : (
           <Box>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               w="44"
               onClick={() => answerDates()}
             >
@@ -234,7 +234,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             <Box>
               <Button
                 sx={{
-                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
                 }}
                 onClick={onOpen}
@@ -248,7 +248,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             <Box>
               <Button
                 sx={{
-                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
                 }}
                 onClick={onOpen}
@@ -276,7 +276,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
               {commentLoading ? (
                 <Button
                   sx={{
-                    '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                     _focus: { boxShadow: 'none' },
                   }}
                   colorScheme="blue"
@@ -288,7 +288,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
               ) : (
                 <Button
                   sx={{
-                    '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                     _focus: { boxShadow: 'none' },
                   }}
                   colorScheme="blue"
@@ -300,7 +300,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
               )}
               <Button
                 sx={{
-                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
                 }}
                 onClick={onClose}
@@ -312,7 +312,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         </Modal>
         <Box pt="4">
           <Button
-            sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+            sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
             bg="green.300"
             onClick={() => sharedScheduleByLine()}
           >

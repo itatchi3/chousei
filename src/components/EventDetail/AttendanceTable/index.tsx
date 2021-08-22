@@ -130,9 +130,11 @@ const AttendanceTable = () => {
       </Box>
 
       <Table>
-        <Tr>
-          <Th size="small">コメント</Th>
-        </Tr>
+        <Tbody>
+          <Tr>
+            <Th size="small">コメント</Th>
+          </Tr>
+        </Tbody>
       </Table>
       <Table>
         <Tbody>

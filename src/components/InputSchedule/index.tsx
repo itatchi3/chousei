@@ -142,33 +142,35 @@ export const InputSchedule = () => {
               ))}
             </Tr>
           </Thead>
-          {event.times.map((time, i) => (
-            <Tr key={time}>
-              {event.dates.map((date, j) => (
-                <Th key={date} px="3" py="2">
-                  <Center>
-                    <Button
-                      sx={{
-                        '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
-                        _focus: { boxShadow: 'none' },
-                      }}
-                      colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
-                      onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
-                    >
-                      {time}
-                    </Button>
-                  </Center>
-                </Th>
-              ))}
-            </Tr>
-          ))}
+          <Tbody>
+            {event.times.map((time, i) => (
+              <Tr key={time}>
+                {event.dates.map((date, j) => (
+                  <Th key={date} px="3" py="2">
+                    <Center>
+                      <Button
+                        sx={{
+                          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                          _focus: { boxShadow: 'none' },
+                        }}
+                        colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
+                        onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
+                      >
+                        {time}
+                      </Button>
+                    </Center>
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
         </Table>
       </Box>
       <Center>
         <VStack pos="fixed" bottom="0" bg="white" w="100%">
           <HStack p="4" spacing={4}>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={redVarient}
               colorScheme="red"
               w="24"
@@ -177,7 +179,7 @@ export const InputSchedule = () => {
               ○
             </Button>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={greenVarient}
               colorScheme="green"
               w="24"
@@ -186,7 +188,7 @@ export const InputSchedule = () => {
               △
             </Button>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={blueVarient}
               colorScheme="blue"
               w="24"
@@ -199,7 +201,7 @@ export const InputSchedule = () => {
             {loading ? (
               <Button
                 sx={{
-                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
                 }}
                 isLoading
@@ -209,7 +211,7 @@ export const InputSchedule = () => {
             ) : (
               <Button
                 sx={{
-                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
                 }}
                 onClick={() => registerAttendances()}
