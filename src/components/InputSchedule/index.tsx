@@ -148,7 +148,10 @@ export const InputSchedule = () => {
                 <Th key={date} px="3" py="2">
                   <Center>
                     <Button
-                      sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                      sx={{
+                        '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                        _focus: { boxShadow: 'none' },
+                      }}
                       colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
                       onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
                     >
@@ -165,7 +168,7 @@ export const InputSchedule = () => {
         <VStack pos="fixed" bottom="0" bg="white" w="100%">
           <HStack p="4" spacing={4}>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={redVarient}
               colorScheme="red"
               w="24"
@@ -174,7 +177,7 @@ export const InputSchedule = () => {
               ○
             </Button>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={greenVarient}
               colorScheme="green"
               w="24"
@@ -183,7 +186,7 @@ export const InputSchedule = () => {
               △
             </Button>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={blueVarient}
               colorScheme="blue"
               w="24"
@@ -194,12 +197,21 @@ export const InputSchedule = () => {
           </HStack>
           <Box pb="4">
             {loading ? (
-              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} isLoading>
+              <Button
+                sx={{
+                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
+                isLoading
+              >
                 出欠を回答する
               </Button>
             ) : (
               <Button
-                sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                sx={{
+                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
                 onClick={() => registerAttendances()}
               >
                 出欠を回答する

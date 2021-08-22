@@ -182,7 +182,10 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
           scheduleLoading ? (
             <Box>
               <Button
-                sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                sx={{
+                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
                 w="44"
                 isLoading
                 onClick={() => answerDates()}
@@ -193,7 +196,10 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
           ) : (
             <Box>
               <Button
-                sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                sx={{
+                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
                 w="44"
                 onClick={() => answerDates()}
               >
@@ -204,7 +210,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         ) : scheduleLoading ? (
           <Box>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               w="44"
               isLoading
               onClick={() => answerDates()}
@@ -215,7 +221,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         ) : (
           <Box>
             <Button
-              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               w="44"
               onClick={() => answerDates()}
             >
@@ -226,7 +232,13 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         {!answerCommentFlag ? (
           <Box>
             <Box>
-              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} onClick={onOpen}>
+              <Button
+                sx={{
+                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
+                onClick={onOpen}
+              >
                 コメントを入力する
               </Button>
             </Box>
@@ -234,7 +246,13 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         ) : (
           <Box>
             <Box>
-              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} onClick={onOpen}>
+              <Button
+                sx={{
+                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
+                onClick={onOpen}
+              >
                 コメントを修正する
               </Button>
             </Box>
@@ -257,7 +275,10 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             <ModalFooter>
               {commentLoading ? (
                 <Button
-                  sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                  sx={{
+                    '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                    _focus: { boxShadow: 'none' },
+                  }}
                   colorScheme="blue"
                   mr={3}
                   isLoading
@@ -266,7 +287,10 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
                 </Button>
               ) : (
                 <Button
-                  sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+                  sx={{
+                    '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                    _focus: { boxShadow: 'none' },
+                  }}
                   colorScheme="blue"
                   mr={3}
                   onClick={registerAttendeeComment}
@@ -274,7 +298,13 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
                   保存
                 </Button>
               )}
-              <Button sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }} onClick={onClose}>
+              <Button
+                sx={{
+                  '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
+                onClick={onClose}
+              >
                 閉じる
               </Button>
             </ModalFooter>
@@ -282,7 +312,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         </Modal>
         <Box pt="4">
           <Button
-            sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)' }}
+            sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
             bg="green.300"
             onClick={() => sharedScheduleByLine()}
           >
