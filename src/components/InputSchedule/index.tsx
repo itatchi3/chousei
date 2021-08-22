@@ -146,13 +146,14 @@ export const InputSchedule = () => {
             {event.times.map((time, i) => (
               <Tr key={time}>
                 {event.dates.map((date, j) => (
-                  <Th key={date} px="3" py="2">
+                  <Th key={date} px="2" py="2">
                     <Center>
                       <Button
                         sx={{
                           WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                           _focus: { boxShadow: 'none' },
                         }}
+                        w="70px"
                         colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
                         onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
                       >
