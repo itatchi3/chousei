@@ -90,7 +90,10 @@ const AttendanceTable = () => {
                           <Avatar src={atendee.profileImg} size="sm" />
                         </Center>
                       </PopoverTrigger>
-                      <PopoverContent w="auto" sx={{ _focus: { boxShadow: 'none' } }}>
+                      <PopoverContent
+                        w="auto"
+                        sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
+                      >
                         <PopoverArrow />
                         <PopoverBody>{atendee.name}</PopoverBody>
                       </PopoverContent>
@@ -145,7 +148,10 @@ const AttendanceTable = () => {
                             <Avatar src={atendee.profileImg} size="sm" />
                           </Center>
                         </PopoverTrigger>
-                        <PopoverContent w="auto" sx={{ _focus: { boxShadow: 'none' } }}>
+                        <PopoverContent
+                          w="auto"
+                          sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
+                        >
                           <PopoverArrow />
                           <PopoverBody>{atendee.name}</PopoverBody>
                         </PopoverContent>

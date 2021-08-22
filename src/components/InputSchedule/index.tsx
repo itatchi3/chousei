@@ -150,7 +150,7 @@ export const InputSchedule = () => {
                     <Button
                       sx={{
                         '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
-                        _focus: { boxShadow: 'none', outline: 'none' },
+                        _focus: { boxShadow: 'none' },
                       }}
                       colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
                       onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
@@ -168,10 +168,7 @@ export const InputSchedule = () => {
         <VStack pos="fixed" bottom="0" bg="white" w="100%">
           <HStack p="4" spacing={4}>
             <Button
-              sx={{
-                '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
-                _focus: { boxShadow: 'none', outline: 'none' },
-              }}
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={redVarient}
               colorScheme="red"
               w="24"
@@ -180,10 +177,7 @@ export const InputSchedule = () => {
               ○
             </Button>
             <Button
-              sx={{
-                '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
-                _focus: { boxShadow: 'none', outline: 'none' },
-              }}
+              sx={{ '-webkit-tap-highlight-color': 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={greenVarient}
               colorScheme="green"
               w="24"
@@ -206,7 +200,7 @@ export const InputSchedule = () => {
               <Button
                 sx={{
                   '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none', outline: 'none' },
+                  _focus: { boxShadow: 'none' },
                 }}
                 isLoading
               >
@@ -216,7 +210,7 @@ export const InputSchedule = () => {
               <Button
                 sx={{
                   '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none', outline: 'none' },
+                  _focus: { boxShadow: 'none' },
                 }}
                 onClick={() => registerAttendances()}
               >
