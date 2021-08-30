@@ -10,8 +10,6 @@ export const CreateEvent = () => {
     <Box p="3">
       <InputEventOverview />
       <InputDates />
-      <InputTimeWidth />
-      <InputTimeInterval />
       <EventPush />
     </Box>
   );
