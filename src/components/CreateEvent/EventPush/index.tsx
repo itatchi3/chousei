@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { database } from 'src/utils/firebase';
-import { DateObject } from 'react-multi-date-picker';
+// import { DateObject } from 'react-multi-date-picker';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { useAuth } from 'src/hooks/auth';
