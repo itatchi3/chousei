@@ -234,7 +234,7 @@ export const InputDates = () => {
       <VStack>
         {candidateDates.map((candidateDate, indexDate) => (
           <Box key={indexDate}>
-            <Box p="3">
+            <Box px="3" py="1">
               <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg" isRequired>
                 <FormLabel fontWeight="bold" fontSize="sm" ref={finalRef}>
                   日付
@@ -279,14 +279,14 @@ export const InputDates = () => {
                 </Modal>
               </FormControl>
             </Box>
-            <Box px="3">
+            <Box px="3" pb="3">
               <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg" isRequired>
                 <FormLabel fontWeight="bold" fontSize="sm" ref={finalRef}>
                   時間幅
                 </FormLabel>
                 <VStack>
                   {candidateDate.timeWidth.map((timeWidth, indexWidth) => (
-                    <HStack key={indexWidth} pb="2">
+                    <HStack key={indexWidth} pb="1">
                       <Box>
                         <Input
                           type="number"
