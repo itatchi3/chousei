@@ -28,7 +28,14 @@ export type AttendeeCommentType = {
 export type EditingEventType = {
   eventName: string;
   description: string;
-  dates: string[];
+};
+
+export type CandidateDate = {
+  date: Date[];
+  timeWidth: TimeWidth[];
+};
+
+type TimeWidth = {
   fromHour: string;
   toHour: string;
   fromMinute: string;
@@ -74,10 +81,15 @@ export const editingEventState = atom<EditingEventType>({
   default: {
     eventName: '',
     description: '',
-    dates: [],
-    fromHour: '',
-    toHour: '',
-    fromMinute: '',
-    toMinute: '',
   },
+});
+
+export const candidateDateState = atom<CandidateDate[]>({
+  key: 'candidateDateState',
+  default: [
+    {
+      date: [],
+      timeWidth: [{ fromHour: '', toHour: '', fromMinute: '', toMinute: '' }],
+    },
+  ],
 });

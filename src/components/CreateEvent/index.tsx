@@ -9,8 +9,12 @@ export const CreateEvent = () => {
   return (
     <Box p="3">
       <InputEventOverview />
-      <InputDates />
-      <EventPush />
+      <Box pt="4">
+        <InputDates />
+      </Box>
+      <Box p="6">
+        <EventPush />
+      </Box>
     </Box>
   );
 };

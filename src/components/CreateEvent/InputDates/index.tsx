@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { editingEventState } from 'src/atoms/eventState';
+import { candidateDateState } from 'src/atoms/eventState';
 import {
   Box,
   Center,
@@ -23,33 +23,16 @@ import {
 } from '@chakra-ui/react';
 import DayPicker, { DateUtils, DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { useEffect, useRef, useState } from 'react';
-
-type CandidateDate = {
-  date: Date[];
-  timeWidth: TimeWidth[];
-};
-
-type TimeWidth = {
-  fromHour: string;
-  toHour: string;
-  fromMinute: string;
-  toMinute: string;
-};
+import { useRef, useState } from 'react';
+import { cloneDeep } from 'lodash';
 
 export const InputDates = () => {
-  const [event, setEvent] = useRecoilState(editingEventState);
-  const [candidateDates, setCandidateDates] = useState<CandidateDate[]>([
-    {
-      date: [],
-      timeWidth: [{ fromHour: '', toHour: '', fromMinute: '', toMinute: '' }],
-    },
-  ]);
+  const [candidateDates, setCandidateDates] = useRecoilState(candidateDateState);
   const [sortedDatesString, setSortedDatesString] = useState(['']);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
 
-  const handleDayClick = (day: Date, { selected }: DayModifiers, e: any, indexDate: number) => {
+  const handleDayClick = (day: Date, { selected }: DayModifiers, indexDate: number) => {
     const selectedDays = candidateDates[indexDate].date.concat();
     if (selected) {
       const selectedIndex = selectedDays.findIndex((selectedDay) =>
@@ -66,12 +49,12 @@ export const InputDates = () => {
 
     const currentData = candidateDates[indexDate];
     const newData = { ...currentData, date: sortedDates };
-    const newState = candidateDates.slice();
+    const newState = cloneDeep(candidateDates);
     newState[indexDate] = newData;
     setCandidateDates(newState);
 
     const possibleDates = sortedDates.map((date) => date.getMonth() + '/' + date.getDate());
-    const newSortedDatesString = sortedDatesString.slice();
+    const newSortedDatesString = cloneDeep(sortedDatesString);
     newSortedDatesString[indexDate] = possibleDates.join(', ');
     setSortedDatesString(newSortedDatesString);
   };
@@ -80,7 +63,7 @@ export const InputDates = () => {
     const currentData = candidateDates[indexDate];
     const currentTimeWidth = currentData.timeWidth[indexWidth];
     const newTimeWidth = { ...currentTimeWidth, [key]: value };
-    const newState = candidateDates.slice();
+    const newState = cloneDeep(candidateDates);
     newState[indexDate].timeWidth[indexWidth] = newTimeWidth;
     setCandidateDates(newState);
   };
@@ -129,7 +112,6 @@ export const InputDates = () => {
         indexWidth,
       );
     } else if (parseInt(e.target.value) > 23) {
-      setEvent((state) => ({ ...state, toHour: '23' }));
       onChangeTimeWidth('toHour', '23', indexDate, indexWidth);
     } else {
       onChangeTimeWidth('toHour', String(parseInt(e.target.value)), indexDate, indexWidth);
@@ -196,7 +178,6 @@ export const InputDates = () => {
 
   const addTimeWidths = async (indexDate: number) => {
     const currentData = candidateDates[indexDate];
-    console.log(currentData.timeWidth);
     const newTimeWidth = [
       ...currentData.timeWidth,
       {
@@ -206,7 +187,7 @@ export const InputDates = () => {
         toMinute: '',
       },
     ];
-    const newState = candidateDates.slice();
+    const newState = cloneDeep(candidateDates);
     newState[indexDate].timeWidth = newTimeWidth;
     setCandidateDates(newState);
   };
@@ -220,9 +201,10 @@ export const InputDates = () => {
       },
     ]);
   };
+  console.log(candidateDates);
 
   return (
-    <Box pt="4">
+    <Box>
       <Flex align="center">
         <Circle size="30px" bg="green.500" color="white" fontWeight="bold">
           2
@@ -231,17 +213,17 @@ export const InputDates = () => {
           候補時間を入力
         </Text>
       </Flex>
-      <VStack>
+      <VStack px="3">
         {candidateDates.map((candidateDate, indexDate) => (
-          <Box key={indexDate}>
-            <Box px="3" py="1">
-              <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg" isRequired>
+          <FormControl py="2" borderWidth="2px" borderRadius="lg" isRequired key={indexDate}>
+            <Box px="3">
+              <Box>
                 <FormLabel fontWeight="bold" fontSize="sm" ref={finalRef}>
                   日付
                 </FormLabel>
                 <Input
                   placeholder="タップしてください"
-                  value={sortedDatesString}
+                  defaultValue={sortedDatesString[indexDate]}
                   onFocus={onOpen}
                 />
                 <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose} size="xs">
@@ -254,7 +236,7 @@ export const InputDates = () => {
                         <DayPicker
                           selectedDays={candidateDate.date}
                           onDayClick={(day, modifires, e) =>
-                            handleDayClick(day, modifires, e, indexDate)
+                            handleDayClick(day, modifires, indexDate)
                           }
                         />
                       </Box>
@@ -277,10 +259,10 @@ export const InputDates = () => {
                     </ModalFooter>
                   </ModalContent>
                 </Modal>
-              </FormControl>
+              </Box>
             </Box>
-            <Box px="3" pb="3">
-              <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg" isRequired>
+            <Box px="3" pt="3">
+              <Box>
                 <FormLabel fontWeight="bold" fontSize="sm" ref={finalRef}>
                   時間幅
                 </FormLabel>
@@ -333,14 +315,14 @@ export const InputDates = () => {
                     </HStack>
                   ))}
 
-                  <Button onClick={() => addTimeWidths(indexDate)}>時間幅を追加</Button>
+                  <Button onClick={() => addTimeWidths(indexDate)}>+</Button>
                 </VStack>
-              </FormControl>
+              </Box>
             </Box>
-          </Box>
+          </FormControl>
         ))}
         <Box pt="2">
-          <Button onClick={addCandidateDate}>候補時間を追加</Button>
+          <Button onClick={addCandidateDate}>+</Button>
         </Box>
       </VStack>
       <Box pos="fixed" w="100%" zIndex={2}>
