@@ -7,6 +7,7 @@ import { database } from 'src/utils/firebase';
 import { useAuth } from 'src/hooks/auth';
 import { useRecoilValue } from 'recoil';
 import { editingEventState } from 'src/atoms/eventState';
+import { cloneDeep } from 'lodash';
 import {
   Box,
   Center,
@@ -29,6 +30,19 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+type CandidateDate = {
+  date: Date;
+  timeWidth: TimeWidth[];
+};
+
+type TimeWidth = {
+  fromHour: string;
+  toHour: string;
+  fromMinute: string;
+  toMinute: string;
+  stringTimeWidth: string;
+};
+
 export const EventPush = () => {
   const { liff } = useAuth();
   const [eventNameValidation, setEventNameValidation] = useState(true);
@@ -36,63 +50,83 @@ export const EventPush = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
   const candidateDates = useRecoilValue(candidateDateState);
+  const [shapedCandidateDates, setShapedCandidateDates] = useState<CandidateDate[]>();
 
   const registerEvent = async () => {
-    let sortedCandidateDates = [];
-    candidateDates.map((candidateDate, i) => {
-      candidateDate.date.map((date, j) => {
-        date;
+    const candidateDates2: CandidateDate[] = [];
+    candidateDates.map((candidateDate) => {
+      let stringTimeWidth: TimeWidth[] = [];
+      candidateDate.timeWidth.map((timeWidth) => {
+        stringTimeWidth.push({
+          ...timeWidth,
+          stringTimeWidth:
+            timeWidth.fromHour +
+            ':' +
+            timeWidth.fromMinute +
+            '~' +
+            timeWidth.toHour +
+            ':' +
+            timeWidth.toMinute,
+        });
+      });
+
+      candidateDate.date.map((date) => {
+        candidateDates2.push({
+          date: date,
+          timeWidth: stringTimeWidth,
+        });
       });
     });
-    //   if (event.eventName !== '' && event.dates !== null) {
-    //     //入力した値の整形
-    //     const possibleDates = (event.dates as DateObject[]).map(
-    //       (date) => date.month + '/' + date.day,
-    //     );
-    //     const sortedPossibleDates = possibleDates.sort((a, b) => {
-    //       return a > b ? 1 : -1;
-    //     });
-    //     const times = [];
-    //     switch (event.timeInterval[0]) {
-    //       case 15:
-    //         for (let i = event.timeWidth[0]; i < event.timeWidth[1]; i++) {
-    //           times.push(i + ':00');
-    //           times.push(i + ':15');
-    //           times.push(i + ':45');
-    //         }
-    //         break;
-    //       case 30:
-    //         for (let i = event.timeWidth[0]; i < event.timeWidth[1]; i++) {
-    //           times.push(i + ':00');
-    //           times.push(i + ':30');
-    //         }
-    //         break;
-    //       case 60:
-    //         for (let i = event.timeWidth[0]; i < event.timeWidth[1]; i++) {
-    //           times.push(i + ':00');
-    //         }
-    //         break;
-    //       case 120:
-    //         for (let i = event.timeWidth[0]; i < event.timeWidth[1]; i = i + 2) {
-    //           times.push(i + ':00');
-    //         }
-    //         break;
-    //       default:
-    //       // do nothing
-    //     }
-    // const prospectiveDates = [];
-    // for (let j = 0; j < sortedPossibleDates.length; j++) {
-    //   for (let k = 0; k < times.length; k++) {
-    //     prospectiveDates.push(sortedPossibleDates[j] + '  ' + times[k]);
-    //   }
-    // }
-    // const eventData = {
-    //   name: event.eventName,
-    //   description: event.description,
-    //   dates: sortedPossibleDates,
-    //   times: times,
-    //   prospectiveDates: prospectiveDates,
-    // };
+
+    const candidateDates3: CandidateDate[] = [];
+    const overTwo: number[] = [];
+    candidateDates2.map((candidateDate2) => {
+      const filteredDates = candidateDates2.filter(
+        (n) => n.date.getTime() === candidateDate2.date.getTime(),
+      );
+      if (filteredDates.length > 1) {
+        if (!overTwo.includes(candidateDate2.date.getTime())) {
+          let newTimeWidth: TimeWidth[] = [];
+          filteredDates.map((filteredDate) => {
+            newTimeWidth = [...newTimeWidth, ...filteredDate.timeWidth];
+          });
+          candidateDates3.push({ date: candidateDate2.date, timeWidth: newTimeWidth });
+          overTwo.push(candidateDate2.date.getTime());
+        }
+      } else {
+        candidateDates3.push(candidateDate2);
+      }
+    });
+
+    candidateDates3.sort((a, b) => a.date.getTime() - b.date.getTime());
+    candidateDates3.map((candidateDate3) => {
+      // const sortTimeWidth = cloneDeep(candidateDate3.timeWidth);
+      let sortTimeWidth: TimeWidth[] = [];
+      let filterTimeWidth: string[] = [];
+      candidateDate3.timeWidth.filter((e) => {
+        if (filterTimeWidth.indexOf(e.stringTimeWidth) === -1) {
+          filterTimeWidth.push(e.stringTimeWidth);
+          sortTimeWidth.push(e);
+        }
+      });
+
+      sortTimeWidth.sort((a, b) => {
+        if (a.fromHour > b.fromHour) return 1;
+        if (a.fromHour < b.fromHour) return -1;
+        if (a.fromMinute > b.fromMinute) return 1;
+        if (a.fromMinute < b.fromMinute) return -1;
+        if (a.toHour > b.toHour) return 1;
+        if (a.toHour < b.toHour) return -1;
+        if (a.toMinute > b.toMinute) return 1;
+        if (a.toMinute < b.toMinute) return -1;
+        return 0;
+      });
+      candidateDate3.timeWidth = sortTimeWidth;
+    });
+    setShapedCandidateDates(candidateDates3);
+    console.log(shapedCandidateDates);
+    onOpen();
+
     //Realtime Databaseに整形した値を書き込む
     //LINEに出欠表のURLを送信する
     // const eventPush = await database.ref('events').push(eventData);
@@ -146,15 +180,11 @@ export const EventPush = () => {
   //   };
   //   errorCheck();
   // }, [event.eventName, event.dates]);
+  const handleSubmit = () => {};
+
   return (
     <VStack>
-      <Button
-        bg="green.200"
-        onFocus={onOpen}
-        onClick={() => {
-          registerEvent();
-        }}
-      >
+      <Button bg="green.200" onClick={() => registerEvent()}>
         イベントを作成する
       </Button>
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose} size="xs">
@@ -163,7 +193,16 @@ export const EventPush = () => {
           <ModalCloseButton />
           <ModalHeader></ModalHeader>
           <ModalBody py="0">
-            <Box>aaaaa</Box>
+            {shapedCandidateDates?.map((shapedCandidateDate, i) => (
+              <Box key={i}>
+                <Box>
+                  {shapedCandidateDate.date.getMonth() + '/' + shapedCandidateDate.date.getDay()}
+                </Box>
+                {shapedCandidateDate.timeWidth.map((timeWidth, j) => (
+                  <Box key={j}>{timeWidth.stringTimeWidth}</Box>
+                ))}
+              </Box>
+            ))}
           </ModalBody>
           <ModalFooter pt="0">
             <Center>
@@ -174,7 +213,7 @@ export const EventPush = () => {
                     _focus: { boxShadow: 'none' },
                   }}
                   colorScheme="blue"
-                  onClick={onClose}
+                  onClick={() => handleSubmit()}
                 >
                   保存
                 </Button>

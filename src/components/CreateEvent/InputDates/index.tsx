@@ -201,7 +201,6 @@ export const InputDates = () => {
       },
     ]);
   };
-  console.log(candidateDates);
 
   return (
     <Box>
