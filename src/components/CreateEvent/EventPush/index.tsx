@@ -31,7 +31,7 @@ import {
 } from '@chakra-ui/react';
 
 type CandidateDate = {
-  date: Date;
+  date: number;
   timeWidth: TimeWidth[];
 };
 
@@ -51,8 +51,9 @@ export const EventPush = () => {
   const finalRef = useRef(null);
   const candidateDates = useRecoilValue(candidateDateState);
   const [shapedCandidateDates, setShapedCandidateDates] = useState<CandidateDate[]>();
+  const event = useRecoilValue(editingEventState);
 
-  const registerEvent = async () => {
+  const registerEvent = () => {
     const candidateDates2: CandidateDate[] = [];
     candidateDates.map((candidateDate) => {
       let stringTimeWidth: TimeWidth[] = [];
@@ -72,7 +73,7 @@ export const EventPush = () => {
 
       candidateDate.date.map((date) => {
         candidateDates2.push({
-          date: date,
+          date: date.getTime(),
           timeWidth: stringTimeWidth,
         });
       });
@@ -81,24 +82,22 @@ export const EventPush = () => {
     const candidateDates3: CandidateDate[] = [];
     const overTwo: number[] = [];
     candidateDates2.map((candidateDate2) => {
-      const filteredDates = candidateDates2.filter(
-        (n) => n.date.getTime() === candidateDate2.date.getTime(),
-      );
+      const filteredDates = candidateDates2.filter((n) => n.date === candidateDate2.date);
       if (filteredDates.length > 1) {
-        if (!overTwo.includes(candidateDate2.date.getTime())) {
+        if (!overTwo.includes(candidateDate2.date)) {
           let newTimeWidth: TimeWidth[] = [];
           filteredDates.map((filteredDate) => {
             newTimeWidth = [...newTimeWidth, ...filteredDate.timeWidth];
           });
           candidateDates3.push({ date: candidateDate2.date, timeWidth: newTimeWidth });
-          overTwo.push(candidateDate2.date.getTime());
+          overTwo.push(candidateDate2.date);
         }
       } else {
         candidateDates3.push(candidateDate2);
       }
     });
 
-    candidateDates3.sort((a, b) => a.date.getTime() - b.date.getTime());
+    candidateDates3.sort((a, b) => a.date - b.date);
     candidateDates3.map((candidateDate3) => {
       // const sortTimeWidth = cloneDeep(candidateDate3.timeWidth);
       let sortTimeWidth: TimeWidth[] = [];
@@ -126,11 +125,17 @@ export const EventPush = () => {
     setShapedCandidateDates(candidateDates3);
     console.log(shapedCandidateDates);
     onOpen();
-
+  };
+  const handleSubmit = async () => {
+    console.log(shapedCandidateDates);
     //Realtime Databaseに整形した値を書き込む
     //LINEに出欠表のURLを送信する
-    // const eventPush = await database.ref('events').push(eventData);
-    // const eventId = eventPush.key;
+    const eventPush = await database.ref('test').push({
+      name: event.eventName,
+      description: event.description,
+      candidateDates: shapedCandidateDates,
+    });
+    const eventId = eventPush.key;
     // await liff!
     //   .sendMessages([
     //     {
@@ -150,37 +155,17 @@ export const EventPush = () => {
     //         eventId,
     //     },
     //   ])
-    //       .then(() => {
-    //         console.log('message sent');
-    //       })
-    //       .catch((err) => {
-    //         console.log('error', err);
-    //         alert(err);
-    //       });
-    //     // liffアプリを閉じる
-    //     liff!.closeWindow();
-    //     // router.push(`/event/${eventId}`);
-    //   }
+    //   .then(() => {
+    //     console.log('message sent');
+    //   })
+    //   .catch((err) => {
+    //     console.log('error', err);
+    //     alert(err);
+    //   });
+    // // liffアプリを閉じる
+    // liff!.closeWindow();
+    // router.push(`/event/${eventId}`);
   };
-
-  // useEffect(() => {
-  //   const errorCheck = () => {
-  //     if (event.eventName === '') {
-  //       setEventNameValidation(false);
-  //     } else {
-  //       setEventNameValidation(true);
-  //     }
-
-  //     // 無理矢理感ある
-  //     if ((event.dates as DateObject[]).length === 0) {
-  //       setDatesValidation(false);
-  //     } else {
-  //       setDatesValidation(true);
-  //     }
-  //   };
-  //   errorCheck();
-  // }, [event.eventName, event.dates]);
-  const handleSubmit = () => {};
 
   return (
     <VStack>
@@ -196,7 +181,9 @@ export const EventPush = () => {
             {shapedCandidateDates?.map((shapedCandidateDate, i) => (
               <Box key={i}>
                 <Box>
-                  {shapedCandidateDate.date.getMonth() + '/' + shapedCandidateDate.date.getDay()}
+                  {new Date(shapedCandidateDate.date).getMonth() +
+                    '/' +
+                    new Date(shapedCandidateDate.date).getDay()}
                 </Box>
                 {shapedCandidateDate.timeWidth.map((timeWidth, j) => (
                   <Box key={j}>{timeWidth.stringTimeWidth}</Box>
