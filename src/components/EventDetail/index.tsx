@@ -61,19 +61,16 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       comment: attendeeComment.comment,
     };
     await database
-      .ref(`events/${event.eventId}/attendeeComment/${attendeeData.userId}`)
+      .ref(`events/${eventId}/attendeeComment/${attendeeData.userId}`)
       .set(attendeeData);
     location.reload();
   };
 
   useEffect(() => {
     setEvent({
-      eventId: eventId,
       name: eventData.name,
       description: eventData.description,
-      dates: eventData.dates,
-      times: eventData.times,
-      prospectiveDates: eventData.prospectiveDates,
+      candidateDates: eventData.candidateDates,
       attendeeVotes:
         eventData.attendeeVotes !== undefined
           ? attendeeVotesObjectToArray(eventData.attendeeVotes)

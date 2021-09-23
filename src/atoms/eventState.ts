@@ -1,14 +1,22 @@
 import { atom } from 'recoil';
 
-export type EventType = {
-  eventId: string;
+export type FireBaseEventType = {
   name: string;
   description: string;
-  dates: string[];
-  times: string[];
-  prospectiveDates: string[];
-  attendeeVotes?: AttendeeVotesType[];
+  candidateDates: CandidateDate[];
+};
+
+export type EventType = {
+  name: string;
+  description: string;
+  candidateDates: CandidateDate[];
   attendeeComment?: AttendeeCommentType[];
+  attendeeVotes?: AttendeeVotesType[];
+};
+
+export type CandidateDate = {
+  date: number;
+  timeWidth: TimeWidth;
 };
 
 export type AttendeeVotesType = {
@@ -30,29 +38,30 @@ export type EditingEventType = {
   description: string;
 };
 
-export type CandidateDate = {
+export type EditingCandidateDate = {
   date: Date[];
   timeWidth: TimeWidth[];
 };
 
-type TimeWidth = {
+export type TimeWidth = {
   fromHour: string;
   toHour: string;
   fromMinute: string;
   toMinute: string;
+  stringTimeWidth?: string;
 };
 
 export const eventState = atom<EventType>({
   key: 'eventState',
   default: {
-    eventId: '',
     name: '',
     description: '',
-    dates: [''],
-    times: [''],
-    prospectiveDates: [''],
-    attendeeVotes: undefined,
-    attendeeComment: undefined,
+    candidateDates: [
+      {
+        date: 0,
+        timeWidth: { fromHour: '', toHour: '', fromMinute: '', toMinute: '', stringTimeWidth: '' },
+      },
+    ],
   },
 });
 
@@ -84,7 +93,7 @@ export const editingEventState = atom<EditingEventType>({
   },
 });
 
-export const candidateDateState = atom<CandidateDate[]>({
+export const candidateDateState = atom<EditingCandidateDate[]>({
   key: 'candidateDateState',
   default: [
     {

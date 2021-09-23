@@ -1,23 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { candidateDateState } from 'src/atoms/eventState';
+import { useState } from 'react';
+import { candidateDateState, TimeWidth, CandidateDate } from 'src/atoms/eventState';
 import { database } from 'src/utils/firebase';
-// import { DateObject } from 'react-multi-date-picker';
-// import Grid from '@material-ui/core/Grid';
-// import Button from '@material-ui/core/Button';
 import { useAuth } from 'src/hooks/auth';
 import { useRecoilValue } from 'recoil';
 import { editingEventState } from 'src/atoms/eventState';
-import { cloneDeep } from 'lodash';
 import {
   Box,
   Center,
-  Circle,
-  Flex,
-  Text,
   Button,
-  Input,
-  FormControl,
-  FormLabel,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -30,31 +20,21 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-type CandidateDate = {
+type SortedCandidateDate = {
   date: number;
   timeWidth: TimeWidth[];
 };
 
-type TimeWidth = {
-  fromHour: string;
-  toHour: string;
-  fromMinute: string;
-  toMinute: string;
-  stringTimeWidth: string;
-};
-
 export const EventPush = () => {
-  const { liff } = useAuth();
-  const [eventNameValidation, setEventNameValidation] = useState(true);
-  const [datesValidation, setDatesValidation] = useState(true);
+  // const { liff } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const finalRef = useRef(null);
   const candidateDates = useRecoilValue(candidateDateState);
   const [shapedCandidateDates, setShapedCandidateDates] = useState<CandidateDate[]>();
+  const [sortedCandidateDates, setSortedCandidateDates] = useState<SortedCandidateDate[]>();
   const event = useRecoilValue(editingEventState);
 
   const registerEvent = () => {
-    const candidateDates2: CandidateDate[] = [];
+    const candidateDates2: SortedCandidateDate[] = [];
     candidateDates.map((candidateDate) => {
       let stringTimeWidth: TimeWidth[] = [];
       candidateDate.timeWidth.map((timeWidth) => {
@@ -79,7 +59,7 @@ export const EventPush = () => {
       });
     });
 
-    const candidateDates3: CandidateDate[] = [];
+    const candidateDates3: SortedCandidateDate[] = [];
     const overTwo: number[] = [];
     candidateDates2.map((candidateDate2) => {
       const filteredDates = candidateDates2.filter((n) => n.date === candidateDate2.date);
@@ -99,10 +79,10 @@ export const EventPush = () => {
 
     candidateDates3.sort((a, b) => a.date - b.date);
     candidateDates3.map((candidateDate3) => {
-      // const sortTimeWidth = cloneDeep(candidateDate3.timeWidth);
       let sortTimeWidth: TimeWidth[] = [];
       let filterTimeWidth: string[] = [];
       candidateDate3.timeWidth.filter((e) => {
+        if (e.stringTimeWidth === undefined) return;
         if (filterTimeWidth.indexOf(e.stringTimeWidth) === -1) {
           filterTimeWidth.push(e.stringTimeWidth);
           sortTimeWidth.push(e);
@@ -122,15 +102,21 @@ export const EventPush = () => {
       });
       candidateDate3.timeWidth = sortTimeWidth;
     });
-    setShapedCandidateDates(candidateDates3);
+    setSortedCandidateDates(candidateDates3);
+
+    let candidateDates4: CandidateDate[] = [];
+    candidateDates3.map((candidateDate) => {
+      candidateDate.timeWidth.map((timeWidth) => {
+        candidateDates4.push({ date: candidateDate.date, timeWidth: timeWidth });
+      });
+    });
+    setShapedCandidateDates(candidateDates4);
     console.log(shapedCandidateDates);
     onOpen();
   };
   const handleSubmit = async () => {
     console.log(shapedCandidateDates);
-    //Realtime Databaseに整形した値を書き込む
-    //LINEに出欠表のURLを送信する
-    const eventPush = await database.ref('test').push({
+    const eventPush = await database.ref('events').push({
       name: event.eventName,
       description: event.description,
       candidateDates: shapedCandidateDates,
@@ -172,20 +158,20 @@ export const EventPush = () => {
       <Button bg="green.200" onClick={() => registerEvent()}>
         イベントを作成する
       </Button>
-      <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose} size="xs">
+      <Modal isOpen={isOpen} onClose={onClose} size="xs" scrollBehavior={'inside'}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
           <ModalHeader></ModalHeader>
           <ModalBody py="0">
-            {shapedCandidateDates?.map((shapedCandidateDate, i) => (
+            {sortedCandidateDates?.map((sortedCandidateDate, i) => (
               <Box key={i}>
                 <Box>
-                  {new Date(shapedCandidateDate.date).getMonth() +
+                  {new Date(sortedCandidateDate.date).getMonth() +
                     '/' +
-                    new Date(shapedCandidateDate.date).getDay()}
+                    new Date(sortedCandidateDate.date).getDay()}
                 </Box>
-                {shapedCandidateDate.timeWidth.map((timeWidth, j) => (
+                {sortedCandidateDate.timeWidth.map((timeWidth, j) => (
                   <Box key={j}>{timeWidth.stringTimeWidth}</Box>
                 ))}
               </Box>

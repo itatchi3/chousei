@@ -19,7 +19,7 @@ import {
 import { useRecoilValue } from 'recoil';
 
 type Count = {
-  date: string;
+  date: number;
   positiveCount: number;
   evenCount: number;
   negativeCount: number;
@@ -31,9 +31,9 @@ const AttendanceTable = () => {
   const [colours, setColours] = useState<string[]>([]);
 
   useEffect(() => {
-    const attendanceCounts = event.prospectiveDates.map((column, i) => {
+    const attendanceCounts = event.candidateDates.map((column, i) => {
       return {
-        date: column,
+        date: column.date,
         positiveCount:
           event.attendeeVotes !== undefined
             ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '○').length
@@ -61,7 +61,7 @@ const AttendanceTable = () => {
     });
     setCounts(attendanceCounts);
     setColours(evaluations);
-  }, [event.attendeeVotes, event.prospectiveDates]);
+  }, [event.attendeeVotes, event.candidateDates]);
 
   return (
     <>
@@ -106,7 +106,13 @@ const AttendanceTable = () => {
             {counts.map((count, i) => (
               <Tr key={i} bg={colours[i]}>
                 <Td pl="20px" pr="2px">
-                  <Box>{event.prospectiveDates[i]}</Box>
+                  <Box>
+                    {new Date(event.candidateDates[i].date).getMonth() +
+                      '/' +
+                      new Date(event.candidateDates[i].date).getDay() +
+                      '  ' +
+                      event.candidateDates[i].timeWidth.stringTimeWidth}
+                  </Box>
                 </Td>
                 <Td>
                   <Center>{count.positiveCount}</Center>
