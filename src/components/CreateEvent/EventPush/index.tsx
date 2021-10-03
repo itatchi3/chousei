@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { candidateDateState, TimeWidth, CandidateDate } from 'src/atoms/eventState';
+import { candidateDateState, TimeWidth, EditingTimeWidth } from 'src/atoms/eventState';
 import { database } from 'src/utils/firebase';
 import { useAuth } from 'src/hooks/auth';
 import { useRecoilValue } from 'recoil';
@@ -21,67 +21,74 @@ import {
 } from '@chakra-ui/react';
 
 type SortedCandidateDate = {
+  date: Date;
+  timeWidth: EditingTimeWidth[];
+};
+
+type RegisterCandidateDate = {
   date: number;
-  timeWidth: TimeWidth[];
+  timeWidth: TimeWidth;
 };
 
 export const EventPush = () => {
-  // const { liff } = useAuth();
+  const { liff } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const candidateDates = useRecoilValue(candidateDateState);
-  const [shapedCandidateDates, setShapedCandidateDates] = useState<CandidateDate[]>();
+  const [registerCandidateDates, setRegisterCandidateDates] = useState<RegisterCandidateDate[]>();
   const [sortedCandidateDates, setSortedCandidateDates] = useState<SortedCandidateDate[]>();
   const event = useRecoilValue(editingEventState);
 
   const registerEvent = () => {
-    const candidateDates2: SortedCandidateDate[] = [];
+    const addedStringTimeWidthCandidateDates: SortedCandidateDate[] = [];
     candidateDates.map((candidateDate) => {
-      let stringTimeWidth: TimeWidth[] = [];
+      let stringTimeWidth: EditingTimeWidth[] = [];
       candidateDate.timeWidth.map((timeWidth) => {
         stringTimeWidth.push({
           ...timeWidth,
           stringTimeWidth:
-            timeWidth.fromHour +
+            timeWidth.startHour +
             ':' +
-            timeWidth.fromMinute +
+            timeWidth.startMinute +
             '~' +
-            timeWidth.toHour +
+            timeWidth.endHour +
             ':' +
-            timeWidth.toMinute,
+            timeWidth.endMinute,
         });
       });
 
       candidateDate.date.map((date) => {
-        candidateDates2.push({
-          date: date.getTime(),
+        addedStringTimeWidthCandidateDates.push({
+          date: date,
           timeWidth: stringTimeWidth,
         });
       });
     });
 
-    const candidateDates3: SortedCandidateDate[] = [];
-    const overTwo: number[] = [];
-    candidateDates2.map((candidateDate2) => {
-      const filteredDates = candidateDates2.filter((n) => n.date === candidateDate2.date);
+    const sortedCandidateDates: SortedCandidateDate[] = [];
+    const pushedDate: number[] = [];
+    addedStringTimeWidthCandidateDates.map((candidateDate) => {
+      const filteredDates = addedStringTimeWidthCandidateDates.filter(
+        (n) => n.date.getTime() === candidateDate.date.getTime(),
+      );
       if (filteredDates.length > 1) {
-        if (!overTwo.includes(candidateDate2.date)) {
-          let newTimeWidth: TimeWidth[] = [];
+        if (!pushedDate.includes(candidateDate.date.getTime())) {
+          let newTimeWidth: EditingTimeWidth[] = [];
           filteredDates.map((filteredDate) => {
             newTimeWidth = [...newTimeWidth, ...filteredDate.timeWidth];
           });
-          candidateDates3.push({ date: candidateDate2.date, timeWidth: newTimeWidth });
-          overTwo.push(candidateDate2.date);
+          sortedCandidateDates.push({ date: candidateDate.date, timeWidth: newTimeWidth });
+          pushedDate.push(candidateDate.date.getTime());
         }
       } else {
-        candidateDates3.push(candidateDate2);
+        sortedCandidateDates.push(candidateDate);
       }
     });
 
-    candidateDates3.sort((a, b) => a.date - b.date);
-    candidateDates3.map((candidateDate3) => {
-      let sortTimeWidth: TimeWidth[] = [];
+    sortedCandidateDates.sort((a, b) => a.date.getTime() - b.date.getTime());
+    sortedCandidateDates.map((candidateDate) => {
+      let sortTimeWidth: EditingTimeWidth[] = [];
       let filterTimeWidth: string[] = [];
-      candidateDate3.timeWidth.filter((e) => {
+      candidateDate.timeWidth.filter((e) => {
         if (e.stringTimeWidth === undefined) return;
         if (filterTimeWidth.indexOf(e.stringTimeWidth) === -1) {
           filterTimeWidth.push(e.stringTimeWidth);
@@ -90,67 +97,88 @@ export const EventPush = () => {
       });
 
       sortTimeWidth.sort((a, b) => {
-        if (a.fromHour > b.fromHour) return 1;
-        if (a.fromHour < b.fromHour) return -1;
-        if (a.fromMinute > b.fromMinute) return 1;
-        if (a.fromMinute < b.fromMinute) return -1;
-        if (a.toHour > b.toHour) return 1;
-        if (a.toHour < b.toHour) return -1;
-        if (a.toMinute > b.toMinute) return 1;
-        if (a.toMinute < b.toMinute) return -1;
+        if (a.startHour > b.startHour) return 1;
+        if (a.startHour < b.startHour) return -1;
+        if (a.startMinute > b.startMinute) return 1;
+        if (a.startMinute < b.startMinute) return -1;
+        if (a.endHour > b.endHour) return 1;
+        if (a.endHour < b.endHour) return -1;
+        if (a.endMinute > b.endMinute) return 1;
+        if (a.endMinute < b.endMinute) return -1;
         return 0;
       });
-      candidateDate3.timeWidth = sortTimeWidth;
+      candidateDate.timeWidth = sortTimeWidth;
     });
-    setSortedCandidateDates(candidateDates3);
+    setSortedCandidateDates(sortedCandidateDates);
 
-    let candidateDates4: CandidateDate[] = [];
-    candidateDates3.map((candidateDate) => {
+    let registerCandidateDate: RegisterCandidateDate[] = [];
+    sortedCandidateDates.map((candidateDate) => {
       candidateDate.timeWidth.map((timeWidth) => {
-        candidateDates4.push({ date: candidateDate.date, timeWidth: timeWidth });
+        const start = new Date(
+          candidateDate.date.getFullYear(),
+          candidateDate.date.getMonth(),
+          candidateDate.date.getDate(),
+          Number(timeWidth.startHour),
+          Number(timeWidth.startMinute),
+        );
+        const end = new Date(
+          candidateDate.date.getFullYear(),
+          candidateDate.date.getMonth(),
+          candidateDate.date.getDate(),
+          Number(timeWidth.endHour),
+          Number(timeWidth.endMinute),
+        );
+        if (timeWidth.stringTimeWidth) {
+          registerCandidateDate.push({
+            date: candidateDate.date.getTime(),
+            timeWidth: {
+              start: start.getTime(),
+              end: end.getTime(),
+              stringTimeWidth: timeWidth.stringTimeWidth,
+            },
+          });
+        }
       });
     });
-    setShapedCandidateDates(candidateDates4);
-    console.log(shapedCandidateDates);
+    setRegisterCandidateDates(registerCandidateDate);
     onOpen();
   };
   const handleSubmit = async () => {
-    console.log(shapedCandidateDates);
+    console.log(registerCandidateDates);
     const eventPush = await database.ref('events').push({
       name: event.eventName,
       description: event.description,
-      candidateDates: shapedCandidateDates,
+      candidateDates: registerCandidateDates,
     });
     const eventId = eventPush.key;
-    // await liff!
-    //   .sendMessages([
-    //     {
-    //       type: 'text',
-    //       text: '出欠表が完成したよ！',
-    //     },
-    //     {
-    //       type: 'text',
-    //       text:
-    //         '【イベント名】\n' +
-    //         event.eventName +
-    //         '\n' +
-    //         '【概要】\n' +
-    //         event.description +
-    //         '\n' +
-    //         'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
-    //         eventId,
-    //     },
-    //   ])
-    //   .then(() => {
-    //     console.log('message sent');
-    //   })
-    //   .catch((err) => {
-    //     console.log('error', err);
-    //     alert(err);
-    //   });
-    // // liffアプリを閉じる
-    // liff!.closeWindow();
-    // router.push(`/event/${eventId}`);
+    await liff!
+      .sendMessages([
+        {
+          type: 'text',
+          text: '出欠表が完成したよ！',
+        },
+        {
+          type: 'text',
+          text:
+            '【イベント名】\n' +
+            event.eventName +
+            '\n' +
+            '【概要】\n' +
+            event.description +
+            '\n' +
+            'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
+            eventId,
+        },
+      ])
+      .then(() => {
+        console.log('message sent');
+      })
+      .catch((err) => {
+        console.log('error', err);
+        alert(err);
+      });
+    // liffアプリを閉じる
+    liff!.closeWindow();
   };
 
   return (

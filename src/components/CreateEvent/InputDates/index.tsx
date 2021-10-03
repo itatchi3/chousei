@@ -66,112 +66,113 @@ export const InputDates = () => {
     newState[indexDate].timeWidth[indexWidth] = newTimeWidth;
     setCandidateDates(newState);
   };
-  const changeFromHour = (
+  const changestartHour = (
     e: React.ChangeEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
   ) => {
-    onChangeTimeWidth('fromHour', e.target.value, indexDate, indexWidth);
+    onChangeTimeWidth('startHour', e.target.value, indexDate, indexWidth);
   };
 
-  const changeToHour = (
+  const changeendHour = (
     e: React.ChangeEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
   ) => {
-    onChangeTimeWidth('toHour', e.target.value, indexDate, indexWidth);
+    onChangeTimeWidth('endHour', e.target.value, indexDate, indexWidth);
   };
 
-  const blurFromHour = (
+  const blurstartHour = (
     e: React.FocusEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
   ) => {
     if (parseInt(e.target.value) < 0) {
-      onChangeTimeWidth('fromHour', '', indexDate, indexWidth);
+      onChangeTimeWidth('startHour', '', indexDate, indexWidth);
     } else if (parseInt(e.target.value) > 23) {
-      onChangeTimeWidth('fromHour', '23', indexDate, indexWidth);
+      onChangeTimeWidth('startHour', '23', indexDate, indexWidth);
     } else {
-      onChangeTimeWidth('fromHour', String(parseInt(e.target.value)), indexDate, indexWidth);
+      onChangeTimeWidth('startHour', String(parseInt(e.target.value)), indexDate, indexWidth);
     }
   };
 
-  const blurToHour = (
+  const blurendHour = (
     e: React.FocusEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
   ) => {
     if (
-      parseInt(e.target.value) <= parseInt(candidateDates[indexDate].timeWidth[indexWidth].fromHour)
-    ) {
-      onChangeTimeWidth(
-        'toHour',
-        candidateDates[indexDate].timeWidth[indexWidth].fromHour,
-        indexDate,
-        indexWidth,
-      );
-    } else if (parseInt(e.target.value) > 23) {
-      onChangeTimeWidth('toHour', '23', indexDate, indexWidth);
-    } else {
-      onChangeTimeWidth('toHour', String(parseInt(e.target.value)), indexDate, indexWidth);
-    }
-  };
-
-  const changeFromMinute = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    onChangeTimeWidth('fromMinute', e.target.value, indexDate, indexWidth);
-  };
-
-  const changeToMinute = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    onChangeTimeWidth('toMinute', e.target.value, indexDate, indexWidth);
-  };
-
-  const blurFromMinute = (
-    e: React.FocusEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    if (parseInt(e.target.value) < 0) {
-      onChangeTimeWidth('fromMinute', '00', indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-      onChangeTimeWidth('fromMinute', '0' + parseInt(e.target.value), indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 10 && parseInt(e.target.value) <= 59) {
-      onChangeTimeWidth('fromMinute', String(parseInt(e.target.value)), indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 60) {
-      onChangeTimeWidth('fromMinute', '59', indexDate, indexWidth);
-    }
-  };
-
-  const blurToMinute = (
-    e: React.FocusEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    if (
-      candidateDates[indexDate].timeWidth[indexWidth].fromHour ===
-        candidateDates[indexDate].timeWidth[indexWidth].toHour &&
       parseInt(e.target.value) <=
-        parseInt(candidateDates[indexDate].timeWidth[indexWidth].fromMinute)
+      parseInt(candidateDates[indexDate].timeWidth[indexWidth].startHour)
     ) {
       onChangeTimeWidth(
-        'toMinute',
-        candidateDates[indexDate].timeWidth[indexWidth].fromMinute,
+        'endHour',
+        candidateDates[indexDate].timeWidth[indexWidth].startHour,
+        indexDate,
+        indexWidth,
+      );
+    } else if (parseInt(e.target.value) > 23) {
+      onChangeTimeWidth('endHour', '23', indexDate, indexWidth);
+    } else {
+      onChangeTimeWidth('endHour', String(parseInt(e.target.value)), indexDate, indexWidth);
+    }
+  };
+
+  const changestartMinute = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    indexDate: number,
+    indexWidth: number,
+  ) => {
+    onChangeTimeWidth('startMinute', e.target.value, indexDate, indexWidth);
+  };
+
+  const changeendMinute = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    indexDate: number,
+    indexWidth: number,
+  ) => {
+    onChangeTimeWidth('endMinute', e.target.value, indexDate, indexWidth);
+  };
+
+  const blurstartMinute = (
+    e: React.FocusEvent<HTMLInputElement>,
+    indexDate: number,
+    indexWidth: number,
+  ) => {
+    if (parseInt(e.target.value) < 0) {
+      onChangeTimeWidth('startMinute', '00', indexDate, indexWidth);
+    } else if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
+      onChangeTimeWidth('startMinute', '0' + parseInt(e.target.value), indexDate, indexWidth);
+    } else if (parseInt(e.target.value) >= 10 && parseInt(e.target.value) <= 59) {
+      onChangeTimeWidth('startMinute', String(parseInt(e.target.value)), indexDate, indexWidth);
+    } else if (parseInt(e.target.value) >= 60) {
+      onChangeTimeWidth('startMinute', '59', indexDate, indexWidth);
+    }
+  };
+
+  const blurendMinute = (
+    e: React.FocusEvent<HTMLInputElement>,
+    indexDate: number,
+    indexWidth: number,
+  ) => {
+    if (
+      candidateDates[indexDate].timeWidth[indexWidth].startHour ===
+        candidateDates[indexDate].timeWidth[indexWidth].endHour &&
+      parseInt(e.target.value) <=
+        parseInt(candidateDates[indexDate].timeWidth[indexWidth].startMinute)
+    ) {
+      onChangeTimeWidth(
+        'endMinute',
+        candidateDates[indexDate].timeWidth[indexWidth].startMinute,
         indexDate,
         indexWidth,
       );
     } else if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-      onChangeTimeWidth('toMinute', '0' + parseInt(e.target.value), indexDate, indexWidth);
+      onChangeTimeWidth('endMinute', '0' + parseInt(e.target.value), indexDate, indexWidth);
     } else if (parseInt(e.target.value) >= 10 && parseInt(e.target.value) <= 59) {
-      onChangeTimeWidth('toMinute', String(parseInt(e.target.value)), indexDate, indexWidth);
+      onChangeTimeWidth('endMinute', String(parseInt(e.target.value)), indexDate, indexWidth);
     } else if (parseInt(e.target.value) >= 60) {
-      onChangeTimeWidth('toMinute', '59', indexDate, indexWidth);
+      onChangeTimeWidth('endMinute', '59', indexDate, indexWidth);
     }
   };
 
@@ -180,10 +181,10 @@ export const InputDates = () => {
     const newTimeWidth = [
       ...currentData.timeWidth,
       {
-        fromHour: '',
-        toHour: '',
-        fromMinute: '',
-        toMinute: '',
+        startHour: '',
+        endHour: '',
+        startMinute: '',
+        endMinute: '',
       },
     ];
     const newState = cloneDeep(candidateDates);
@@ -196,7 +197,7 @@ export const InputDates = () => {
       ...candidateDates,
       {
         date: [],
-        timeWidth: [{ fromHour: '', toHour: '', fromMinute: '', toMinute: '' }],
+        timeWidth: [{ startHour: '', endHour: '', startMinute: '', endMinute: '' }],
       },
     ]);
     setIsOpen([...isOpen, false]);
@@ -288,9 +289,9 @@ export const InputDates = () => {
                     <Box>
                       <Input
                         type="number"
-                        value={timeWidth.fromHour}
-                        onChange={(e) => changeFromHour(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurFromHour(e, indexDate, indexWidth)}
+                        value={timeWidth.startHour}
+                        onChange={(e) => changestartHour(e, indexDate, indexWidth)}
+                        onBlur={(e) => blurstartHour(e, indexDate, indexWidth)}
                         textAlign="center"
                         p="0"
                         ref={datePicRef.current[indexDate] as any}
@@ -300,9 +301,9 @@ export const InputDates = () => {
                     <Box>
                       <Input
                         type="number"
-                        value={timeWidth.fromMinute}
-                        onChange={(e) => changeFromMinute(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurFromMinute(e, indexDate, indexWidth)}
+                        value={timeWidth.startMinute}
+                        onChange={(e) => changestartMinute(e, indexDate, indexWidth)}
+                        onBlur={(e) => blurstartMinute(e, indexDate, indexWidth)}
                         textAlign="center"
                         p="0"
                       />
@@ -311,9 +312,9 @@ export const InputDates = () => {
                     <Box>
                       <Input
                         type="number"
-                        value={timeWidth.toHour}
-                        onChange={(e) => changeToHour(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurToHour(e, indexDate, indexWidth)}
+                        value={timeWidth.endHour}
+                        onChange={(e) => changeendHour(e, indexDate, indexWidth)}
+                        onBlur={(e) => blurendHour(e, indexDate, indexWidth)}
                         textAlign="center"
                         p="0"
                       />
@@ -322,9 +323,9 @@ export const InputDates = () => {
                     <Box>
                       <Input
                         type="number"
-                        value={timeWidth.toMinute}
-                        onChange={(e) => changeToMinute(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurToMinute(e, indexDate, indexWidth)}
+                        value={timeWidth.endMinute}
+                        onChange={(e) => changeendMinute(e, indexDate, indexWidth)}
+                        onBlur={(e) => blurendMinute(e, indexDate, indexWidth)}
                         textAlign="center"
                         p="0"
                       />

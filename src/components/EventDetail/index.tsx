@@ -61,13 +61,14 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       comment: attendeeComment.comment,
     };
     await database
-      .ref(`events/${eventId}/attendeeComment/${attendeeData.userId}`)
+      .ref(`events/${event.id}/attendeeComment/${attendeeData.userId}`)
       .set(attendeeData);
     location.reload();
   };
 
   useEffect(() => {
     setEvent({
+      id: eventId,
       name: eventData.name,
       description: eventData.description,
       candidateDates: eventData.candidateDates,
@@ -149,7 +150,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             event.description +
             '\n' +
             'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
-            eventId,
+            event.id,
         },
       ]);
     }
@@ -159,7 +160,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   const answerDates = () => {
     setScheduleLoading(true);
     router.push({
-      pathname: `/event/${eventId}/input`,
+      pathname: `/event/${event.id}/input`,
     });
   };
 

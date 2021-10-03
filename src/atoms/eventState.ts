@@ -7,11 +7,18 @@ export type FireBaseEventType = {
 };
 
 export type EventType = {
+  id: string;
   name: string;
   description: string;
   candidateDates: CandidateDate[];
   attendeeComment?: AttendeeCommentType[];
   attendeeVotes?: AttendeeVotesType[];
+};
+
+export type TimeWidth = {
+  stringTimeWidth: string;
+  start: number;
+  end: number;
 };
 
 export type CandidateDate = {
@@ -40,26 +47,31 @@ export type EditingEventType = {
 
 export type EditingCandidateDate = {
   date: Date[];
-  timeWidth: TimeWidth[];
+  timeWidth: EditingTimeWidth[];
 };
 
-export type TimeWidth = {
-  fromHour: string;
-  toHour: string;
-  fromMinute: string;
-  toMinute: string;
+export type EditingTimeWidth = {
+  startHour: string;
+  endHour: string;
+  startMinute: string;
+  endMinute: string;
   stringTimeWidth?: string;
 };
 
 export const eventState = atom<EventType>({
   key: 'eventState',
   default: {
+    id: '',
     name: '',
     description: '',
     candidateDates: [
       {
         date: 0,
-        timeWidth: { fromHour: '', toHour: '', fromMinute: '', toMinute: '', stringTimeWidth: '' },
+        timeWidth: {
+          start: 0,
+          end: 0,
+          stringTimeWidth: '',
+        },
       },
     ],
   },
@@ -98,7 +110,7 @@ export const candidateDateState = atom<EditingCandidateDate[]>({
   default: [
     {
       date: [],
-      timeWidth: [{ fromHour: '', toHour: '', fromMinute: '', toMinute: '' }],
+      timeWidth: [{ startHour: '', endHour: '', startMinute: '', endMinute: '' }],
     },
   ],
 });

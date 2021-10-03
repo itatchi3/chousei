@@ -1,72 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { eventState, attendeeVotesState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 import { database } from 'src/utils/firebase';
-import {
-  Button,
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  HStack,
-  VStack,
-  Center,
-} from '@chakra-ui/react';
+import { Button, Box, HStack, VStack, Center, Flex } from '@chakra-ui/react';
+import FullCalendar, { EventClickArg } from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { cloneDeep } from 'lodash';
+
+type EventFullCalendar = {
+  start: Date;
+  end: Date;
+  id: string;
+  color: string;
+};
 
 export const InputSchedule = () => {
-  //ボタンの色
   const [color, setColor] = useState('Red');
-  //入力ボタンが選択されているかどうか
   const [redVarient, setRedVarient] = useState<'solid' | 'outline'>('solid');
   const [greenVarient, setGreenVarient] = useState<'solid' | 'outline'>('outline');
   const [blueVarient, setBlueVarient] = useState<'solid' | 'outline'>('outline');
   const [loading, setLoading] = useState(false);
+  const [dates, setDates] = useState<number[]>([]);
+  const [eventFullCalendarList, setEventFullCalendarList] = useState<EventFullCalendar[][]>([]);
+  const [minTime, setMinTime] = useState(0);
+  const [maxTime, setMaxTime] = useState(24);
+  const [viewTimeList, setViewTimeList] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
   const attendee = useRecoilValue(attendeeVotesState);
 
-  const [possibleDates, setPossibleDates] = useState<{ date: string; vote: '○' | '△' | '×' }[]>(
+  const [votes, setVotes] = useState<('○' | '△' | '×')[]>(
     !attendee.votes.length
-      ? event.prospectiveDates.map((date) => {
-          return {
-            date: date,
-            vote: '△',
-          };
+      ? event.candidateDates.map(() => {
+          return '△';
         })
-      : event.prospectiveDates.map((date, i) => {
-          return {
-            date: date,
-            vote: attendee.votes[i],
-          };
+      : event.candidateDates.map((date, i) => {
+          return attendee.votes[i];
         }),
   );
-
-  const [buttonColors, setButtonColors] = useState([]);
 
   const router = useRouter();
 
   const checkColor = (vote: '○' | '△' | '×') => {
     switch (vote) {
       case '○':
-        return 'red';
+        return '#C53030';
       case '△':
-        return 'green';
+        return '#2F855A';
       case '×':
-        return 'blue';
+        return '#3182CE';
     }
-  };
-
-  const onSelectVote = (targetDate: string, selectedVote: '○' | '△' | '×') => {
-    const newPossibleDates = possibleDates.map((possibleDate) => {
-      return possibleDate.date === targetDate
-        ? { ...possibleDate, vote: selectedVote }
-        : possibleDate;
-    });
-    setPossibleDates(newPossibleDates);
   };
 
   const handleClickRed = () => {
@@ -96,25 +80,36 @@ export const InputSchedule = () => {
     }
   };
 
-  const handleClickChange = (possibleDate: { date: string }) => {
+  const handleClickVoteChange = (arg: EventClickArg, indexDate: number) => {
+    const index = Number(arg.event.id);
+    const newVotes = cloneDeep(votes);
+    const newEventFullCalendarList = cloneDeep(eventFullCalendarList);
+    let newVote: '○' | '△' | '×' = '△';
     switch (color) {
       case 'Red':
-        onSelectVote(possibleDate.date, '○');
+        newVote = '○';
         break;
       case 'Green':
-        onSelectVote(possibleDate.date, '△');
+        newVote = '△';
         break;
       case 'Blue':
-        onSelectVote(possibleDate.date, '×');
+        newVote = '×';
         break;
       default:
       // do nothing
     }
+    newVotes[index] = newVote;
+    setVotes(newVotes);
+    eventFullCalendarList[indexDate].map((event, indexEvent) => {
+      if (event.id === arg.event.id) {
+        newEventFullCalendarList[indexDate][indexEvent].color = checkColor(newVote);
+      }
+    });
+    setEventFullCalendarList(newEventFullCalendarList);
   };
 
   const registerAttendances = async () => {
     setLoading(true);
-    const votes = possibleDates.map((possibleDate) => possibleDate.vote);
     const attendeeData = {
       userId: attendee.userId,
       name: attendee.name,
@@ -122,51 +117,118 @@ export const InputSchedule = () => {
       profileImg: attendee.profileImg,
     };
 
-    await database
-      .ref(`events/${event.eventId}/attendeeVotes/${attendeeData.userId}`)
-      .set(attendeeData);
+    await database.ref(`events/${event.id}/attendeeVotes/${attendeeData.userId}`).set(attendeeData);
 
-    router.push(`/event/${event.eventId}`);
+    router.push(`/event/${event.id}`);
   };
+
+  useEffect(() => {
+    let dateList: number[] = [event.candidateDates[0].date];
+    let eventFullCalendarList: EventFullCalendar[][] = [];
+    let eventFullCalendar: EventFullCalendar[] = [];
+    let newMinTime = 24;
+    let newMaxTime = 0;
+
+    event.candidateDates.map((candidateDate, index) => {
+      if (new Date(candidateDate.timeWidth.start).getHours() < newMinTime) {
+        newMinTime = new Date(candidateDate.timeWidth.start).getHours();
+      }
+      if (new Date(candidateDate.timeWidth.end).getHours() > newMaxTime) {
+        newMaxTime = new Date(candidateDate.timeWidth.end).getHours();
+      }
+      if (dateList.includes(candidateDate.date)) {
+        eventFullCalendar.push({
+          start: new Date(candidateDate.timeWidth.start),
+          end: new Date(candidateDate.timeWidth.end),
+          id: index.toString(),
+          color: checkColor(votes[index]),
+        });
+      } else {
+        eventFullCalendarList.push(eventFullCalendar);
+        dateList.push(candidateDate.date);
+        eventFullCalendar = [
+          {
+            start: new Date(candidateDate.timeWidth.start),
+            end: new Date(candidateDate.timeWidth.end),
+            id: index.toString(),
+            color: checkColor(votes[index]),
+          },
+        ];
+      }
+    });
+    if (eventFullCalendar.length) {
+      eventFullCalendarList.push(eventFullCalendar);
+    }
+    setDates(dateList);
+    setEventFullCalendarList(eventFullCalendarList);
+    setMinTime(newMinTime);
+    setMaxTime(newMaxTime);
+    let newTimeList: number[] = [];
+    for (let i = newMinTime; i <= newMaxTime; i++) {
+      newTimeList.push(i);
+    }
+    setViewTimeList(newTimeList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box p="3">
-      <Box overflowX="scroll" pb="36">
-        <Table variant="unstyled">
-          <Thead>
-            <Tr>
-              {event.dates.map((date) => (
-                <Th key={date}>
-                  <Center>{date}</Center>
-                </Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {event.times.map((time, i) => (
-              <Tr key={time}>
-                {event.dates.map((date, j) => (
-                  <Th key={date} px="2" py="2">
-                    <Center>
-                      <Button
-                        sx={{
-                          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                          _focus: { boxShadow: 'none' },
-                        }}
-                        w="70px"
-                        colorScheme={checkColor(possibleDates[j * event.times.length + i].vote)}
-                        onClick={() => handleClickChange(possibleDates[j * event.times.length + i])}
-                      >
-                        {time}
-                      </Button>
-                    </Center>
-                  </Th>
-                ))}
-              </Tr>
+      <Flex height={window.innerHeight - 150} overflow="scroll">
+        <VStack pt="16px" pr="6px">
+          {viewTimeList.map((viewTime) => (
+            <Box key={viewTime} fontSize="xs" pb="24px">
+              {viewTime + ':00'}
+            </Box>
+          ))}
+        </VStack>
+        {dates.map((date, index) => {
+          return (
+            <Box minWidth="100px" key={index}>
+              <Center fontWeight="bold">
+                {new Date(date).getMonth() + '/' + new Date(date).getDate()}
+              </Center>
+              <FullCalendar
+                plugins={[timeGridPlugin]}
+                initialView="timeGridDay"
+                headerToolbar={false}
+                allDaySlot={false}
+                contentHeight={'auto'}
+                initialDate={new Date(date)}
+                events={eventFullCalendarList[index]}
+                slotEventOverlap={false}
+                eventTimeFormat={{
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }}
+                eventClick={(arg) => handleClickVoteChange(arg, index)}
+                slotMinTime={minTime + ':00:00'}
+                slotMaxTime={maxTime + ':00:00'}
+              />
+            </Box>
+          );
+        })}
+        {dates.length >= 4 && (
+          <VStack pt="16px" pl="6px">
+            {viewTimeList.map((viewTime) => (
+              <Box key={viewTime} fontSize="xs" pb="24px">
+                {viewTime + ':00'}
+              </Box>
             ))}
-          </Tbody>
-        </Table>
-      </Box>
+          </VStack>
+        )}
+
+        <style jsx global>{`
+          .fc-timegrid-slot-label,
+          thead {
+            display: none !important;
+          }
+          .fc-timegrid-event .fc-event-time {
+            white-space: normal;
+            font-size: 10px;
+          }
+        `}</style>
+      </Flex>
       <Center>
         <VStack pos="fixed" bottom="0" bg="white" w="100%">
           <HStack p="4" spacing={4}>
