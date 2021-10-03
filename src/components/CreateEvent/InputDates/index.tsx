@@ -342,9 +342,6 @@ export const InputDates = () => {
           <Button onClick={addCandidateDate}>+</Button>
         </Box>
       </VStack>
-      <Box pos="fixed" w="100%" zIndex={2}>
-        Fixed with zIndex
-      </Box>
     </Box>
   );
 };

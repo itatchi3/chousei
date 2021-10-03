@@ -190,10 +190,10 @@ export const EventPush = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalHeader></ModalHeader>
-          <ModalBody py="0">
+          <ModalHeader>候補時間リスト</ModalHeader>
+          <ModalBody pt="0" px="10" mb="4">
             {sortedCandidateDates?.map((sortedCandidateDate, i) => (
-              <Box key={i}>
+              <Box key={i} pb="2">
                 <Box>
                   {new Date(sortedCandidateDate.date).getMonth() +
                     '/' +
@@ -216,7 +216,7 @@ export const EventPush = () => {
                   colorScheme="blue"
                   onClick={() => handleSubmit()}
                 >
-                  保存
+                  作成
                 </Button>
               </HStack>
             </Center>
