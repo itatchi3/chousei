@@ -52,7 +52,7 @@ export const InputDates = () => {
     newState[indexDate] = newData;
     setCandidateDates(newState);
 
-    const possibleDates = sortedDates.map((date) => date.getMonth() + '/' + date.getDate());
+    const possibleDates = sortedDates.map((date) => date.getMonth() + 1 + '/' + date.getDate());
     const newSortedDatesString = cloneDeep(sortedDatesString);
     newSortedDatesString[indexDate] = possibleDates.join(', ');
     setSortedDatesString(newSortedDatesString);

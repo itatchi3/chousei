@@ -185,7 +185,7 @@ export const InputSchedule = () => {
           return (
             <Box minWidth="100px" key={index}>
               <Center fontWeight="bold">
-                {new Date(date).getMonth() + '/' + new Date(date).getDate()}
+                {new Date(date).getMonth() + 1 + '/' + new Date(date).getDate()}
               </Center>
               <FullCalendar
                 plugins={[timeGridPlugin]}

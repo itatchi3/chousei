@@ -196,8 +196,9 @@ export const EventPush = () => {
               <Box key={i} pb="2">
                 <Box>
                   {new Date(sortedCandidateDate.date).getMonth() +
+                    1 +
                     '/' +
-                    new Date(sortedCandidateDate.date).getDay()}
+                    new Date(sortedCandidateDate.date).getDate()}
                 </Box>
                 {sortedCandidateDate.timeWidth.map((timeWidth, j) => (
                   <Box key={j}>{timeWidth.stringTimeWidth}</Box>
