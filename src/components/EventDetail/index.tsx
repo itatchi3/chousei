@@ -149,7 +149,9 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             '【概要】\n' +
             event.description +
             '\n' +
-            'https://liff.line.me/1656098585-v7VEeZ7Q/event/' +
+            'https://liff.line.me/' +
+            process.env.NEXT_PUBLIC_LIFF_ID +
+            '/event/' +
             event.id,
         },
       ]);
