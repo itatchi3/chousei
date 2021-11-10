@@ -25,9 +25,6 @@
     "react": "17.0.2",
     "react-day-picker": "^7.4.10",
     "react-dom": "17.0.2",
-    "react-liff": "^1.1.0",
-    "react-multi-date-picker": "^3.1.1",
-    "react-sticky-table": "^5.1.11",
     "recoil": "^0.4.0"
   },
   "devDependencies": {

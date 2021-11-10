@@ -1,7 +1,5 @@
-// import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
-import { createTheme } from '@material-ui/core/styles';
 import { FC } from 'react';
 import { AuthProvider, useAuth } from 'src/hooks/auth';
 import { Center, ChakraProvider, Spinner } from '@chakra-ui/react';
