@@ -162,7 +162,7 @@ export const InputSchedule = () => {
     setDates(dateList);
     setEventFullCalendarList(eventFullCalendarList);
     setMinTime(newMinTime);
-    setMaxTime(newMaxTime);
+    setMaxTime(newMaxTime + 1);
     let newTimeList: number[] = [];
     for (let i = newMinTime; i <= newMaxTime; i++) {
       newTimeList.push(i);
