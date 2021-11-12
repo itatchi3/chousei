@@ -164,7 +164,7 @@ export const InputSchedule = () => {
     setMinTime(newMinTime);
     setMaxTime(newMaxTime + 1);
     let newTimeList: number[] = [];
-    for (let i = newMinTime; i <= newMaxTime; i++) {
+    for (let i = newMinTime; i <= newMaxTime + 1; i++) {
       newTimeList.push(i);
     }
     setViewTimeList(newTimeList);
