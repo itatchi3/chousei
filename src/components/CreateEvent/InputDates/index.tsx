@@ -280,7 +280,12 @@ export const InputDates = () => {
               >
                 <ModalOverlay />
                 <ModalContent>
-                  <ModalCloseButton />
+                  <ModalCloseButton
+                    sx={{
+                      WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                      _focus: { boxShadow: 'none' },
+                    }}
+                  />
                   <ModalHeader></ModalHeader>
                   <ModalBody py="0">
                     <Box>
@@ -378,13 +383,29 @@ export const InputDates = () => {
                   </HStack>
                 ))}
 
-                <Button onClick={() => addTimeWidths(indexDate)}>+</Button>
+                <Button
+                  sx={{
+                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                    _focus: { boxShadow: 'none' },
+                  }}
+                  onClick={() => addTimeWidths(indexDate)}
+                >
+                  +
+                </Button>
               </VStack>
             </FormControl>
           </Box>
         ))}
         <Box pt="2">
-          <Button onClick={addCandidateDate}>+</Button>
+          <Button
+            sx={{
+              WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+              _focus: { boxShadow: 'none' },
+            }}
+            onClick={addCandidateDate}
+          >
+            +
+          </Button>
         </Box>
       </VStack>
     </Box>

@@ -185,13 +185,25 @@ export const EventPush = () => {
 
   return (
     <VStack>
-      <Button bg="green.200" onClick={() => registerEvent()}>
+      <Button
+        bg="green.200"
+        sx={{
+          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+          _focus: { boxShadow: 'none' },
+        }}
+        onClick={() => registerEvent()}
+      >
         イベントを作成する
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} size="xs" scrollBehavior={'inside'}>
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton />
+          <ModalCloseButton
+            sx={{
+              WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+              _focus: { boxShadow: 'none' },
+            }}
+          />
           <ModalHeader>候補時間リスト</ModalHeader>
           <ModalBody pt="0" px="10" mb="4">
             {sortedCandidateDates?.map((sortedCandidateDate, i) => (
