@@ -39,18 +39,22 @@ export const InputEventOverview = () => {
       </Flex>
       <Box p="3">
         <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg" isRequired>
-          <FormLabel fontWeight="bold" fontSize="sm">
-            イベント名
-          </FormLabel>
+          <Box py="1">
+            <FormLabel fontWeight="bold" fontSize="sm">
+              イベント名
+            </FormLabel>
+          </Box>
           <Input onChange={changeEventname} value={event.eventName} />
           <FormHelperText fontSize="xs">ミーティング、練習日程、シフト調整など</FormHelperText>
         </FormControl>
       </Box>
       <Box px="3">
         <FormControl px="3" py="2" borderWidth="2px" borderRadius="lg">
-          <FormLabel fontWeight="bold" fontSize="sm">
-            補足・備考
-          </FormLabel>
+          <Box py="1">
+            <FormLabel fontWeight="bold" fontSize="sm">
+              補足・備考
+            </FormLabel>
+          </Box>
           <Textarea onChange={changeDescription} value={event.description} rows={4} />
           <FormHelperText fontSize="xs">〆切は○日など</FormHelperText>
         </FormControl>
