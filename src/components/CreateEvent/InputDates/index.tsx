@@ -2,22 +2,24 @@ import { useRecoilState } from 'recoil';
 import { candidateDateState } from 'src/atoms/eventState';
 import {
   Box,
+  Button,
   Center,
   Circle,
+  CloseButton,
   Flex,
-  Text,
-  Button,
-  Input,
   FormControl,
   FormLabel,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   HStack,
+  Input,
+  Modal,
+  ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spacer,
+  Text,
   VStack,
 } from '@chakra-ui/react';
 import DayPicker, { DateUtils, DayModifiers } from 'react-day-picker';
@@ -66,7 +68,7 @@ export const InputDates = () => {
     newState[indexDate].timeWidth[indexWidth] = newTimeWidth;
     setCandidateDates(newState);
   };
-  const changestartHour = (
+  const changeStartHour = (
     e: React.ChangeEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
@@ -74,7 +76,7 @@ export const InputDates = () => {
     onChangeTimeWidth('startHour', e.target.value, indexDate, indexWidth);
   };
 
-  const changeendHour = (
+  const changeEndHour = (
     e: React.ChangeEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
@@ -82,7 +84,7 @@ export const InputDates = () => {
     onChangeTimeWidth('endHour', e.target.value, indexDate, indexWidth);
   };
 
-  const blurstartHour = (
+  const blurStartHour = (
     e: React.FocusEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
@@ -96,7 +98,7 @@ export const InputDates = () => {
     }
   };
 
-  const blurendHour = (
+  const blurEndHour = (
     e: React.FocusEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
@@ -214,10 +216,26 @@ export const InputDates = () => {
     newIsOpen[indexDate] = false;
     setIsOpen(newIsOpen);
   };
+
+  const onDeleteDate = (indexDate: number) => {
+    const newCandidateDates = cloneDeep(candidateDates);
+    newCandidateDates.splice(indexDate, 1);
+    setCandidateDates(newCandidateDates);
+    const newSortedDatesString = cloneDeep(sortedDatesString);
+    newSortedDatesString.splice(indexDate, 1);
+    setSortedDatesString(newSortedDatesString);
+  };
+
+  const onDeleteTimeWidth = (indexDate: number, indexWidth: number) => {
+    const newCandidateDates = cloneDeep(candidateDates);
+    newCandidateDates[indexDate].timeWidth.splice(indexWidth, 1);
+    setCandidateDates(newCandidateDates);
+  };
   useEffect(() => {
     datePicRef.current = candidateDates.map(() => createRef());
   }, [candidateDates]);
 
+  console.log(candidateDates);
   return (
     <Box>
       <Flex align="center">
@@ -230,11 +248,25 @@ export const InputDates = () => {
       </Flex>
       <VStack px="3">
         {candidateDates.map((candidateDate, indexDate) => (
-          <Box py="2" borderWidth="2px" borderRadius="lg" key={indexDate}>
+          <Box mt="3" py="2" borderWidth="2px" borderRadius="lg" key={indexDate}>
             <FormControl px="3" isRequired>
-              <FormLabel fontWeight="bold" fontSize="sm">
-                日付
-              </FormLabel>
+              <Flex>
+                <Box my="1">
+                  <FormLabel fontWeight="bold" fontSize="sm">
+                    日付
+                  </FormLabel>
+                </Box>
+                <Spacer />
+
+                <CloseButton
+                  sx={{
+                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                    _focus: { boxShadow: 'none' },
+                  }}
+                  onClick={() => onDeleteDate(indexDate)}
+                  visibility={candidateDates.length >= 2 ? 'visible' : 'hidden'}
+                />
+              </Flex>
               <Input
                 placeholder="タップしてください"
                 defaultValue={sortedDatesString[indexDate]}
@@ -280,18 +312,31 @@ export const InputDates = () => {
               </Modal>
             </FormControl>
             <FormControl px="3" pt="3" isRequired>
-              <FormLabel fontWeight="bold" fontSize="sm">
-                時間幅
-              </FormLabel>
+              <Box py="1">
+                <FormLabel fontWeight="bold" fontSize="sm" pb="1">
+                  時間幅
+                </FormLabel>
+              </Box>
               <VStack>
                 {candidateDate.timeWidth.map((timeWidth, indexWidth) => (
-                  <HStack key={indexWidth} pb="1">
+                  <HStack key={indexWidth} pb="1" align="center">
+                    <CloseButton
+                      size="sm"
+                      ml="-2"
+                      mr="-1"
+                      sx={{
+                        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                        _focus: { boxShadow: 'none' },
+                      }}
+                      onClick={() => onDeleteTimeWidth(indexDate, indexWidth)}
+                      visibility={candidateDate.timeWidth.length >= 2 ? 'visible' : 'hidden'}
+                    />
                     <Box>
                       <Input
                         type="number"
                         value={timeWidth.startHour}
-                        onChange={(e) => changestartHour(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurstartHour(e, indexDate, indexWidth)}
+                        onChange={(e) => changeStartHour(e, indexDate, indexWidth)}
+                        onBlur={(e) => blurStartHour(e, indexDate, indexWidth)}
                         textAlign="center"
                         p="0"
                         ref={datePicRef.current[indexDate] as any}
@@ -313,14 +358,14 @@ export const InputDates = () => {
                       <Input
                         type="number"
                         value={timeWidth.endHour}
-                        onChange={(e) => changeendHour(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurendHour(e, indexDate, indexWidth)}
+                        onChange={(e) => changeEndHour(e, indexDate, indexWidth)}
+                        onBlur={(e) => blurEndHour(e, indexDate, indexWidth)}
                         textAlign="center"
                         p="0"
                       />
                     </Box>
                     <Text>:</Text>
-                    <Box>
+                    <Box pr="4">
                       <Input
                         type="number"
                         value={timeWidth.endMinute}
