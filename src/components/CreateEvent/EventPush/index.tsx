@@ -161,7 +161,7 @@ export const EventPush = () => {
             '【イベント名】\n' +
             event.eventName +
             '\n' +
-            '【概要】\n' +
+            '【補足・備考】\n' +
             event.description +
             '\n' +
             'https://liff.line.me/' +
