@@ -15,7 +15,6 @@ import { useEffect } from 'react';
 
 export const InputEventOverview = () => {
   const [event, setEvent] = useRecoilState(editingEventState);
-  const [isValidate, setIsValidate] = useRecoilState(isValidateState);
   const changeEventname = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setEvent((state) => ({
       ...state,
@@ -29,11 +28,6 @@ export const InputEventOverview = () => {
     }));
   };
 
-  useEffect(() => {
-    if (event.eventName === '') {
-      setIsValidate(true);
-    }
-  }, [event, setIsValidate]);
   return (
     <>
       <Flex align="center">

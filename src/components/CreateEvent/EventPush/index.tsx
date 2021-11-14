@@ -181,6 +181,8 @@ export const EventPush = () => {
     liff!.closeWindow();
   };
 
+  console.log(isValidate);
+
   return (
     <VStack>
       <Button
@@ -203,8 +205,13 @@ export const EventPush = () => {
               _focus: { boxShadow: 'none' },
             }}
           />
-          <ModalHeader>候補時間リスト</ModalHeader>
-          <ModalBody pt="0" px="10" mb="4">
+          <ModalHeader>内容を確認してください</ModalHeader>
+          <ModalBody pt="0" px="50px" mb="4" fontSize="lg">
+            <Box fontWeight="bold">イベント名</Box>
+            <Box pb="3">{event.eventName}</Box>
+            <Box fontWeight="bold">補足・備考</Box>
+            <Box pb="3">{event.description}</Box>
+            <Box fontWeight="bold">候補時間</Box>
             {sortedCandidateDates?.map((sortedCandidateDate, i) => (
               <Box key={i} pb="2">
                 <Box>
@@ -214,7 +221,9 @@ export const EventPush = () => {
                     new Date(sortedCandidateDate.date).getDate()}
                 </Box>
                 {sortedCandidateDate.timeWidth.map((timeWidth, j) => (
-                  <Box key={j}>{timeWidth.stringTimeWidth}</Box>
+                  <Box key={j} pl="6">
+                    {timeWidth.stringTimeWidth}
+                  </Box>
                 ))}
               </Box>
             ))}
