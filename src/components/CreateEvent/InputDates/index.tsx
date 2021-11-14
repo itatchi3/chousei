@@ -230,7 +230,7 @@ export const InputDates = () => {
                         }
                         .DayPicker:not(.DayPicker--interactionDisabled)
                           .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
-                          background-color: #ffffff;
+                          background: none;
                         }
                         .DayPicker-Day--today {
                           color: #000000;
@@ -265,7 +265,7 @@ export const InputDates = () => {
               </Box>
               <VStack>
                 {candidateDate.timeWidth.map((timeWidth, indexWidth) => (
-                  <HStack key={indexWidth} pb="1" width="100%" align="center">
+                  <HStack key={indexWidth} pb="1">
                     <CloseButton
                       size="sm"
                       ml="-2"
@@ -277,75 +277,75 @@ export const InputDates = () => {
                       onClick={() => onDeleteTimeWidth(indexDate, indexWidth)}
                       visibility={candidateDate.timeWidth.length >= 2 ? 'visible' : 'hidden'}
                     />
-                    <Box width="100%">
-                      {timeWidth.start >= timeWidth.end ||
-                      timeWidth.start === '' ||
-                      timeWidth.end === '' ? (
-                        <Input
-                          type="time"
-                          display="flex"
-                          justifyContent="center"
-                          pl="10"
-                          sx={{
-                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                            _focus: { boxShadow: '0 0 0 1px #e53e3e' },
-                          }}
-                          value={timeWidth.start}
-                          onChange={(e) => changeStartTime(e, indexDate, indexWidth)}
-                          isInvalid
-                        />
-                      ) : (
-                        <Input
-                          type="time"
-                          display="flex"
-                          justifyContent="center"
-                          pl="10"
-                          sx={{
-                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                            _focus: { boxShadow: 'none' },
-                          }}
-                          value={timeWidth.start}
-                          onChange={(e) => changeStartTime(e, indexDate, indexWidth)}
-                        />
-                      )}
+                    <Box
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      width="100px"
+                      position="relative"
+                      borderColor={
+                        timeWidth.start >= timeWidth.end ||
+                        timeWidth.start === '' ||
+                        timeWidth.end === ''
+                          ? 'red.500'
+                          : 'gray.200'
+                      }
+                    >
+                      <Box
+                        textAlign="center"
+                        position="absolute"
+                        top="50%"
+                        left="50%"
+                        transform="translateY(-50%) translateX(-50%)"
+                      >
+                        {timeWidth.start}
+                      </Box>
+                      <Input
+                        type="time"
+                        onChange={(e) => changeStartTime(e, indexDate, indexWidth)}
+                        opacity="0"
+                      />
                     </Box>
                     <Text>~</Text>
-                    {timeWidth.start >= timeWidth.end ||
-                    timeWidth.start === '' ||
-                    timeWidth.end === '' ? (
-                      <Box width="100%" pr="5">
+                    <Box pr="5">
+                      <Box
+                        borderWidth="1px"
+                        borderRadius="lg"
+                        position="relative"
+                        width="100px"
+                        borderColor={
+                          timeWidth.start >= timeWidth.end ||
+                          timeWidth.start === '' ||
+                          timeWidth.end === ''
+                            ? 'red.500'
+                            : 'gray.200'
+                        }
+                      >
+                        <Box
+                          textAlign="center"
+                          position="absolute"
+                          top="50%"
+                          left="50%"
+                          transform="translateY(-50%) translateX(-50%)"
+                        >
+                          {timeWidth.end}
+                        </Box>
                         <Input
                           type="time"
-                          display="flex"
-                          justifyContent="center"
-                          pl="10"
-                          sx={{
-                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                            _focus: { boxShadow: '0 0 0 1px #e53e3e' },
-                          }}
-                          value={timeWidth.end}
                           onChange={(e) => changeEndTime(e, indexDate, indexWidth)}
-                          isInvalid
+                          opacity="0"
                         />
                       </Box>
-                    ) : (
-                      <Box width="100%" pr="5">
-                        <Input
-                          type="time"
-                          display="flex"
-                          justifyContent="center"
-                          pl="10"
-                          sx={{
-                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                            _focus: { boxShadow: 'none' },
-                          }}
-                          value={timeWidth.end}
-                          onChange={(e) => changeEndTime(e, indexDate, indexWidth)}
-                        />
-                      </Box>
-                    )}
+                    </Box>
                   </HStack>
                 ))}
+                <style jsx global>{`
+                  input[type='time']::-webkit-calendar-picker-indicator {
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                    width: 100%;
+                  }
+                `}</style>
                 <Button
                   sx={{
                     WebkitTapHighlightColor: 'rgba(0,0,0,0)',
