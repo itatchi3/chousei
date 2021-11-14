@@ -23,6 +23,7 @@ export type TimeWidth = {
 
 export type CandidateDate = {
   date: number;
+  dateString: string;
   timeWidth: TimeWidth;
 };
 
@@ -65,6 +66,7 @@ export const eventState = atom<EventType>({
     candidateDates: [
       {
         date: 0,
+        dateString: '',
         timeWidth: {
           start: 0,
           end: 0,

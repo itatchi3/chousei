@@ -107,10 +107,7 @@ const AttendanceTable = () => {
               <Tr key={i} bg={colours[i]}>
                 <Td pl="20px" pr="2px">
                   <Box>
-                    {new Date(event.candidateDates[i].date).getMonth() +
-                      1 +
-                      '/' +
-                      new Date(event.candidateDates[i].date).getDate() +
+                    {event.candidateDates[i].dateString +
                       '  ' +
                       event.candidateDates[i].timeWidth.stringTimeWidth}
                   </Box>

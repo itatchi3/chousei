@@ -184,9 +184,7 @@ export const InputSchedule = () => {
         {dates.map((date, index) => {
           return (
             <Box minWidth="100px" key={index}>
-              <Center fontWeight="bold">
-                {new Date(date).getMonth() + 1 + '/' + new Date(date).getDate()}
-              </Center>
+              <Center fontWeight="bold">{event.candidateDates[index].dateString}</Center>
               <FullCalendar
                 plugins={[timeGridPlugin]}
                 initialView="timeGridDay"

@@ -33,6 +33,7 @@ export const InputDates = () => {
   const datePicRef = useRef<React.RefObject<HTMLLabelElement>[]>([]);
   const [isOpen, setIsOpen] = useState([false]);
   const [isValidate, setIsValidate] = useRecoilState(isValidateState);
+  const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
   const handleDayClick = (day: Date, { selected }: DayModifiers, indexDate: number) => {
     const selectedDays = candidateDates[indexDate].date.concat();
@@ -55,7 +56,10 @@ export const InputDates = () => {
     newState[indexDate] = newData;
     setCandidateDates(newState);
 
-    const possibleDates = sortedDates.map((date) => date.getMonth() + 1 + '/' + date.getDate());
+    const possibleDates = sortedDates.map(
+      (date) =>
+        date.getMonth() + 1 + '/' + date.getDate() + '(' + dayOfWeekStr[date.getDay()] + ')',
+    );
     const newSortedDatesString = cloneDeep(sortedDatesString);
     newSortedDatesString[indexDate] = possibleDates.join(', ');
     setSortedDatesString(newSortedDatesString);
@@ -304,7 +308,7 @@ export const InputDates = () => {
                       />
                     </Box>
                     <Text>~</Text>
-                    <Box pr="5">
+                    <Box pr="8">
                       <Box
                         borderWidth="1px"
                         borderRadius="lg"

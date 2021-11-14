@@ -27,11 +27,13 @@ import {
 
 type SortedCandidateDate = {
   date: Date;
+  dateString: string;
   timeWidth: EditingTimeWidth[];
 };
 
 type RegisterCandidateDate = {
   date: number;
+  dateString: string;
   timeWidth: TimeWidth;
 };
 
@@ -44,6 +46,7 @@ export const EventPush = () => {
   const event = useRecoilValue(editingEventState);
   const isValidate = useRecoilValue(isValidateState);
   const [isLoading, setIsLoading] = useState(false);
+  const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
   const registerEvent = () => {
     const addedStringTimeWidthCandidateDates: SortedCandidateDate[] = [];
@@ -59,6 +62,8 @@ export const EventPush = () => {
       candidateDate.date.map((date) => {
         addedStringTimeWidthCandidateDates.push({
           date: date,
+          dateString:
+            date.getMonth() + 1 + '/' + date.getDate() + '(' + dayOfWeekStr[date.getDay()] + ')',
           timeWidth: stringTimeWidth,
         });
       });
@@ -76,7 +81,7 @@ export const EventPush = () => {
           filteredDates.map((filteredDate) => {
             newTimeWidth = [...newTimeWidth, ...filteredDate.timeWidth];
           });
-          sortedCandidateDates.push({ date: candidateDate.date, timeWidth: newTimeWidth });
+          sortedCandidateDates.push({ ...candidateDate, timeWidth: newTimeWidth });
           pushedDate.push(candidateDate.date.getTime());
         }
       } else {
@@ -129,6 +134,7 @@ export const EventPush = () => {
         if (timeWidth.stringTimeWidth) {
           registerCandidateDate.push({
             date: candidateDate.date.getTime(),
+            dateString: candidateDate.dateString,
             timeWidth: {
               start: start.getTime(),
               end: end.getTime(),
@@ -181,8 +187,8 @@ export const EventPush = () => {
     liff!.closeWindow();
   };
 
-  console.log(isValidate);
-
+  console.log(sortedCandidateDates);
+  console.log(registerCandidateDates);
   return (
     <VStack>
       <Button
@@ -208,20 +214,19 @@ export const EventPush = () => {
           <ModalHeader>内容を確認してください</ModalHeader>
           <ModalBody pt="0" px="50px" mb="4" fontSize="lg">
             <Box fontWeight="bold">イベント名</Box>
-            <Box pb="3">{event.eventName}</Box>
+            <Box pl="2" pb="4">
+              {event.eventName}
+            </Box>
             <Box fontWeight="bold">補足・備考</Box>
-            <Box pb="3">{event.description}</Box>
+            <Box pl="2" pb="4">
+              {event.description}
+            </Box>
             <Box fontWeight="bold">候補時間</Box>
             {sortedCandidateDates?.map((sortedCandidateDate, i) => (
               <Box key={i} pb="2">
-                <Box>
-                  {new Date(sortedCandidateDate.date).getMonth() +
-                    1 +
-                    '/' +
-                    new Date(sortedCandidateDate.date).getDate()}
-                </Box>
+                <Box pl="2">{sortedCandidateDate.dateString}</Box>
                 {sortedCandidateDate.timeWidth.map((timeWidth, j) => (
-                  <Box key={j} pl="6">
+                  <Box key={j} textAlign="center">
                     {timeWidth.stringTimeWidth}
                   </Box>
                 ))}
