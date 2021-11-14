@@ -210,14 +210,32 @@ export const InputDates = () => {
                     }}
                   />
                   <ModalHeader></ModalHeader>
-                  <ModalBody py="0">
+                  <ModalBody py="0" px="0">
                     <Box>
                       <DayPicker
                         selectedDays={candidateDate.date}
                         onDayClick={(day, modifires, e) =>
                           handleDayClick(day, modifires, indexDate)
                         }
+                        weekdaysShort={['日', '月', '火', '水', '木', '金', '土']}
                       />
+                      <style jsx global>{`
+                        .DayPicker-Day {
+                          padding: 4px 8px;
+                          margin: 2px;
+                        }
+                        .DayPicker {
+                          font-size: 21px;
+                          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+                        }
+                        .DayPicker:not(.DayPicker--interactionDisabled)
+                          .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+                          background-color: #ffffff;
+                        }
+                        .DayPicker-Day--today {
+                          color: #000000;
+                        }
+                      `}</style>
                     </Box>
                   </ModalBody>
                   <ModalFooter pt="0">
