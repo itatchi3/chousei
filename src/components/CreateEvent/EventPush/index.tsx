@@ -43,6 +43,7 @@ export const EventPush = () => {
   const [sortedCandidateDates, setSortedCandidateDates] = useState<SortedCandidateDate[]>();
   const event = useRecoilValue(editingEventState);
   const isValidate = useRecoilValue(isValidateState);
+  const [isLoading, setIsLoading] = useState(false);
 
   const registerEvent = () => {
     const addedStringTimeWidthCandidateDates: SortedCandidateDate[] = [];
@@ -141,7 +142,7 @@ export const EventPush = () => {
     onOpen();
   };
   const handleSubmit = async () => {
-    console.log(registerCandidateDates);
+    setIsLoading(true);
     const eventPush = await database.ref('events').push({
       name: event.eventName,
       description: event.description,
@@ -228,6 +229,7 @@ export const EventPush = () => {
                   }}
                   colorScheme="blue"
                   onClick={() => handleSubmit()}
+                  isLoading={isLoading}
                 >
                   作成
                 </Button>
