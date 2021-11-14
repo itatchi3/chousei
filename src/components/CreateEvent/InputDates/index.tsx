@@ -268,8 +268,6 @@ export const InputDates = () => {
                   <HStack key={indexWidth} pb="1">
                     <CloseButton
                       size="sm"
-                      ml="-2"
-                      mr="-1"
                       sx={{
                         WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                         _focus: { boxShadow: 'none' },
