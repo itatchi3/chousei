@@ -1,8 +1,7 @@
 import { useRecoilState } from 'recoil';
-import { editingEventState } from 'src/atoms/eventState';
+import { editingEventState, isValidateState } from 'src/atoms/eventState';
 import {
   Box,
-  Center,
   Circle,
   Flex,
   FormControl,
@@ -12,9 +11,11 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 export const InputEventOverview = () => {
   const [event, setEvent] = useRecoilState(editingEventState);
+  const [isValidate, setIsValidate] = useRecoilState(isValidateState);
   const changeEventname = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setEvent((state) => ({
       ...state,
@@ -27,6 +28,12 @@ export const InputEventOverview = () => {
       description: evt.target.value,
     }));
   };
+
+  useEffect(() => {
+    if (event.eventName === '') {
+      setIsValidate(true);
+    }
+  }, [event, setIsValidate]);
   return (
     <>
       <Flex align="center">

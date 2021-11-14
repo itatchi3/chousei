@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { candidateDateState } from 'src/atoms/eventState';
+import { candidateDateState, isValidateState } from 'src/atoms/eventState';
 import {
   Box,
   Button,
@@ -32,6 +32,7 @@ export const InputDates = () => {
   const [sortedDatesString, setSortedDatesString] = useState(['']);
   const datePicRef = useRef<React.RefObject<HTMLLabelElement>[]>([]);
   const [isOpen, setIsOpen] = useState([false]);
+  const [isValidate, setIsValidate] = useRecoilState(isValidateState);
 
   const handleDayClick = (day: Date, { selected }: DayModifiers, indexDate: number) => {
     const selectedDays = candidateDates[indexDate].date.concat();
@@ -68,114 +69,20 @@ export const InputDates = () => {
     newState[indexDate].timeWidth[indexWidth] = newTimeWidth;
     setCandidateDates(newState);
   };
-  const changeStartHour = (
+  const changeStartTime = (
     e: React.ChangeEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
   ) => {
-    onChangeTimeWidth('startHour', e.target.value, indexDate, indexWidth);
+    onChangeTimeWidth('start', e.target.value, indexDate, indexWidth);
   };
 
-  const changeEndHour = (
+  const changeEndTime = (
     e: React.ChangeEvent<HTMLInputElement>,
     indexDate: number,
     indexWidth: number,
   ) => {
-    onChangeTimeWidth('endHour', e.target.value, indexDate, indexWidth);
-  };
-
-  const blurStartHour = (
-    e: React.FocusEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    if (parseInt(e.target.value) < 0) {
-      onChangeTimeWidth('startHour', '', indexDate, indexWidth);
-    } else if (parseInt(e.target.value) > 23) {
-      onChangeTimeWidth('startHour', '23', indexDate, indexWidth);
-    } else {
-      onChangeTimeWidth('startHour', String(parseInt(e.target.value)), indexDate, indexWidth);
-    }
-  };
-
-  const blurEndHour = (
-    e: React.FocusEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    if (
-      parseInt(e.target.value) <=
-      parseInt(candidateDates[indexDate].timeWidth[indexWidth].startHour)
-    ) {
-      onChangeTimeWidth(
-        'endHour',
-        candidateDates[indexDate].timeWidth[indexWidth].startHour,
-        indexDate,
-        indexWidth,
-      );
-    } else if (parseInt(e.target.value) > 23) {
-      onChangeTimeWidth('endHour', '23', indexDate, indexWidth);
-    } else {
-      onChangeTimeWidth('endHour', String(parseInt(e.target.value)), indexDate, indexWidth);
-    }
-  };
-
-  const changestartMinute = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    onChangeTimeWidth('startMinute', e.target.value, indexDate, indexWidth);
-  };
-
-  const changeendMinute = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    onChangeTimeWidth('endMinute', e.target.value, indexDate, indexWidth);
-  };
-
-  const blurstartMinute = (
-    e: React.FocusEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    if (parseInt(e.target.value) < 0) {
-      onChangeTimeWidth('startMinute', '00', indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-      onChangeTimeWidth('startMinute', '0' + parseInt(e.target.value), indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 10 && parseInt(e.target.value) <= 59) {
-      onChangeTimeWidth('startMinute', String(parseInt(e.target.value)), indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 60) {
-      onChangeTimeWidth('startMinute', '59', indexDate, indexWidth);
-    }
-  };
-
-  const blurendMinute = (
-    e: React.FocusEvent<HTMLInputElement>,
-    indexDate: number,
-    indexWidth: number,
-  ) => {
-    if (
-      candidateDates[indexDate].timeWidth[indexWidth].startHour ===
-        candidateDates[indexDate].timeWidth[indexWidth].endHour &&
-      parseInt(e.target.value) <=
-        parseInt(candidateDates[indexDate].timeWidth[indexWidth].startMinute)
-    ) {
-      onChangeTimeWidth(
-        'endMinute',
-        candidateDates[indexDate].timeWidth[indexWidth].startMinute,
-        indexDate,
-        indexWidth,
-      );
-    } else if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-      onChangeTimeWidth('endMinute', '0' + parseInt(e.target.value), indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 10 && parseInt(e.target.value) <= 59) {
-      onChangeTimeWidth('endMinute', String(parseInt(e.target.value)), indexDate, indexWidth);
-    } else if (parseInt(e.target.value) >= 60) {
-      onChangeTimeWidth('endMinute', '59', indexDate, indexWidth);
-    }
+    onChangeTimeWidth('end', e.target.value, indexDate, indexWidth);
   };
 
   const addTimeWidths = async (indexDate: number) => {
@@ -183,10 +90,8 @@ export const InputDates = () => {
     const newTimeWidth = [
       ...currentData.timeWidth,
       {
-        startHour: '',
-        endHour: '',
-        startMinute: '',
-        endMinute: '',
+        start: '12:00',
+        end: '13:00',
       },
     ];
     const newState = cloneDeep(candidateDates);
@@ -199,7 +104,7 @@ export const InputDates = () => {
       ...candidateDates,
       {
         date: [],
-        timeWidth: [{ startHour: '', endHour: '', startMinute: '', endMinute: '' }],
+        timeWidth: [{ start: '12:00', end: '13:00' }],
       },
     ]);
     setIsOpen([...isOpen, false]);
@@ -235,7 +140,25 @@ export const InputDates = () => {
     datePicRef.current = candidateDates.map(() => createRef());
   }, [candidateDates]);
 
-  console.log(candidateDates);
+  useEffect(() => {
+    let validate = false;
+    candidateDates.map((candidateDate) => {
+      if (candidateDate.date.length === 0) {
+        validate = true;
+        setIsValidate(true);
+      }
+      candidateDate.timeWidth.map((timeWidth) => {
+        if (timeWidth.start >= timeWidth.end) {
+          validate = true;
+          setIsValidate(true);
+        }
+      });
+    });
+    if (!validate) {
+      setIsValidate(false);
+    }
+  }, [candidateDates, setIsValidate]);
+
   return (
     <Box>
       <Flex align="center">
@@ -248,7 +171,7 @@ export const InputDates = () => {
       </Flex>
       <VStack px="3">
         {candidateDates.map((candidateDate, indexDate) => (
-          <Box mt="3" py="2" borderWidth="2px" borderRadius="lg" key={indexDate}>
+          <Box mt="3" py="2" borderWidth="2px" borderRadius="lg" width="100%" key={indexDate}>
             <FormControl px="3" isRequired>
               <Flex>
                 <Box my="1">
@@ -324,7 +247,7 @@ export const InputDates = () => {
               </Box>
               <VStack>
                 {candidateDate.timeWidth.map((timeWidth, indexWidth) => (
-                  <HStack key={indexWidth} pb="1" align="center">
+                  <HStack key={indexWidth} pb="1" width="100%" align="center">
                     <CloseButton
                       size="sm"
                       ml="-2"
@@ -336,53 +259,75 @@ export const InputDates = () => {
                       onClick={() => onDeleteTimeWidth(indexDate, indexWidth)}
                       visibility={candidateDate.timeWidth.length >= 2 ? 'visible' : 'hidden'}
                     />
-                    <Box>
-                      <Input
-                        type="number"
-                        value={timeWidth.startHour}
-                        onChange={(e) => changeStartHour(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurStartHour(e, indexDate, indexWidth)}
-                        textAlign="center"
-                        p="0"
-                        ref={datePicRef.current[indexDate] as any}
-                      />
-                    </Box>
-                    <Text>:</Text>
-                    <Box>
-                      <Input
-                        type="number"
-                        value={timeWidth.startMinute}
-                        onChange={(e) => changestartMinute(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurstartMinute(e, indexDate, indexWidth)}
-                        textAlign="center"
-                        p="0"
-                      />
+                    <Box width="100%">
+                      {timeWidth.start >= timeWidth.end ||
+                      timeWidth.start === '' ||
+                      timeWidth.end === '' ? (
+                        <Input
+                          type="time"
+                          display="flex"
+                          justifyContent="center"
+                          pl="10"
+                          sx={{
+                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                            _focus: { boxShadow: '0 0 0 1px #e53e3e' },
+                          }}
+                          value={timeWidth.start}
+                          onChange={(e) => changeStartTime(e, indexDate, indexWidth)}
+                          isInvalid
+                        />
+                      ) : (
+                        <Input
+                          type="time"
+                          display="flex"
+                          justifyContent="center"
+                          pl="10"
+                          sx={{
+                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                            _focus: { boxShadow: 'none' },
+                          }}
+                          value={timeWidth.start}
+                          onChange={(e) => changeStartTime(e, indexDate, indexWidth)}
+                        />
+                      )}
                     </Box>
                     <Text>~</Text>
-                    <Box>
-                      <Input
-                        type="number"
-                        value={timeWidth.endHour}
-                        onChange={(e) => changeEndHour(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurEndHour(e, indexDate, indexWidth)}
-                        textAlign="center"
-                        p="0"
-                      />
-                    </Box>
-                    <Text>:</Text>
-                    <Box pr="4">
-                      <Input
-                        type="number"
-                        value={timeWidth.endMinute}
-                        onChange={(e) => changeendMinute(e, indexDate, indexWidth)}
-                        onBlur={(e) => blurendMinute(e, indexDate, indexWidth)}
-                        textAlign="center"
-                        p="0"
-                      />
-                    </Box>
+                    {timeWidth.start >= timeWidth.end ||
+                    timeWidth.start === '' ||
+                    timeWidth.end === '' ? (
+                      <Box width="100%" pr="5">
+                        <Input
+                          type="time"
+                          display="flex"
+                          justifyContent="center"
+                          pl="10"
+                          sx={{
+                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                            _focus: { boxShadow: '0 0 0 1px #e53e3e' },
+                          }}
+                          value={timeWidth.end}
+                          onChange={(e) => changeEndTime(e, indexDate, indexWidth)}
+                          isInvalid
+                        />
+                      </Box>
+                    ) : (
+                      <Box width="100%" pr="5">
+                        <Input
+                          type="time"
+                          display="flex"
+                          justifyContent="center"
+                          pl="10"
+                          sx={{
+                            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                            _focus: { boxShadow: 'none' },
+                          }}
+                          value={timeWidth.end}
+                          onChange={(e) => changeEndTime(e, indexDate, indexWidth)}
+                        />
+                      </Box>
+                    )}
                   </HStack>
                 ))}
-
                 <Button
                   sx={{
                     WebkitTapHighlightColor: 'rgba(0,0,0,0)',

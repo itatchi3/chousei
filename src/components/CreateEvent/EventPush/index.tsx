@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { candidateDateState, TimeWidth, EditingTimeWidth } from 'src/atoms/eventState';
+import {
+  candidateDateState,
+  TimeWidth,
+  EditingTimeWidth,
+  isValidateState,
+} from 'src/atoms/eventState';
 import { database } from 'src/utils/firebase';
 import { useAuth } from 'src/hooks/auth';
 import { useRecoilValue } from 'recoil';
@@ -37,6 +42,7 @@ export const EventPush = () => {
   const [registerCandidateDates, setRegisterCandidateDates] = useState<RegisterCandidateDate[]>();
   const [sortedCandidateDates, setSortedCandidateDates] = useState<SortedCandidateDate[]>();
   const event = useRecoilValue(editingEventState);
+  const isValidate = useRecoilValue(isValidateState);
 
   const registerEvent = () => {
     const addedStringTimeWidthCandidateDates: SortedCandidateDate[] = [];
@@ -45,14 +51,7 @@ export const EventPush = () => {
       candidateDate.timeWidth.map((timeWidth) => {
         stringTimeWidth.push({
           ...timeWidth,
-          stringTimeWidth:
-            timeWidth.startHour +
-            ':' +
-            timeWidth.startMinute +
-            '~' +
-            timeWidth.endHour +
-            ':' +
-            timeWidth.endMinute,
+          stringTimeWidth: timeWidth.start + '~' + timeWidth.end,
         });
       });
 
@@ -97,14 +96,10 @@ export const EventPush = () => {
       });
 
       sortTimeWidth.sort((a, b) => {
-        if (a.startHour > b.startHour) return 1;
-        if (a.startHour < b.startHour) return -1;
-        if (a.startMinute > b.startMinute) return 1;
-        if (a.startMinute < b.startMinute) return -1;
-        if (a.endHour > b.endHour) return 1;
-        if (a.endHour < b.endHour) return -1;
-        if (a.endMinute > b.endMinute) return 1;
-        if (a.endMinute < b.endMinute) return -1;
+        if (a.start > b.start) return 1;
+        if (a.start < b.start) return -1;
+        if (a.end > b.end) return 1;
+        if (a.end < b.end) return -1;
         return 0;
       });
       candidateDate.timeWidth = sortTimeWidth;
@@ -114,19 +109,21 @@ export const EventPush = () => {
     let registerCandidateDate: RegisterCandidateDate[] = [];
     sortedCandidateDates.map((candidateDate) => {
       candidateDate.timeWidth.map((timeWidth) => {
+        const [startHour, startMinute] = timeWidth.start.split(':');
         const start = new Date(
           candidateDate.date.getFullYear(),
           candidateDate.date.getMonth(),
           candidateDate.date.getDate(),
-          Number(timeWidth.startHour),
-          Number(timeWidth.startMinute),
+          Number(startHour),
+          Number(startMinute),
         );
+        const [endHour, endMinute] = timeWidth.end.split(':');
         const end = new Date(
           candidateDate.date.getFullYear(),
           candidateDate.date.getMonth(),
           candidateDate.date.getDate(),
-          Number(timeWidth.endHour),
-          Number(timeWidth.endMinute),
+          Number(endHour),
+          Number(endMinute),
         );
         if (timeWidth.stringTimeWidth) {
           registerCandidateDate.push({
@@ -192,6 +189,7 @@ export const EventPush = () => {
           _focus: { boxShadow: 'none' },
         }}
         onClick={() => registerEvent()}
+        isDisabled={isValidate || event.eventName === ''}
       >
         イベントを作成する
       </Button>

@@ -51,10 +51,8 @@ export type EditingCandidateDate = {
 };
 
 export type EditingTimeWidth = {
-  startHour: string;
-  endHour: string;
-  startMinute: string;
-  endMinute: string;
+  start: string;
+  end: string;
   stringTimeWidth?: string;
 };
 
@@ -110,7 +108,12 @@ export const candidateDateState = atom<EditingCandidateDate[]>({
   default: [
     {
       date: [],
-      timeWidth: [{ startHour: '', endHour: '', startMinute: '', endMinute: '' }],
+      timeWidth: [{ start: '12:00', end: '13:00' }],
     },
   ],
+});
+
+export const isValidateState = atom<boolean>({
+  key: 'isValidateState',
+  default: false,
 });
