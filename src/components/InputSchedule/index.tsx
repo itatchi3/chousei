@@ -22,6 +22,7 @@ export const InputSchedule = () => {
   const [blueVarient, setBlueVarient] = useState<'solid' | 'outline'>('outline');
   const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState<number[]>([]);
+  const [dateStrings, setDateStrings] = useState<string[]>([]);
   const [eventFullCalendarList, setEventFullCalendarList] = useState<EventFullCalendar[][]>([]);
   const [minTime, setMinTime] = useState(0);
   const [maxTime, setMaxTime] = useState(24);
@@ -124,6 +125,7 @@ export const InputSchedule = () => {
 
   useEffect(() => {
     let dateList: number[] = [event.candidateDates[0].date];
+    let dateStringList: string[] = [event.candidateDates[0].dateString];
     let eventFullCalendarList: EventFullCalendar[][] = [];
     let eventFullCalendar: EventFullCalendar[] = [];
     let newMinTime = 24;
@@ -146,6 +148,7 @@ export const InputSchedule = () => {
       } else {
         eventFullCalendarList.push(eventFullCalendar);
         dateList.push(candidateDate.date);
+        dateStringList.push(candidateDate.dateString);
         eventFullCalendar = [
           {
             start: new Date(candidateDate.timeWidth.start),
@@ -160,6 +163,7 @@ export const InputSchedule = () => {
       eventFullCalendarList.push(eventFullCalendar);
     }
     setDates(dateList);
+    setDateStrings(dateStringList);
     setEventFullCalendarList(eventFullCalendarList);
     setMinTime(newMinTime);
     setMaxTime(newMaxTime + 1);
@@ -184,7 +188,7 @@ export const InputSchedule = () => {
         {dates.map((date, index) => {
           return (
             <Box minWidth="100px" key={index}>
-              <Center fontWeight="bold">{event.candidateDates[index].dateString}</Center>
+              <Center fontWeight="bold">{dateStrings[index]}</Center>
               <FullCalendar
                 plugins={[timeGridPlugin]}
                 initialView="timeGridDay"
