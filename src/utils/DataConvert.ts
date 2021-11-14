@@ -1,38 +1,7 @@
 import { AttendeeVotesType } from 'src/atoms/eventState';
 import { AttendeeCommentType } from 'src/atoms/eventState';
-/*
 
-attendees: {
-  -Lxxxxxxxxxxxxxxx : {
-      name: "一郎",
-      votes: [ "○", "△", "×" ],
-      comment: "9日はいけません"
-  },
-  -Lxxxxxxxxxxxxxxx : {
-      name: "次郎",
-      votes: [ "○", "○", "×" ],
-      comment: ''
-  }
-}
-
-↓以下のように変換する
-
-[
-  {
-    name: "一郎",
-    votes: [ "○", "△", "×" ],
-    comment: "9日はいけません"
-  },
-  {
-    name: "次郎",
-    votes: [ "○", "○", "×" ],
-    comment: ''
-  }
-]
-
-*/
-
-export function attendeeVotesObjectToArray(attendees: AttendeeVotesType[]) {
+export const attendeeVotesObjectToArray = (attendees: AttendeeVotesType[]) => {
   if (!attendees) {
     return [];
   }
@@ -43,9 +12,9 @@ export function attendeeVotesObjectToArray(attendees: AttendeeVotesType[]) {
     votes: entry[1].votes,
   }));
   return attendeesArray;
-}
+};
 
-export function attendeeCommentObjectToArray(attendees: AttendeeCommentType[]) {
+export const attendeeCommentObjectToArray = (attendees: AttendeeCommentType[]) => {
   if (!attendees) {
     return [];
   }
@@ -56,4 +25,4 @@ export function attendeeCommentObjectToArray(attendees: AttendeeCommentType[]) {
     comment: entry[1].comment,
   }));
   return attendeesArray;
-}
+};
