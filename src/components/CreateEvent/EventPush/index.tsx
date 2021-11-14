@@ -192,7 +192,7 @@ export const EventPush = () => {
   return (
     <VStack>
       <Button
-        bg="green.200"
+        bg="green.300"
         sx={{
           WebkitTapHighlightColor: 'rgba(0,0,0,0)',
           _focus: { boxShadow: 'none' },
