@@ -91,11 +91,28 @@ export const InputDates = () => {
 
   const addTimeWidths = async (indexDate: number) => {
     const currentData = candidateDates[indexDate];
+    const lastTimeWidth = currentData.timeWidth[currentData.timeWidth.length - 1];
+    const [startHour, startMin] = lastTimeWidth.start.split(':').map(Number);
+    const [endHour, endMin] = lastTimeWidth.end.split(':').map(Number);
+    const minLength = endMin - startMin;
+    const hourLength = endHour - startHour;
+    const newStartTIme = lastTimeWidth.end;
+    let newEndTime = '';
+    if (endMin + minLength < 60) {
+      newEndTime = `${endHour + hourLength}:${('00' + endMin + minLength).slice(-2)}`;
+    } else {
+      newEndTime = `${endHour + hourLength + 1}:${('00' + (endMin + minLength - 60)).slice(-2)}`;
+    }
+
+    if (newEndTime.split(':').map(Number)[0] >= 24) {
+      newEndTime = '23:59';
+    }
+
     const newTimeWidth = [
       ...currentData.timeWidth,
       {
-        start: '12:00',
-        end: '13:00',
+        start: newStartTIme,
+        end: newEndTime,
       },
     ];
     const newState = cloneDeep(candidateDates);
