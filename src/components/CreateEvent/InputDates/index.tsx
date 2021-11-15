@@ -163,6 +163,7 @@ export const InputDates = () => {
     }
   }, [candidateDates, setIsValidate]);
 
+  console.log(candidateDates);
   return (
     <Box>
       <Flex align="center">
@@ -305,6 +306,7 @@ export const InputDates = () => {
                         type="time"
                         onChange={(e) => changeStartTime(e, indexDate, indexWidth)}
                         opacity="0"
+                        value={timeWidth.start}
                       />
                     </Box>
                     <Text>~</Text>
@@ -335,6 +337,7 @@ export const InputDates = () => {
                           type="time"
                           onChange={(e) => changeEndTime(e, indexDate, indexWidth)}
                           opacity="0"
+                          value={timeWidth.end}
                         />
                       </Box>
                     </Box>
