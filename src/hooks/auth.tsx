@@ -1,19 +1,25 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
 import type Liff from '@line/liff';
 
-// @ts-ignore
-const AuthContext = createContext<typeof Liff>(undefined);
+export type LiffContextType = { liff?: typeof Liff };
+const liffContextInit = { liff: undefined };
+const LiffContext = createContext<LiffContextType>(liffContextInit);
 
 export const AuthProvider: FC = ({ children }) => {
-  const [liff, setLiff] = useState<typeof Liff>();
+  const [liff, setLiff] = useState<LiffContextType>(liffContextInit);
 
   useEffect(() => {
     let unmounted = false;
     const func = async () => {
       const liff = (await import('@line/liff')).default;
-      await liff!.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
+      try {
+        await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
+      } catch (error) {
+        console.error('liff init error', error);
+      }
+
       if (!unmounted) {
-        setLiff(liff);
+        setLiff({ liff });
       }
     };
     func();
@@ -23,16 +29,17 @@ export const AuthProvider: FC = ({ children }) => {
     return cleanup;
   }, []);
 
-  return <AuthContext.Provider value={liff!}>{children}</AuthContext.Provider>;
+  return <LiffContext.Provider value={liff}>{children}</LiffContext.Provider>;
 };
 
 type UseAuthReturn = {
   initialized: boolean;
   liff?: typeof Liff;
+  isInClient?: boolean;
 };
 
-export const useAuth = (): UseAuthReturn => {
-  const liff = useContext(AuthContext);
+export const useLiff = (): UseAuthReturn => {
+  const { liff } = useContext(LiffContext);
 
   if (!liff) {
     return {
@@ -43,5 +50,6 @@ export const useAuth = (): UseAuthReturn => {
   return {
     initialized: true,
     liff: liff,
+    isInClient: liff.isInClient(),
   };
 };

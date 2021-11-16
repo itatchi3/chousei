@@ -1,11 +1,11 @@
 import type { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
 import { FC } from 'react';
-import { AuthProvider, useAuth } from 'src/hooks/auth';
+import { AuthProvider, useLiff } from 'src/hooks/auth';
 import { Center, ChakraProvider, Spinner } from '@chakra-ui/react';
 
 const Layout: FC = ({ children }) => {
-  const { initialized } = useAuth();
+  const { initialized } = useLiff();
 
   if (!initialized) {
     return (

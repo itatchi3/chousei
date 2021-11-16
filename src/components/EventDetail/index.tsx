@@ -10,7 +10,7 @@ import {
   EventType,
   attendeeCommentState,
 } from 'src/atoms/eventState';
-import { useAuth } from 'src/hooks/auth';
+import { useLiff } from 'src/hooks/auth';
 import {
   Modal,
   ModalOverlay,
@@ -32,7 +32,7 @@ type Props = {
 };
 
 export const EventDetail = ({ eventId, eventData }: Props) => {
-  const { liff } = useAuth();
+  const { liff } = useLiff();
   const router = useRouter();
   const [answerVotesFlag, setAnswerVotesFlag] = useState(false);
   const [answerCommentFlag, setAnswerCommentFlag] = useState(false);

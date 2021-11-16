@@ -7,7 +7,7 @@ import {
   isValidateTimeState,
 } from 'src/atoms/eventState';
 import { database } from 'src/utils/firebase';
-import { useAuth } from 'src/hooks/auth';
+import { useLiff } from 'src/hooks/auth';
 import { useRecoilValue } from 'recoil';
 import { editingEventState } from 'src/atoms/eventState';
 import {
@@ -39,7 +39,7 @@ type RegisterCandidateDate = {
 };
 
 export const EventPush = () => {
-  const { liff } = useAuth();
+  const { liff } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const candidateDates = useRecoilValue(candidateDateState);
   const [registerCandidateDates, setRegisterCandidateDates] = useState<RegisterCandidateDate[]>();
