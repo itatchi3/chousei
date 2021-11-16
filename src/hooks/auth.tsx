@@ -11,7 +11,6 @@ export const AuthProvider: FC = ({ children }) => {
     let unmounted = false;
     const func = async () => {
       const liff = (await import('@line/liff')).default;
-      console.log('import liff');
       await liff!.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
       if (!unmounted) {
         setLiff(liff);

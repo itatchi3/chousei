@@ -189,8 +189,6 @@ export const EventPush = () => {
     liff!.closeWindow();
   };
 
-  console.log(sortedCandidateDates);
-  console.log(registerCandidateDates);
   return (
     <VStack>
       <Button

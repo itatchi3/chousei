@@ -185,7 +185,6 @@ export const InputDates = () => {
     }
   }, [candidateDates, setIsValidateDate, setIsValidateTime]);
 
-  console.log(candidateDates);
   return (
     <Box>
       <Flex align="center">
