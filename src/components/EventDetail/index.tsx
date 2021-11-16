@@ -25,6 +25,7 @@ import {
   Heading,
   VStack,
 } from '@chakra-ui/react';
+import { NotClient } from '../NotClient';
 
 type Props = {
   eventId: string;
@@ -32,7 +33,7 @@ type Props = {
 };
 
 export const EventDetail = ({ eventId, eventData }: Props) => {
-  const { liff } = useLiff();
+  const { liff, isInClient } = useLiff();
   const router = useRouter();
   const [answerVotesFlag, setAnswerVotesFlag] = useState(false);
   const [answerCommentFlag, setAnswerCommentFlag] = useState(false);
@@ -168,6 +169,11 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
 
   return (
     <Box p="3">
+      {!isInClient && (
+        <Box pb="6">
+          <NotClient />
+        </Box>
+      )}
       <Box>
         <Heading>{event.name}</Heading>
         <Box p="2">{event.description}</Box>
