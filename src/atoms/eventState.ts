@@ -115,7 +115,12 @@ export const candidateDateState = atom<EditingCandidateDate[]>({
   ],
 });
 
-export const isValidateState = atom<boolean>({
-  key: 'isValidateState',
+export const isValidateDateState = atom<boolean>({
+  key: 'isValidateDateState',
+  default: false,
+});
+
+export const isValidateTimeState = atom<boolean>({
+  key: 'isValidateTimeState',
   default: false,
 });

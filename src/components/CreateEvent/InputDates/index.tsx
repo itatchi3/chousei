@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { candidateDateState, isValidateState } from 'src/atoms/eventState';
+import { candidateDateState, isValidateDateState, isValidateTimeState } from 'src/atoms/eventState';
 import {
   Box,
   Button,
@@ -32,7 +32,8 @@ export const InputDates = () => {
   const [sortedDatesString, setSortedDatesString] = useState(['']);
   const datePicRef = useRef<React.RefObject<HTMLLabelElement>[]>([]);
   const [isOpen, setIsOpen] = useState([false]);
-  const [isValidate, setIsValidate] = useRecoilState(isValidateState);
+  const [isValidateDate, setIsValidateDate] = useRecoilState(isValidateDateState);
+  const [isValidateTime, setIsValidateTime] = useRecoilState(isValidateTimeState);
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
   const handleDayClick = (day: Date, { selected }: DayModifiers, indexDate: number) => {
@@ -162,23 +163,27 @@ export const InputDates = () => {
   }, [candidateDates]);
 
   useEffect(() => {
-    let validate = false;
+    let validateDate = false;
+    let validateTime = false;
     candidateDates.map((candidateDate) => {
       if (candidateDate.date.length === 0) {
-        validate = true;
-        setIsValidate(true);
+        validateDate = true;
+        setIsValidateDate(true);
       }
       candidateDate.timeWidth.map((timeWidth) => {
         if (timeWidth.start >= timeWidth.end) {
-          validate = true;
-          setIsValidate(true);
+          validateTime = true;
+          setIsValidateTime(true);
         }
       });
     });
-    if (!validate) {
-      setIsValidate(false);
+    if (!validateDate) {
+      setIsValidateDate(false);
     }
-  }, [candidateDates, setIsValidate]);
+    if (!validateTime) {
+      setIsValidateTime(false);
+    }
+  }, [candidateDates, setIsValidateDate, setIsValidateTime]);
 
   console.log(candidateDates);
   return (
@@ -374,6 +379,7 @@ export const InputDates = () => {
                     _focus: { boxShadow: 'none' },
                   }}
                   onClick={() => addTimeWidths(indexDate)}
+                  disabled={isValidateTime}
                 >
                   +
                 </Button>

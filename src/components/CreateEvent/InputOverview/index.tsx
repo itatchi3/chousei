@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { editingEventState, isValidateState } from 'src/atoms/eventState';
+import { editingEventState } from 'src/atoms/eventState';
 import {
   Box,
   Circle,
@@ -11,7 +11,6 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
-import { useEffect } from 'react';
 
 export const InputEventOverview = () => {
   const [event, setEvent] = useRecoilState(editingEventState);

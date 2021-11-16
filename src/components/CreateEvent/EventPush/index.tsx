@@ -3,7 +3,8 @@ import {
   candidateDateState,
   TimeWidth,
   EditingTimeWidth,
-  isValidateState,
+  isValidateDateState,
+  isValidateTimeState,
 } from 'src/atoms/eventState';
 import { database } from 'src/utils/firebase';
 import { useAuth } from 'src/hooks/auth';
@@ -44,7 +45,8 @@ export const EventPush = () => {
   const [registerCandidateDates, setRegisterCandidateDates] = useState<RegisterCandidateDate[]>();
   const [sortedCandidateDates, setSortedCandidateDates] = useState<SortedCandidateDate[]>();
   const event = useRecoilValue(editingEventState);
-  const isValidate = useRecoilValue(isValidateState);
+  const isValidateDate = useRecoilValue(isValidateDateState);
+  const isValidateTime = useRecoilValue(isValidateTimeState);
   const [isLoading, setIsLoading] = useState(false);
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -198,7 +200,7 @@ export const EventPush = () => {
           _focus: { boxShadow: 'none' },
         }}
         onClick={() => registerEvent()}
-        isDisabled={isValidate || event.eventName === ''}
+        isDisabled={isValidateDate || isValidateTime || event.eventName === ''}
       >
         イベントを作成する
       </Button>
