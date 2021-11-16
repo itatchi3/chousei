@@ -185,55 +185,26 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       </Box>
       <VStack justify="center" p="6">
         {!answerVotesFlag ? (
-          scheduleLoading ? (
-            <Box>
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                w="44"
-                isLoading
-                onClick={() => answerDates()}
-              >
-                予定を入力する
-              </Button>
-            </Box>
-          ) : (
-            <Box>
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                w="44"
-                onClick={() => answerDates()}
-              >
-                予定を入力する
-              </Button>
-            </Box>
-          )
-        ) : scheduleLoading ? (
-          <Box>
-            <Button
-              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-              w="44"
-              isLoading
-              onClick={() => answerDates()}
-            >
-              予定を修正する
-            </Button>
-          </Box>
+          <Button
+            sx={{
+              WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+              _focus: { boxShadow: 'none' },
+            }}
+            w="44"
+            isLoading={scheduleLoading}
+            onClick={() => answerDates()}
+          >
+            予定を入力する
+          </Button>
         ) : (
-          <Box>
-            <Button
-              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-              w="44"
-              onClick={() => answerDates()}
-            >
-              予定を修正する
-            </Button>
-          </Box>
+          <Button
+            sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+            w="44"
+            isLoading={scheduleLoading}
+            onClick={() => answerDates()}
+          >
+            予定を修正する
+          </Button>
         )}
         {!answerCommentFlag ? (
           <Box>
@@ -279,32 +250,19 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             </ModalBody>
 
             <ModalFooter>
-              {commentLoading ? (
-                <Button
-                  sx={{
-                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                    _focus: { boxShadow: 'none' },
-                  }}
-                  colorScheme="blue"
-                  mr={3}
-                  isLoading
-                >
-                  保存
-                </Button>
-              ) : (
-                <Button
-                  sx={{
-                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                    _focus: { boxShadow: 'none' },
-                  }}
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={registerAttendeeComment}
-                  disabled={!isInClient}
-                >
-                  保存
-                </Button>
-              )}
+              <Button
+                sx={{
+                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                  _focus: { boxShadow: 'none' },
+                }}
+                colorScheme="blue"
+                mr={3}
+                onClick={registerAttendeeComment}
+                isLoading={commentLoading}
+                disabled={!isInClient}
+              >
+                保存
+              </Button>
               <Button
                 sx={{
                   WebkitTapHighlightColor: 'rgba(0,0,0,0)',

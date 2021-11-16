@@ -265,28 +265,16 @@ export const InputSchedule = () => {
             </Button>
           </HStack>
           <Box pb="4">
-            {loading ? (
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                isLoading
-              >
-                出欠を回答する
-              </Button>
-            ) : (
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                onClick={() => registerAttendances()}
-                disabled={!isInClient}
-              >
-                出欠を回答する
-              </Button>
-            )}
+            <Button
+              sx={{
+                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                _focus: { boxShadow: 'none' },
+              }}
+              isLoading={loading}
+              disabled={!isInClient}
+            >
+              出欠を回答する
+            </Button>
           </Box>
         </VStack>
       </Center>
