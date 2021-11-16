@@ -275,6 +275,7 @@ export const InputSchedule = () => {
                 WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                 _focus: { boxShadow: 'none' },
               }}
+              onClick={() => registerAttendances()}
               isLoading={loading}
               disabled={!isInClient}
             >
