@@ -93,6 +93,10 @@ const AttendanceTable = () => {
                       <PopoverContent
                         w="auto"
                         sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
+                        fontWeight="bold"
+                        color="gray.600"
+                        fontSize="xs"
+                        textTransform="none"
                       >
                         <PopoverArrow />
                         <PopoverBody>{atendee.name}</PopoverBody>
