@@ -254,6 +254,15 @@ export const InputDates = () => {
                           font-size: 21px;
                           -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
                         }
+                        .DayPicker-wrapper:focus {
+                          outline: none;
+                        }
+                        .DayPicker-NavButton:focus {
+                          outline: none;
+                        }
+                        .DayPicker-Day:focus {
+                          outline: none;
+                        }
                         .DayPicker:not(.DayPicker--interactionDisabled)
                           .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
                           background: none;
