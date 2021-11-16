@@ -39,7 +39,7 @@ type RegisterCandidateDate = {
 };
 
 export const EventPush = () => {
-  const { liff } = useLiff();
+  const { liff, isInClient } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const candidateDates = useRecoilValue(candidateDateState);
   const [registerCandidateDates, setRegisterCandidateDates] = useState<RegisterCandidateDate[]>();
@@ -244,6 +244,7 @@ export const EventPush = () => {
                   colorScheme="blue"
                   onClick={() => handleSubmit()}
                   isLoading={isLoading}
+                  disabled={!isInClient}
                 >
                   作成
                 </Button>

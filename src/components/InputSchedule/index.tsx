@@ -7,6 +7,7 @@ import { Button, Box, HStack, VStack, Center, Flex } from '@chakra-ui/react';
 import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { cloneDeep } from 'lodash';
+import { useLiff } from 'src/hooks/auth';
 
 type EventFullCalendar = {
   start: Date;
@@ -27,6 +28,7 @@ export const InputSchedule = () => {
   const [minTime, setMinTime] = useState(0);
   const [maxTime, setMaxTime] = useState(24);
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
+  const { isInClient } = useLiff();
 
   const event = useRecoilValue(eventState);
   const attendee = useRecoilValue(attendeeVotesState);
@@ -280,6 +282,7 @@ export const InputSchedule = () => {
                   _focus: { boxShadow: 'none' },
                 }}
                 onClick={() => registerAttendances()}
+                disabled={!isInClient}
               >
                 出欠を回答する
               </Button>

@@ -300,6 +300,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
                   colorScheme="blue"
                   mr={3}
                   onClick={registerAttendeeComment}
+                  disabled={!isInClient}
                 >
                   保存
                 </Button>
@@ -321,6 +322,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
             bg="green.300"
             onClick={() => sharedScheduleByLine()}
+            disabled={!isInClient}
           >
             友達へ共有する
           </Button>
