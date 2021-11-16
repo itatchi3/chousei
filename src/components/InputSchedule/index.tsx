@@ -132,6 +132,7 @@ export const InputSchedule = () => {
     let eventFullCalendar: EventFullCalendar[] = [];
     let newMinTime = 24;
     let newMaxTime = 0;
+    let minutesWhenMaxTime = 0;
 
     event.candidateDates.map((candidateDate, index) => {
       if (new Date(candidateDate.timeWidth.start).getHours() < newMinTime) {
@@ -139,6 +140,7 @@ export const InputSchedule = () => {
       }
       if (new Date(candidateDate.timeWidth.end).getHours() > newMaxTime) {
         newMaxTime = new Date(candidateDate.timeWidth.end).getHours();
+        minutesWhenMaxTime = new Date(candidateDate.timeWidth.end).getMinutes();
       }
       if (dateList.includes(candidateDate.date)) {
         eventFullCalendar.push({
@@ -168,9 +170,12 @@ export const InputSchedule = () => {
     setDateStrings(dateStringList);
     setEventFullCalendarList(eventFullCalendarList);
     setMinTime(newMinTime);
-    setMaxTime(newMaxTime + 1);
+    if (minutesWhenMaxTime) {
+      newMaxTime += 1;
+    }
+    setMaxTime(newMaxTime);
     let newTimeList: number[] = [];
-    for (let i = newMinTime; i <= newMaxTime + 1; i++) {
+    for (let i = newMinTime; i <= newMaxTime; i++) {
       newTimeList.push(i);
     }
     setViewTimeList(newTimeList);
