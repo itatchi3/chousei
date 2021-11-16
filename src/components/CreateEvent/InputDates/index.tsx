@@ -282,7 +282,7 @@ export const InputDates = () => {
             <FormControl px="3" pt="3" isRequired>
               <Box py="1">
                 <FormLabel fontWeight="bold" fontSize="sm" pb="1">
-                  時間幅
+                  時間帯
                 </FormLabel>
               </Box>
               <VStack>
