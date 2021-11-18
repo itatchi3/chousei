@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
 import { FC } from 'react';
-import { AuthProvider, useLiff } from 'src/hooks/auth';
+import { LiffAuth, useLiff } from 'src/hooks/auth';
 import { Center, ChakraProvider, Spinner } from '@chakra-ui/react';
 
 const Layout: FC = ({ children }) => {
@@ -9,11 +9,9 @@ const Layout: FC = ({ children }) => {
 
   if (!initialized) {
     return (
-      <ChakraProvider>
-        <Center p="8">
-          <Spinner color="green.400" />
-        </Center>
-      </ChakraProvider>
+      <Center p="8">
+        <Spinner color="green.400" />
+      </Center>
     );
   }
 
@@ -22,15 +20,15 @@ const Layout: FC = ({ children }) => {
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <AuthProvider>
-      <Layout>
+    <RecoilRoot>
+      <LiffAuth>
         <ChakraProvider>
-          <RecoilRoot>
+          <Layout>
             <Component {...pageProps} />
-          </RecoilRoot>
+          </Layout>
         </ChakraProvider>
-      </Layout>
-    </AuthProvider>
+      </LiffAuth>
+    </RecoilRoot>
   );
 };
 export default MyApp;

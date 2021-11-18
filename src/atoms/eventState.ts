@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import type Liff from '@line/liff';
 
 export type FireBaseEventType = {
   name: string;
@@ -123,4 +124,9 @@ export const isValidateDateState = atom<boolean>({
 export const isValidateTimeState = atom<boolean>({
   key: 'isValidateTimeState',
   default: false,
+});
+
+export const liffState = atom<typeof Liff | undefined>({
+  key: 'liffState',
+  default: undefined,
 });
