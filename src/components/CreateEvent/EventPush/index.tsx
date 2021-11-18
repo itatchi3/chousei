@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   candidateDateState,
   TimeWidth,
@@ -48,6 +49,7 @@ export const EventPush = () => {
   const isValidateDate = useRecoilValue(isValidateDateState);
   const isValidateTime = useRecoilValue(isValidateTimeState);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
   const registerEvent = () => {
@@ -185,8 +187,11 @@ export const EventPush = () => {
         console.log('error', err);
         alert(err);
       });
-    // liffアプリを閉じる
-    liff!.closeWindow();
+    if (isInClient) {
+      liff!.closeWindow();
+    } else {
+      router.push(`/event/${eventId}`);
+    }
   };
 
   return (
@@ -244,7 +249,6 @@ export const EventPush = () => {
                   colorScheme="blue"
                   onClick={() => handleSubmit()}
                   isLoading={isLoading}
-                  disabled={!isInClient}
                 >
                   作成
                 </Button>
