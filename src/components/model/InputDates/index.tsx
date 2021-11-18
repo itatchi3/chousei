@@ -186,7 +186,7 @@ export const InputDates = () => {
   }, [candidateDates, setIsValidateDate, setIsValidateTime]);
 
   return (
-    <Box>
+    <>
       <Flex align="center">
         <Circle size="30px" bg="green.500" color="white" fontWeight="bold">
           2
@@ -407,6 +407,6 @@ export const InputDates = () => {
           </Button>
         </Box>
       </VStack>
-    </Box>
+    </>
   );
 };

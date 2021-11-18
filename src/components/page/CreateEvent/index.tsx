@@ -1,8 +1,7 @@
-import { EventPush } from 'src/components/CreateEvent/EventPush';
-import { InputDates } from 'src/components/CreateEvent/InputDates';
-import { InputEventOverview } from 'src/components/CreateEvent/InputOverview';
+import { EventPush } from 'src/components/model/EventPush';
+import { InputDates } from 'src/components/model/InputDates';
+import { InputEventOverview } from 'src/components/model/InputOverview';
 import { Box } from '@chakra-ui/react';
-import { useLiff } from 'src/hooks/auth';
 
 export const CreateEvent = () => {
   return (

@@ -1,7 +1,7 @@
 import { database } from 'src/utils/firebase';
 import { EventType } from 'src/atoms/eventState';
 import { GetServerSideProps } from 'next';
-import { EventDetail } from 'src/components/EventDetail';
+import { EventDetail } from 'src/components/page/EventDetail';
 
 type Props = {
   eventId: string;

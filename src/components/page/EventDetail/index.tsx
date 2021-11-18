@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { database } from 'src/utils/firebase';
-import AttendanceTable from 'src/components/EventDetail/AttendanceTable';
+import AttendanceTable from 'src/components/model/AttendanceTable';
 import { attendeeVotesObjectToArray, attendeeCommentObjectToArray } from 'src/utils/DataConvert';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
