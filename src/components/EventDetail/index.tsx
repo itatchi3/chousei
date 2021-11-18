@@ -12,6 +12,10 @@ import {
 } from 'src/atoms/eventState';
 import { useLiff } from 'src/hooks/auth';
 import {
+  Menu,
+  MenuButton,
+  MenuGroup,
+  MenuList,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -24,7 +28,12 @@ import {
   Box,
   Heading,
   VStack,
+  Flex,
+  Input,
+  useClipboard,
+  IconButton,
 } from '@chakra-ui/react';
+import { CopyIcon } from '@chakra-ui/icons';
 
 type Props = {
   eventId: string;
@@ -42,6 +51,9 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [commentLoading, setCommentLoading] = useState(false);
   const [scheduleLoading, setScheduleLoading] = useState(false);
+  const { onCopy } = useClipboard(
+    'https://liff.line.me/' + process.env.NEXT_PUBLIC_LIFF_ID + '/event/' + event.id,
+  );
 
   const initialRef = useRef(null);
 
@@ -269,14 +281,52 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
           </ModalContent>
         </Modal>
         <Box pt="4">
-          <Button
-            sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-            bg="green.300"
-            onClick={() => sharedScheduleByLine()}
-            disabled={!isInClient}
-          >
-            友達へ共有する
-          </Button>
+          {isInClient ? (
+            <Button
+              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+              bg="green.300"
+              onClick={() => sharedScheduleByLine()}
+              disabled={!isInClient}
+            >
+              友達へ共有する
+            </Button>
+          ) : (
+            <Menu>
+              <MenuButton
+                as={Button}
+                colorScheme="green"
+                sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+              >
+                友達へ共有する
+              </MenuButton>
+              <MenuList Width="300px">
+                <MenuGroup title="リンクを共有してください">
+                  <Flex mb="2" px="4" py="2">
+                    <Input
+                      value={
+                        'https://liff.line.me/' +
+                        process.env.NEXT_PUBLIC_LIFF_ID +
+                        '/event/' +
+                        event.id
+                      }
+                      isReadOnly
+                    />
+                    <IconButton
+                      onClick={onCopy}
+                      size="sm"
+                      ml="2"
+                      sx={{
+                        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                        _focus: { boxShadow: 'none' },
+                      }}
+                      icon={<CopyIcon />}
+                      aria-label="copy"
+                    />
+                  </Flex>
+                </MenuGroup>
+              </MenuList>
+            </Menu>
+          )}
         </Box>
       </VStack>
     </Box>
