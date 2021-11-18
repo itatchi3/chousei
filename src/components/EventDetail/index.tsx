@@ -259,7 +259,6 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
                 mr={3}
                 onClick={registerAttendeeComment}
                 isLoading={commentLoading}
-                disabled={!isInClient}
               >
                 保存
               </Button>
