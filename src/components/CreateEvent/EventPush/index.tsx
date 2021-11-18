@@ -159,35 +159,35 @@ export const EventPush = () => {
       candidateDates: registerCandidateDates,
     });
     const eventId = eventPush.key;
-    await liff!
-      .sendMessages([
-        {
-          type: 'text',
-          text: '出欠表が完成したよ！',
-        },
-        {
-          type: 'text',
-          text:
-            '【イベント名】\n' +
-            event.eventName +
-            '\n' +
-            '【補足・備考】\n' +
-            event.description +
-            '\n' +
-            'https://liff.line.me/' +
-            process.env.NEXT_PUBLIC_LIFF_ID +
-            '/event/' +
-            eventId,
-        },
-      ])
-      .then(() => {
-        console.log('message sent');
-      })
-      .catch((err) => {
-        console.log('error', err);
-        alert(err);
-      });
     if (isInClient) {
+      await liff!
+        .sendMessages([
+          {
+            type: 'text',
+            text: '出欠表が完成したよ！',
+          },
+          {
+            type: 'text',
+            text:
+              '【イベント名】\n' +
+              event.eventName +
+              '\n' +
+              '【補足・備考】\n' +
+              event.description +
+              '\n' +
+              'https://liff.line.me/' +
+              process.env.NEXT_PUBLIC_LIFF_ID +
+              '/event/' +
+              eventId,
+          },
+        ])
+        .then(() => {
+          console.log('message sent');
+        })
+        .catch((err) => {
+          console.log('error', err);
+          alert(err);
+        });
       liff!.closeWindow();
     } else {
       router.push(`/event/${eventId}`);
