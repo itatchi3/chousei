@@ -119,7 +119,7 @@ export const InputSchedule = () => {
     };
 
     await database
-      .ref(`events/${event.id}/respondentVoteList/${respondentData.userId}`)
+      .ref(`events/${event.id}/respondentVoteLists/${respondentData.userId}`)
       .set(respondentData);
 
     router.push(`/event/${event.id}`);

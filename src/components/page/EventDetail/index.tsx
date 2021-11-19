@@ -26,8 +26,8 @@ type Props = {
 export const EventDetail = ({ eventId, eventData }: Props) => {
   const { liff } = useLiff();
   const [event, setEvent] = useRecoilState(eventState);
-  const [respondentVoteLists, setRespondentVoteList] = useRecoilState(respondentVoteListState);
-  const [respondentComments, setRespondentComment] = useRecoilState(respondentCommentState);
+  const [respondentVoteList, setRespondentVoteList] = useRecoilState(respondentVoteListState);
+  const [respondentComment, setRespondentComment] = useRecoilState(respondentCommentState);
 
   useEffect(() => {
     setEvent({

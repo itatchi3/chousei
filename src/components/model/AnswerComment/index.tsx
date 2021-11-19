@@ -16,7 +16,7 @@ import {
 
 export const AnswerComment = () => {
   const event = useRecoilValue(eventState);
-  const [respondentComments, setRespondentComment] = useRecoilState(respondentCommentState);
+  const [respondentComment, setRespondentComment] = useRecoilState(respondentCommentState);
   const [isAnsweredComment, setIsAnsweredComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,10 +32,10 @@ export const AnswerComment = () => {
   const registerComment = async () => {
     setIsLoading(true);
     const respondentData = {
-      userId: respondentComments.userId,
-      name: respondentComments.name,
-      profileImg: respondentComments.profileImg,
-      comment: respondentComments.comment,
+      userId: respondentComment.userId,
+      name: respondentComment.name,
+      profileImg: respondentComment.profileImg,
+      comment: respondentComment.comment,
     };
     await database
       .ref(`events/${event.id}/respondentComments/${respondentData.userId}`)
@@ -48,7 +48,7 @@ export const AnswerComment = () => {
       return;
     }
     event.respondentComments!.map((answeredRespondent) => {
-      if (answeredRespondent.userId === respondentComments.userId) {
+      if (answeredRespondent.userId === respondentComment.userId) {
         setIsAnsweredComment(true);
         setRespondentComment((state) => ({
           ...state,
@@ -56,7 +56,7 @@ export const AnswerComment = () => {
         }));
       }
     });
-  }, [respondentComments.userId, event.respondentComments, setRespondentComment]);
+  }, [respondentComment.userId, event.respondentComments, setRespondentComment]);
 
   return (
     <>
@@ -75,7 +75,7 @@ export const AnswerComment = () => {
           <ModalHeader>コメントを入力してください</ModalHeader>
           <ModalBody>
             <Textarea
-              value={respondentComments.comment}
+              value={respondentComment.comment}
               onChange={handleInputComment}
               ref={initialRef}
               rows={6}

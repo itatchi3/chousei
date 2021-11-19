@@ -6,7 +6,7 @@ import { Button } from '@chakra-ui/react';
 
 export const MoveAnswerScheduleButton = () => {
   const event = useRecoilValue(eventState);
-  const [respondentVoteLists, setRespondentVoteList] = useRecoilState(respondentVoteListState);
+  const [respondentVoteList, setRespondentVoteList] = useRecoilState(respondentVoteListState);
   const [isAnsweredVoteList, setIsAnsweredVoteList] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -23,7 +23,7 @@ export const MoveAnswerScheduleButton = () => {
       return;
     }
     event.respondentVoteLists!.map((respondent) => {
-      if (respondent.userId === respondentVoteLists.userId) {
+      if (respondent.userId === respondentVoteList.userId) {
         setIsAnsweredVoteList(true);
         setRespondentVoteList((state) => ({
           ...state,
@@ -31,7 +31,7 @@ export const MoveAnswerScheduleButton = () => {
         }));
       }
     });
-  }, [respondentVoteLists.userId, event.respondentVoteLists, setRespondentVoteList]);
+  }, [respondentVoteList.userId, event.respondentVoteLists, setRespondentVoteList]);
   return (
     <>
       <Button
@@ -43,7 +43,7 @@ export const MoveAnswerScheduleButton = () => {
         isLoading={isLoading}
         onClick={moveAnswerSchedule}
       >
-        {isAnsweredVoteList ? '予定を入力する' : ' 予定を修正する'}
+        {isAnsweredVoteList ? '予定を修正する' : ' 予定を入力する'}
       </Button>
     </>
   );
