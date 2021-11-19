@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import AttendanceTable from 'src/components/model/AttendanceTable';
+import { useEffect } from 'react';
+import { AttendanceTable } from 'src/components/model/AttendanceTable';
 import {
   respondentVoteListObjectToArray,
   respondentCommentObjectToArray,
@@ -17,6 +17,7 @@ import { ShareButton } from 'src/components/model/ShareButton';
 import { MoveAnswerScheduleButton } from 'src/components/model/MoveAnswerScheduleButton';
 import { AnswerComment } from 'src/components/model/AnswerComment';
 import { EventOverView } from 'src/components/model/EventOverView';
+import { CommentList } from 'src/components/model/CommentList';
 
 type Props = {
   eventId: string;
@@ -75,6 +76,7 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       <EventOverView />
       <Box pt="4">
         <AttendanceTable />
+        <CommentList />
       </Box>
       <VStack justify="center" p="6">
         <MoveAnswerScheduleButton />

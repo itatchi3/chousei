@@ -25,7 +25,7 @@ type Count = {
   negativeCount: number;
 };
 
-const AttendanceTable = () => {
+export const AttendanceTable = () => {
   const event = useRecoilValue(eventState);
   const [counts, setCounts] = useState<Count[]>([]);
   const [colours, setColours] = useState<string[]>([]);
@@ -139,7 +139,15 @@ const AttendanceTable = () => {
           </Tbody>
         </Table>
       </Box>
+    </>
+  );
+};
 
+export const CommentList = () => {
+  const event = useRecoilValue(eventState);
+
+  return (
+    <>
       <Table>
         <Tbody>
           <Tr>
@@ -184,5 +192,3 @@ const AttendanceTable = () => {
     </>
   );
 };
-
-export default AttendanceTable;

@@ -185,9 +185,9 @@ export const InputSchedule = () => {
   return (
     <Box p="3">
       <Flex height={window.innerHeight - 150} overflow="scroll">
-        <VStack pt="16px" pr="6px">
+        <VStack pt="4" pr="2">
           {viewTimeList.map((viewTime) => (
-            <Box key={viewTime} fontSize="xs" pb="24px">
+            <Box key={viewTime} fontSize="xs" pb="6">
               {viewTime + ':00'}
             </Box>
           ))}
@@ -218,9 +218,9 @@ export const InputSchedule = () => {
           );
         })}
         {dates.length >= 4 && (
-          <VStack pt="16px" pl="6px">
+          <VStack pt="4" pl="2">
             {viewTimeList.map((viewTime) => (
-              <Box key={viewTime} fontSize="xs" pb="24px">
+              <Box key={viewTime} fontSize="xs" pb="6">
                 {viewTime + ':00'}
               </Box>
             ))}
@@ -286,4 +286,3 @@ export const InputSchedule = () => {
     </Box>
   );
 };
-export default InputSchedule;
