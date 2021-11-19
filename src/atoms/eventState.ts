@@ -42,13 +42,14 @@ export type AttendeeCommentType = {
   comment: string;
 };
 
-export type EditingEventType = {
+export type EditingOverViewType = {
   eventName: string;
   description: string;
 };
 
 export type EditingCandidateDate = {
   date: Date[];
+  dateString: string;
   timeWidth: EditingTimeWidth[];
 };
 
@@ -98,8 +99,8 @@ export const attendeeCommentState = atom<AttendeeCommentType>({
   },
 });
 
-export const editingEventState = atom<EditingEventType>({
-  key: 'editingEventState',
+export const overViewState = atom<EditingOverViewType>({
+  key: 'overViewState',
   default: {
     eventName: '',
     description: '',
@@ -111,6 +112,7 @@ export const candidateDateState = atom<EditingCandidateDate[]>({
   default: [
     {
       date: [],
+      dateString: '',
       timeWidth: [{ start: '12:00', end: '13:00' }],
     },
   ],
@@ -121,9 +123,9 @@ export const isValidateDateState = atom<boolean>({
   default: false,
 });
 
-export const isValidateTimeState = atom<boolean>({
+export const isValidateTimeListState = atom<boolean[]>({
   key: 'isValidateTimeState',
-  default: false,
+  default: [false],
 });
 
 export const liffState = atom<typeof Liff | undefined>({

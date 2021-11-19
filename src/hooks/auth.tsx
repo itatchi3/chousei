@@ -15,7 +15,7 @@ export const LiffAuth: FC = ({ children }) => {
         console.error('liff init error', error);
       }
       if (!liff.isLoggedIn()) {
-        liff.login();
+        // liff.login();
       }
       setLiff(liff);
     };

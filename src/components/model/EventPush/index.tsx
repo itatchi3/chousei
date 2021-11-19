@@ -5,12 +5,12 @@ import {
   TimeWidth,
   EditingTimeWidth,
   isValidateDateState,
-  isValidateTimeState,
+  isValidateTimeListState,
 } from 'src/atoms/eventState';
 import { database } from 'src/utils/firebase';
 import { useLiff } from 'src/hooks/auth';
 import { useRecoilValue } from 'recoil';
-import { editingEventState } from 'src/atoms/eventState';
+import { overViewState } from 'src/atoms/eventState';
 import {
   Box,
   Center,
@@ -45,9 +45,9 @@ export const EventPush = () => {
   const candidateDates = useRecoilValue(candidateDateState);
   const [registerCandidateDates, setRegisterCandidateDates] = useState<RegisterCandidateDate[]>();
   const [sortedCandidateDates, setSortedCandidateDates] = useState<SortedCandidateDate[]>();
-  const event = useRecoilValue(editingEventState);
+  const event = useRecoilValue(overViewState);
   const isValidateDate = useRecoilValue(isValidateDateState);
-  const isValidateTime = useRecoilValue(isValidateTimeState);
+  const isValidateTimeList = useRecoilValue(isValidateTimeListState);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
@@ -203,7 +203,7 @@ export const EventPush = () => {
           _focus: { boxShadow: 'none' },
         }}
         onClick={() => registerEvent()}
-        isDisabled={isValidateDate || isValidateTime || event.eventName === ''}
+        isDisabled={isValidateDate || isValidateTimeList.includes(true) || event.eventName === ''}
       >
         イベントを作成する
       </Button>

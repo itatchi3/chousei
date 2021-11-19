@@ -1,9 +1,9 @@
 import { useRecoilState } from 'recoil';
-import { editingEventState } from 'src/atoms/eventState';
+import { overViewState } from 'src/atoms/eventState';
 import { Box, FormControl, FormHelperText, FormLabel, Input } from '@chakra-ui/react';
 
 export const InputEventName = () => {
-  const [event, setEvent] = useRecoilState(editingEventState);
+  const [event, setEvent] = useRecoilState(overViewState);
 
   const changeEventname = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setEvent((state) => ({
