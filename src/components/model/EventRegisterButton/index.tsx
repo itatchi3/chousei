@@ -38,7 +38,7 @@ type RegisterCandidateDate = {
   timeWidth: TimeWidth;
 };
 
-export const EventPushButton = () => {
+export const EventRegisterButton = () => {
   const { liff, isInClient } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const candidateDates = useRecoilValue(candidateDateState);
@@ -51,7 +51,7 @@ export const EventPushButton = () => {
   const router = useRouter();
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
-  const registerEvent = () => {
+  const formatEvent = () => {
     const addedStringTimeWidthCandidateDates: SortedCandidateDate[] = [];
     candidateDates.map((candidateDate) => {
       let stringTimeWidth: EditingTimeWidth[] = [];
@@ -201,7 +201,7 @@ export const EventPushButton = () => {
           WebkitTapHighlightColor: 'rgba(0,0,0,0)',
           _focus: { boxShadow: 'none' },
         }}
-        onClick={() => registerEvent()}
+        onClick={formatEvent}
         isDisabled={isValidateDate || isValidateTimeList.includes(true) || event.eventName === ''}
       >
         イベントを作成する
