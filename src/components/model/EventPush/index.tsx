@@ -195,7 +195,7 @@ export const EventPush = () => {
   };
 
   return (
-    <VStack>
+    <>
       <Button
         bg="green.300"
         sx={{
@@ -257,6 +257,6 @@ export const EventPush = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </VStack>
+    </>
   );
 };

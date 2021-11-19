@@ -14,10 +14,12 @@ export const InputEventOverview = () => {
         </Text>
       </Flex>
       <Box p="3">
-        <InputEventName />
-      </Box>
-      <Box px="3">
-        <InputEventDiscription />
+        <Box>
+          <InputEventName />
+        </Box>
+        <Box pt="2">
+          <InputEventDiscription />
+        </Box>
       </Box>
     </>
   );
