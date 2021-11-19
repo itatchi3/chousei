@@ -1,19 +1,13 @@
 import { atom } from 'recoil';
 import type Liff from '@line/liff';
 
-export type FireBaseEventType = {
-  name: string;
-  description: string;
-  candidateDates: CandidateDate[];
-};
-
 export type EventType = {
   id: string;
   name: string;
   description: string;
   candidateDates: CandidateDate[];
-  attendeeComment?: AttendeeCommentType[];
-  attendeeVotes?: AttendeeVotesType[];
+  respondentComments?: RespondentCommentType[];
+  respondentVoteLists?: RespondentVoteListType[];
 };
 
 export type TimeWidth = {
@@ -28,14 +22,14 @@ export type CandidateDate = {
   timeWidth: TimeWidth;
 };
 
-export type AttendeeVotesType = {
+export type RespondentVoteListType = {
   userId: string;
   name: string;
   profileImg: string;
-  votes: ('○' | '△' | '×')[];
+  voteList: ('○' | '△' | '×')[];
 };
 
-export type AttendeeCommentType = {
+export type RespondentCommentType = {
   userId: string;
   name: string;
   profileImg: string;
@@ -79,18 +73,18 @@ export const eventState = atom<EventType>({
   },
 });
 
-export const attendeeVotesState = atom<AttendeeVotesType>({
-  key: 'attendeeVotesState',
+export const respondentVoteListState = atom<RespondentVoteListType>({
+  key: 'respondentVoteListState',
   default: {
     userId: '',
     name: '',
-    votes: [],
+    voteList: [],
     profileImg: '',
   },
 });
 
-export const attendeeCommentState = atom<AttendeeCommentType>({
-  key: 'attendeeCommentState',
+export const respondentCommentState = atom<RespondentCommentType>({
+  key: 'respondentCommentState',
   default: {
     userId: '',
     name: '',

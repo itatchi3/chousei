@@ -35,21 +35,24 @@ const AttendanceTable = () => {
       return {
         date: column.date,
         positiveCount:
-          event.attendeeVotes !== undefined
-            ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '○').length
+          event.respondentVoteLists !== undefined
+            ? event.respondentVoteLists.filter((respondent) => respondent.voteList[i] === '○')
+                .length
             : 0,
         evenCount:
-          event.attendeeVotes !== undefined
-            ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '△').length
+          event.respondentVoteLists !== undefined
+            ? event.respondentVoteLists.filter((respondent) => respondent.voteList[i] === '△')
+                .length
             : 0,
         negativeCount:
-          event.attendeeVotes !== undefined
-            ? event.attendeeVotes.filter((attendee) => attendee.votes[i] === '×').length
+          event.respondentVoteLists !== undefined
+            ? event.respondentVoteLists.filter((respondent) => respondent.voteList[i] === '×')
+                .length
             : 0,
       };
     });
     setCounts(attendanceCounts);
-    if (event.attendeeVotes === undefined) {
+    if (event.respondentVoteLists === undefined) {
       return;
     }
     const scores = attendanceCounts.map((count) => {
@@ -61,7 +64,7 @@ const AttendanceTable = () => {
     });
     setCounts(attendanceCounts);
     setColours(evaluations);
-  }, [event.attendeeVotes, event.candidateDates]);
+  }, [event.respondentVoteLists, event.candidateDates]);
 
   return (
     <>
@@ -81,13 +84,13 @@ const AttendanceTable = () => {
               <Th fontSize="md">
                 <Center>×</Center>
               </Th>
-              {event.attendeeVotes !== undefined &&
-                event.attendeeVotes.map((atendee, i) => (
+              {event.respondentVoteLists !== undefined &&
+                event.respondentVoteLists.map((respondent, i) => (
                   <Th key={i} p="2">
                     <Popover placement="top">
                       <PopoverTrigger>
                         <Center>
-                          <Avatar src={atendee.profileImg} size="sm" />
+                          <Avatar src={respondent.profileImg} size="sm" />
                         </Center>
                       </PopoverTrigger>
                       <PopoverContent
@@ -99,7 +102,7 @@ const AttendanceTable = () => {
                         textTransform="none"
                       >
                         <PopoverArrow />
-                        <PopoverBody>{atendee.name}</PopoverBody>
+                        <PopoverBody>{respondent.name}</PopoverBody>
                       </PopoverContent>
                     </Popover>
                   </Th>
@@ -125,10 +128,10 @@ const AttendanceTable = () => {
                 <Td>
                   <Center>{count.negativeCount}</Center>
                 </Td>
-                {event.attendeeVotes !== undefined &&
-                  event.attendeeVotes.map((atendee, index) => (
+                {event.respondentVoteLists !== undefined &&
+                  event.respondentVoteLists.map((respondent, index) => (
                     <Td key={index}>
-                      <Center>{atendee.votes[i]}</Center>
+                      <Center>{respondent.voteList[i]}</Center>
                     </Td>
                   ))}
               </Tr>
@@ -146,16 +149,16 @@ const AttendanceTable = () => {
       </Table>
       <Table>
         <Tbody>
-          {event.attendeeComment !== undefined &&
-            event.attendeeComment.map(
-              (atendee, i) =>
-                atendee.comment !== '' && (
+          {event.respondentComments !== undefined &&
+            event.respondentComments.map(
+              (respondent, i) =>
+                respondent.comment !== '' && (
                   <Tr key={i}>
                     <Td key={i} p="2" w="24">
                       <Popover placement="top">
                         <PopoverTrigger>
                           <Center>
-                            <Avatar src={atendee.profileImg} size="sm" />
+                            <Avatar src={respondent.profileImg} size="sm" />
                           </Center>
                         </PopoverTrigger>
                         <PopoverContent
@@ -166,12 +169,12 @@ const AttendanceTable = () => {
                           fontSize="xs"
                         >
                           <PopoverArrow />
-                          <PopoverBody>{atendee.name}</PopoverBody>
+                          <PopoverBody>{respondent.name}</PopoverBody>
                         </PopoverContent>
                       </Popover>
                     </Td>
                     <Td align="center" pl="0">
-                      {atendee.comment}
+                      {respondent.comment}
                     </Td>
                   </Tr>
                 ),

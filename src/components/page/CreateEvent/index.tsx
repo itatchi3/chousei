@@ -1,4 +1,4 @@
-import { EventPush } from 'src/components/model/EventPush';
+import { EventPushButton } from 'src/components/model/EventPushButton';
 import { InputDates } from 'src/components/model/InputDates';
 import { InputEventOverview } from 'src/components/model/InputOverview';
 import { Box, Center } from '@chakra-ui/react';
@@ -11,7 +11,7 @@ export const CreateEvent = () => {
         <InputDates />
       </Box>
       <Center py="6">
-        <EventPush />
+        <EventPushButton />
       </Center>
     </Box>
   );

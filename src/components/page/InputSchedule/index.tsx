@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { eventState, attendeeVotesState } from 'src/atoms/eventState';
+import { eventState, respondentVoteListState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 import { database } from 'src/utils/firebase';
 import { Button, Box, HStack, VStack, Center, Flex } from '@chakra-ui/react';
@@ -29,15 +29,15 @@ export const InputSchedule = () => {
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
-  const attendee = useRecoilValue(attendeeVotesState);
+  const respondent = useRecoilValue(respondentVoteListState);
 
-  const [votes, setVotes] = useState<('○' | '△' | '×')[]>(
-    !attendee.votes.length
+  const [voteList, setVoteList] = useState<('○' | '△' | '×')[]>(
+    !respondent.voteList.length
       ? event.candidateDates.map(() => {
           return '△';
         })
       : event.candidateDates.map((date, i) => {
-          return attendee.votes[i];
+          return respondent.voteList[i];
         }),
   );
 
@@ -81,9 +81,9 @@ export const InputSchedule = () => {
     }
   };
 
-  const handleClickVoteChange = (arg: EventClickArg, indexDate: number) => {
+  const onClickVoteChange = (arg: EventClickArg, indexDate: number) => {
     const index = Number(arg.event.id);
-    const newVotes = cloneDeep(votes);
+    const newVoteList = cloneDeep(voteList);
     const newEventFullCalendarList = cloneDeep(eventFullCalendarList);
     let newVote: '○' | '△' | '×' = '△';
     switch (color) {
@@ -99,8 +99,8 @@ export const InputSchedule = () => {
       default:
       // do nothing
     }
-    newVotes[index] = newVote;
-    setVotes(newVotes);
+    newVoteList[index] = newVote;
+    setVoteList(newVoteList);
     eventFullCalendarList[indexDate].map((event, indexEvent) => {
       if (event.id === arg.event.id) {
         newEventFullCalendarList[indexDate][indexEvent].color = checkColor(newVote);
@@ -111,14 +111,16 @@ export const InputSchedule = () => {
 
   const registerAttendances = async () => {
     setLoading(true);
-    const attendeeData = {
-      userId: attendee.userId,
-      name: attendee.name,
-      votes: votes,
-      profileImg: attendee.profileImg,
+    const respondentData = {
+      userId: respondent.userId,
+      name: respondent.name,
+      voteList: voteList,
+      profileImg: respondent.profileImg,
     };
 
-    await database.ref(`events/${event.id}/attendeeVotes/${attendeeData.userId}`).set(attendeeData);
+    await database
+      .ref(`events/${event.id}/respondentVoteList/${respondentData.userId}`)
+      .set(respondentData);
 
     router.push(`/event/${event.id}`);
   };
@@ -145,7 +147,7 @@ export const InputSchedule = () => {
           start: new Date(candidateDate.timeWidth.start),
           end: new Date(candidateDate.timeWidth.end),
           id: index.toString(),
-          color: checkColor(votes[index]),
+          color: checkColor(voteList[index]),
         });
       } else {
         eventFullCalendarList.push(eventFullCalendar);
@@ -156,7 +158,7 @@ export const InputSchedule = () => {
             start: new Date(candidateDate.timeWidth.start),
             end: new Date(candidateDate.timeWidth.end),
             id: index.toString(),
-            color: checkColor(votes[index]),
+            color: checkColor(voteList[index]),
           },
         ];
       }
@@ -208,7 +210,7 @@ export const InputSchedule = () => {
                   minute: '2-digit',
                   hour12: false,
                 }}
-                eventClick={(arg) => handleClickVoteChange(arg, index)}
+                eventClick={(arg) => onClickVoteChange(arg, index)}
                 slotMinTime={minTime + ':00:00'}
                 slotMaxTime={maxTime + ':00:00'}
               />

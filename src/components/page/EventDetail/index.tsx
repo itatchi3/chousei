@@ -1,14 +1,17 @@
 import { useEffect, useState, useRef } from 'react';
 import { database } from 'src/utils/firebase';
 import AttendanceTable from 'src/components/model/AttendanceTable';
-import { attendeeVotesObjectToArray, attendeeCommentObjectToArray } from 'src/utils/DataConvert';
+import {
+  respondentVoteListObjectToArray,
+  respondentCommentObjectToArray,
+} from 'src/utils/DataConvert';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   eventState,
-  attendeeVotesState,
+  respondentVoteListState,
   EventType,
-  attendeeCommentState,
+  respondentCommentState,
 } from 'src/atoms/eventState';
 import { useLiff } from 'src/hooks/auth';
 import {
@@ -41,42 +44,16 @@ type Props = {
 };
 
 export const EventDetail = ({ eventId, eventData }: Props) => {
-  const { liff, isInClient } = useLiff();
+  const { liff } = useLiff();
   const router = useRouter();
-  const [answerVotesFlag, setAnswerVotesFlag] = useState(false);
-  const [answerCommentFlag, setAnswerCommentFlag] = useState(false);
+  const [answerVoteListFlag, setAnswerVoteListFlag] = useState(false);
   const [event, setEvent] = useRecoilState(eventState);
-  const [attendeeVotes, setAttendeeVotes] = useRecoilState(attendeeVotesState);
-  const [attendeeComment, setAttendeeComment] = useRecoilState(attendeeCommentState);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [commentLoading, setCommentLoading] = useState(false);
+  const [respondentVoteLists, setRespondentVoteList] = useRecoilState(respondentVoteListState);
+  const [respondentComments, setRespondentComment] = useRecoilState(respondentCommentState);
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const { onCopy } = useClipboard(
     'https://liff.line.me/' + process.env.NEXT_PUBLIC_LIFF_ID + '/event/' + event.id,
   );
-
-  const initialRef = useRef(null);
-
-  const handleInputComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setAttendeeComment((state) => ({
-      ...state,
-      comment: e.target.value,
-    }));
-  };
-
-  const registerAttendeeComment = async () => {
-    setCommentLoading(true);
-    const attendeeData = {
-      userId: attendeeComment.userId,
-      name: attendeeComment.name,
-      profileImg: attendeeComment.profileImg,
-      comment: attendeeComment.comment,
-    };
-    await database
-      .ref(`events/${event.id}/attendeeComment/${attendeeData.userId}`)
-      .set(attendeeData);
-    location.reload();
-  };
 
   useEffect(() => {
     setEvent({
@@ -84,13 +61,13 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       name: eventData.name,
       description: eventData.description,
       candidateDates: eventData.candidateDates,
-      attendeeVotes:
-        eventData.attendeeVotes !== undefined
-          ? attendeeVotesObjectToArray(eventData.attendeeVotes)
+      respondentVoteLists:
+        eventData.respondentVoteLists !== undefined
+          ? respondentVoteListObjectToArray(eventData.respondentVoteLists)
           : undefined,
-      attendeeComment:
-        eventData.attendeeComment !== undefined
-          ? attendeeCommentObjectToArray(eventData.attendeeComment)
+      respondentComments:
+        eventData.respondentComments !== undefined
+          ? respondentCommentObjectToArray(eventData.respondentComments)
           : undefined,
     });
     const getProfile = async () => {
@@ -102,13 +79,13 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
         profileImg = '';
       }
 
-      setAttendeeVotes((state) => ({
+      setRespondentVoteList((state) => ({
         ...state,
         name: profile.displayName,
         userId: profile.userId,
         profileImg: profileImg,
       }));
-      setAttendeeComment((state) => ({
+      setRespondentComment((state) => ({
         ...state,
         name: profile.displayName,
         userId: profile.userId,
@@ -116,37 +93,34 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
       }));
     };
     getProfile();
-  }, [eventData, setEvent, eventId, liff, setAttendeeVotes, setAttendeeComment]);
+  }, [eventData, setEvent, eventId, liff, setRespondentVoteList, setRespondentComment]);
 
   useEffect(() => {
-    if (event.attendeeVotes === undefined) {
+    if (event.respondentVoteLists === undefined) {
       return;
     }
-    event.attendeeVotes!.map((answeredAttendee) => {
-      if (answeredAttendee.userId === attendeeVotes.userId) {
-        setAnswerVotesFlag(true);
-        setAttendeeVotes((state) => ({
+    event.respondentVoteLists!.map((answeredRespondent) => {
+      if (answeredRespondent.userId === respondentVoteLists.userId) {
+        setAnswerVoteListFlag(true);
+        setRespondentVoteList((state) => ({
           ...state,
-          votes: answeredAttendee.votes,
+          voteList: answeredRespondent.voteList,
         }));
       }
     });
-  }, [attendeeVotes.userId, event.attendeeVotes, setAttendeeVotes]);
+  }, [respondentVoteLists.userId, event.respondentVoteLists, setRespondentVoteList]);
 
   useEffect(() => {
-    if (event.attendeeComment === undefined) {
+    if (event.respondentComments === undefined) {
       return;
     }
-    event.attendeeComment!.map((answeredAttendee) => {
-      if (answeredAttendee.userId === attendeeComment.userId) {
-        setAnswerCommentFlag(true);
-        setAttendeeComment((state) => ({
-          ...state,
-          comment: answeredAttendee.comment,
-        }));
-      }
+    event.respondentComments!.map((answeredRespondent) => {
+      setRespondentComment((state) => ({
+        ...state,
+        comment: answeredRespondent.comment,
+      }));
     });
-  }, [attendeeComment.userId, event.attendeeComment, setAttendeeComment]);
+  }, [event.respondentComments, setRespondentComment]);
 
   // Lineで友達にイベントリンクを共有
   const sharedScheduleByLine = () => {
@@ -180,17 +154,12 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
 
   return (
     <Box p="3">
-      <Box>
-        <Heading>{event.name}</Heading>
-        <Box p="2">{event.description}</Box>
-      </Box>
+      <EventOverView />
       <Box pt="4">
-        <Box>
-          <AttendanceTable />
-        </Box>
+        <AttendanceTable />
       </Box>
       <VStack justify="center" p="6">
-        {!answerVotesFlag ? (
+        {!answerVoteListFlag ? (
           <Button
             sx={{
               WebkitTapHighlightColor: 'rgba(0,0,0,0)',
@@ -212,123 +181,230 @@ export const EventDetail = ({ eventId, eventData }: Props) => {
             予定を修正する
           </Button>
         )}
-        {!answerCommentFlag ? (
-          <Box>
-            <Box>
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                onClick={onOpen}
-              >
-                コメントを入力する
-              </Button>
-            </Box>
-          </Box>
-        ) : (
-          <Box>
-            <Box>
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                onClick={onOpen}
-              >
-                コメントを修正する
-              </Button>
-            </Box>
-          </Box>
-        )}
-
-        <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} size="xs">
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>コメントを入力してください</ModalHeader>
-            <ModalBody>
-              <Textarea
-                value={attendeeComment.comment}
-                onChange={handleInputComment}
-                ref={initialRef}
-                rows={6}
-              />
-            </ModalBody>
-
-            <ModalFooter>
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                colorScheme="blue"
-                mr={3}
-                onClick={registerAttendeeComment}
-                isLoading={commentLoading}
-              >
-                保存
-              </Button>
-              <Button
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
-                onClick={onClose}
-              >
-                閉じる
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        <AnswerComment />
         <Box pt="4">
-          {isInClient ? (
-            <Button
-              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-              bg="green.300"
-              onClick={() => sharedScheduleByLine()}
-              disabled={!isInClient}
-            >
-              友達へ共有する
-            </Button>
-          ) : (
-            <Menu>
-              <MenuButton
-                as={Button}
-                colorScheme="green"
-                sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-              >
-                友達へ共有する
-              </MenuButton>
-              <MenuList Width="300px">
-                <MenuGroup title="リンクを共有してください">
-                  <Flex mb="2" px="4" py="2">
-                    <Input
-                      value={
-                        'https://liff.line.me/' +
-                        process.env.NEXT_PUBLIC_LIFF_ID +
-                        '/event/' +
-                        event.id
-                      }
-                      isReadOnly
-                    />
-                    <IconButton
-                      onClick={onCopy}
-                      size="sm"
-                      ml="2"
-                      sx={{
-                        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                        _focus: { boxShadow: 'none' },
-                      }}
-                      icon={<CopyIcon />}
-                      aria-label="copy"
-                    />
-                  </Flex>
-                </MenuGroup>
-              </MenuList>
-            </Menu>
-          )}
+          <ShareButton />
         </Box>
       </VStack>
     </Box>
+  );
+};
+
+export const EventOverView = () => {
+  const event = useRecoilValue(eventState);
+  return (
+    <>
+      <Heading>{event.name}</Heading>
+      <Box px="1" pt="2">
+        {event.description}
+      </Box>
+    </>
+  );
+};
+
+export const AnswerComment = () => {
+  const event = useRecoilValue(eventState);
+  const [respondentComments, setRespondentComment] = useRecoilState(respondentCommentState);
+  const [isAnsweredComment, setIsAnsweredComment] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = useRef(null);
+
+  const handleInputComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRespondentComment((state) => ({
+      ...state,
+      comment: e.target.value,
+    }));
+  };
+
+  const registerRespondentComment = async () => {
+    setIsLoading(true);
+    const respondentData = {
+      userId: respondentComments.userId,
+      name: respondentComments.name,
+      profileImg: respondentComments.profileImg,
+      comment: respondentComments.comment,
+    };
+    await database
+      .ref(`events/${event.id}/respondentComments/${respondentData.userId}`)
+      .set(respondentData);
+    location.reload();
+  };
+
+  useEffect(() => {
+    if (event.respondentComments === undefined) {
+      return;
+    }
+    event.respondentComments!.map((answeredRespondent) => {
+      if (answeredRespondent.userId === respondentComments.userId) {
+        setIsAnsweredComment(true);
+      }
+    });
+  }, [respondentComments.userId, event.respondentComments]);
+  return (
+    <>
+      <Button
+        sx={{
+          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+          _focus: { boxShadow: 'none' },
+        }}
+        onClick={onOpen}
+      >
+        {isAnsweredComment ? 'コメントを修正する' : 'コメントを入力する'}
+      </Button>
+      <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} size="xs">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>コメントを入力してください</ModalHeader>
+          <ModalBody>
+            <Textarea
+              value={respondentComments.comment}
+              onChange={handleInputComment}
+              ref={initialRef}
+              rows={6}
+            />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              sx={{
+                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                _focus: { boxShadow: 'none' },
+              }}
+              colorScheme="blue"
+              mr={3}
+              onClick={registerRespondentComment}
+              isLoading={isLoading}
+            >
+              保存
+            </Button>
+            <Button
+              sx={{
+                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                _focus: { boxShadow: 'none' },
+              }}
+              onClick={onClose}
+            >
+              閉じる
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+
+export const ShareButton = () => {
+  const event = useRecoilValue(eventState);
+  const { liff, isInClient } = useLiff();
+  const { onCopy } = useClipboard(
+    `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`,
+  );
+
+  const shareScheduleByLine = () => {
+    if (liff!.isApiAvailable('shareTargetPicker')) {
+      liff!.shareTargetPicker([
+        {
+          type: 'text',
+          text:
+            '【イベント名】\n' +
+            event.name +
+            '\n' +
+            '【概要】\n' +
+            event.description +
+            '\n' +
+            `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`,
+        },
+      ]);
+    }
+  };
+  return (
+    <>
+      {isInClient ? (
+        <Button
+          sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+          bg="green.300"
+          onClick={() => shareScheduleByLine()}
+        >
+          友達へ共有する
+        </Button>
+      ) : (
+        <Menu>
+          <MenuButton
+            as={Button}
+            colorScheme="green"
+            sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
+          >
+            友達へ共有する
+          </MenuButton>
+          <MenuList Width="300px">
+            <MenuGroup title="リンクを共有してください">
+              <Flex px="4" py="2">
+                <Input
+                  value={`https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`}
+                  isReadOnly
+                />
+                <IconButton
+                  onClick={onCopy}
+                  size="sm"
+                  ml="2"
+                  sx={{
+                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                    _focus: { boxShadow: 'none' },
+                  }}
+                  icon={<CopyIcon />}
+                  aria-label="copy"
+                />
+              </Flex>
+            </MenuGroup>
+          </MenuList>
+        </Menu>
+      )}
+    </>
+  );
+};
+
+export const MoveInputScheduleButton = () => {
+  const event = useRecoilValue(eventState);
+  const [respondentVoteLists, setRespondentVoteList] = useRecoilState(respondentVoteListState);
+  const [isAnsweredVoteList, setsAnsweredVoteListFlag] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const moveInputSchedule = () => {
+    setIsLoading(true);
+    router.push({
+      pathname: `/event/${event.id}/input`,
+    });
+  };
+
+  useEffect(() => {
+    if (event.respondentVoteLists === undefined) {
+      return;
+    }
+    event.respondentVoteLists!.map((answeredRespondent) => {
+      if (answeredRespondent.userId === respondentVoteLists.userId) {
+        setIsLoading(true);
+        setRespondentVoteList((state) => ({
+          ...state,
+          voteList: answeredRespondent.voteList,
+        }));
+      }
+    });
+  }, [respondentVoteLists.userId, event.respondentVoteLists, setRespondentVoteList]);
+  return (
+    <>
+      <Button
+        sx={{
+          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+          _focus: { boxShadow: 'none' },
+        }}
+        w="44"
+        isLoading={isLoading}
+        onClick={() => moveInputSchedule()}
+      >
+        {isAnsweredVoteList ? '予定を入力する' : ' 予定を修正する'}
+      </Button>
+    </>
   );
 };

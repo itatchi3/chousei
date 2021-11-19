@@ -24,7 +24,6 @@ import {
   useDisclosure,
   HStack,
   ModalCloseButton,
-  VStack,
 } from '@chakra-ui/react';
 
 type SortedCandidateDate = {
@@ -39,7 +38,7 @@ type RegisterCandidateDate = {
   timeWidth: TimeWidth;
 };
 
-export const EventPush = () => {
+export const EventPushButton = () => {
   const { liff, isInClient } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const candidateDates = useRecoilValue(candidateDateState);

@@ -1,28 +1,28 @@
-import { AttendeeVotesType } from 'src/atoms/eventState';
-import { AttendeeCommentType } from 'src/atoms/eventState';
+import { RespondentVoteListType } from 'src/atoms/eventState';
+import { RespondentCommentType } from 'src/atoms/eventState';
 
-export const attendeeVotesObjectToArray = (attendees: AttendeeVotesType[]) => {
-  if (!attendees) {
+export const respondentVoteListObjectToArray = (respondents: RespondentVoteListType[]) => {
+  if (!respondents) {
     return [];
   }
-  const attendeesArray = Object.entries(attendees).map((entry) => ({
+  const respondentsArray = Object.entries(respondents).map((entry) => ({
     userId: entry[1].userId,
     name: entry[1].name,
     profileImg: entry[1].profileImg,
-    votes: entry[1].votes,
+    voteList: entry[1].voteList,
   }));
-  return attendeesArray;
+  return respondentsArray;
 };
 
-export const attendeeCommentObjectToArray = (attendees: AttendeeCommentType[]) => {
-  if (!attendees) {
+export const respondentCommentObjectToArray = (respondents: RespondentCommentType[]) => {
+  if (!respondents) {
     return [];
   }
-  const attendeesArray = Object.entries(attendees).map((entry) => ({
+  const respondentsArray = Object.entries(respondents).map((entry) => ({
     userId: entry[1].userId,
     name: entry[1].name,
     profileImg: entry[1].profileImg,
     comment: entry[1].comment,
   }));
-  return attendeesArray;
+  return respondentsArray;
 };
