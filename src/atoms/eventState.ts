@@ -1,47 +1,27 @@
 import { atom } from 'recoil';
 import type Liff from '@line/liff';
+import { Comment, Event, EventParticipant, PossibleDate, User, Vote } from '.prisma/client';
 
-export type EventType = {
-  id: string;
-  name: string;
-  description: string;
-  candidateDates: CandidateDate[];
-  respondentComments?: RespondentCommentType[];
-  respondentVoteLists?: RespondentVoteListType[];
-};
-
-export type TimeWidth = {
-  stringTimeWidth: string;
-  start: number;
-  end: number;
-};
-
-export type CandidateDate = {
-  date: number;
-  dateString: string;
-  timeWidth: TimeWidth;
-};
-
-export type RespondentVoteListType = {
-  userId: string;
-  name: string;
-  profileImg: string;
-  voteList: ('○' | '△' | '×')[];
-};
-
-export type RespondentCommentType = {
-  userId: string;
-  name: string;
-  profileImg: string;
-  comment: string;
-};
+export type EventType =
+  | (Event & {
+      possibleDates: (PossibleDate & {
+        votes: Vote[];
+      })[];
+      comments: (Comment & {
+        user: User;
+      })[];
+      participants: (EventParticipant & {
+        user: User;
+      })[];
+    })
+  | null;
 
 export type EditingOverViewType = {
   eventName: string;
   description: string;
 };
 
-export type EditingCandidateDate = {
+export type EditingPossibleDate = {
   date: Date[];
   dateString: string;
   timeWidth: EditingTimeWidth[];
@@ -55,42 +35,7 @@ export type EditingTimeWidth = {
 
 export const eventState = atom<EventType>({
   key: 'eventState',
-  default: {
-    id: '',
-    name: '',
-    description: '',
-    candidateDates: [
-      {
-        date: 0,
-        dateString: '',
-        timeWidth: {
-          start: 0,
-          end: 0,
-          stringTimeWidth: '',
-        },
-      },
-    ],
-  },
-});
-
-export const respondentVoteListState = atom<RespondentVoteListType>({
-  key: 'respondentVoteListState',
-  default: {
-    userId: '',
-    name: '',
-    voteList: [],
-    profileImg: '',
-  },
-});
-
-export const respondentCommentState = atom<RespondentCommentType>({
-  key: 'respondentCommentState',
-  default: {
-    userId: '',
-    name: '',
-    profileImg: '',
-    comment: '',
-  },
+  default: null,
 });
 
 export const overViewState = atom<EditingOverViewType>({
@@ -101,8 +46,8 @@ export const overViewState = atom<EditingOverViewType>({
   },
 });
 
-export const candidateDateState = atom<EditingCandidateDate[]>({
-  key: 'candidateDateState',
+export const possibleDateState = atom<EditingPossibleDate[]>({
+  key: 'possibleDateState',
   default: [
     {
       date: [],

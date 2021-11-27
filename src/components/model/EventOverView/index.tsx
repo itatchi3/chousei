@@ -6,9 +6,9 @@ export const EventOverView = () => {
   const event = useRecoilValue(eventState);
   return (
     <>
-      <Heading>{event.name}</Heading>
+      <Heading>{event && event.name}</Heading>
       <Box px="1" pt="2">
-        {event.description}
+        {event && event.description}
       </Box>
     </>
   );

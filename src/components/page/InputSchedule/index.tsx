@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { eventState, respondentVoteListState } from 'src/atoms/eventState';
+import { eventState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 import { database } from 'src/utils/firebase';
 import { Button, Box, HStack, VStack, Center, Flex } from '@chakra-ui/react';
@@ -21,7 +21,7 @@ export const InputSchedule = () => {
   const [greenVarient, setGreenVarient] = useState<'solid' | 'outline'>('outline');
   const [blueVarient, setBlueVarient] = useState<'solid' | 'outline'>('outline');
   const [loading, setLoading] = useState(false);
-  const [dates, setDates] = useState<number[]>([]);
+  const [dates, setDates] = useState<Date[]>([]);
   const [dateStrings, setDateStrings] = useState<string[]>([]);
   const [eventFullCalendarList, setEventFullCalendarList] = useState<EventFullCalendar[][]>([]);
   const [minTime, setMinTime] = useState(0);
@@ -29,21 +29,13 @@ export const InputSchedule = () => {
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
-  const respondent = useRecoilValue(respondentVoteListState);
+  // const respondent = useRecoilValue(respondentVoteListState);
 
-  const [voteList, setVoteList] = useState<('○' | '△' | '×')[]>(
-    !respondent.voteList.length
-      ? event.candidateDates.map(() => {
-          return '△';
-        })
-      : event.candidateDates.map((date, i) => {
-          return respondent.voteList[i];
-        }),
-  );
+  const [voteList, setVoteList] = useState<string[]>();
 
   const router = useRouter();
 
-  const checkColor = (vote: '○' | '△' | '×') => {
+  const checkColor = (vote: string) => {
     switch (vote) {
       case '○':
         return '#C53030';
@@ -51,6 +43,8 @@ export const InputSchedule = () => {
         return '#2F855A';
       case '×':
         return '#3182CE';
+      default:
+        return '#000000';
     }
   };
 
@@ -82,6 +76,7 @@ export const InputSchedule = () => {
   };
 
   const onClickVoteChange = (arg: EventClickArg, indexDate: number) => {
+    if (!voteList) return;
     const index = Number(arg.event.id);
     const newVoteList = cloneDeep(voteList);
     const newEventFullCalendarList = cloneDeep(eventFullCalendarList);
@@ -110,53 +105,55 @@ export const InputSchedule = () => {
   };
 
   const registerAttendances = async () => {
+    if (!event) return;
     setLoading(true);
-    const respondentData = {
-      userId: respondent.userId,
-      name: respondent.name,
-      voteList: voteList,
-      profileImg: respondent.profileImg,
-    };
+    // const respondentData = {
+    //   userId: respondent.userId,
+    //   name: respondent.name,
+    //   voteList: voteList,
+    //   profileImg: respondent.profileImg,
+    // };
 
-    await database
-      .ref(`events/${event.id}/respondentVoteLists/${respondentData.userId}`)
-      .set(respondentData);
+    // await database
+    //   .ref(`events/${event}/respondentVoteLists/${respondentData.userId}`)
+    //   .set(respondentData);
 
-    router.push(`/event/${event.id}`);
+    // router.push(`/event/${event.id}`);
   };
 
   useEffect(() => {
-    let dateList: number[] = [event.candidateDates[0].date];
-    let dateStringList: string[] = [event.candidateDates[0].dateString];
+    if (!event || !voteList) return;
+    let dateList: Date[] = [event.possibleDates[0].date];
+    let dateStringList: string[] = [event.possibleDates[0].dateString];
     let eventFullCalendarList: EventFullCalendar[][] = [];
     let eventFullCalendar: EventFullCalendar[] = [];
     let newMinTime = 24;
     let newMaxTime = 0;
     let minutesWhenMaxTime = 0;
 
-    event.candidateDates.map((candidateDate, index) => {
-      if (new Date(candidateDate.timeWidth.start).getHours() < newMinTime) {
-        newMinTime = new Date(candidateDate.timeWidth.start).getHours();
+    event.possibleDates.map((possibleDate, index) => {
+      if (new Date(possibleDate.startTime).getHours() < newMinTime) {
+        newMinTime = new Date(possibleDate.startTime).getHours();
       }
-      if (new Date(candidateDate.timeWidth.end).getHours() > newMaxTime) {
-        newMaxTime = new Date(candidateDate.timeWidth.end).getHours();
-        minutesWhenMaxTime = new Date(candidateDate.timeWidth.end).getMinutes();
+      if (new Date(possibleDate.endTime).getHours() > newMaxTime) {
+        newMaxTime = new Date(possibleDate.endTime).getHours();
+        minutesWhenMaxTime = new Date(possibleDate.endTime).getMinutes();
       }
-      if (dateList.includes(candidateDate.date)) {
+      if (dateList.includes(possibleDate.date)) {
         eventFullCalendar.push({
-          start: new Date(candidateDate.timeWidth.start),
-          end: new Date(candidateDate.timeWidth.end),
+          start: new Date(possibleDate.startTime),
+          end: new Date(possibleDate.endTime),
           id: index.toString(),
           color: checkColor(voteList[index]),
         });
       } else {
         eventFullCalendarList.push(eventFullCalendar);
-        dateList.push(candidateDate.date);
-        dateStringList.push(candidateDate.dateString);
+        dateList.push(possibleDate.date);
+        dateStringList.push(possibleDate.dateString);
         eventFullCalendar = [
           {
-            start: new Date(candidateDate.timeWidth.start),
-            end: new Date(candidateDate.timeWidth.end),
+            start: new Date(possibleDate.startTime),
+            end: new Date(possibleDate.endTime),
             id: index.toString(),
             color: checkColor(voteList[index]),
           },
@@ -179,8 +176,20 @@ export const InputSchedule = () => {
       newTimeList.push(i);
     }
     setViewTimeList(newTimeList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [event, voteList]);
+
+  useEffect(() => {
+    if (!event) return;
+    const voteList = event.possibleDates.map((possibleDate) => {
+      possibleDate.votes.map((vote) => {
+        if (vote.userId === 'userId') {
+          return vote.vote;
+        }
+      });
+      return '△';
+    });
+    setVoteList(voteList);
+  }, [event]);
 
   return (
     <Box p="3">

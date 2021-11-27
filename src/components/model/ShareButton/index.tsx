@@ -18,12 +18,13 @@ export const ShareButton = () => {
   const event = useRecoilValue(eventState);
   const { liff, isInClient } = useLiff();
   const { onCopy } = useClipboard(
-    `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`,
+    event ? `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}` : '',
   );
 
   const shareScheduleByLine = () => {
-    if (liff!.isApiAvailable('shareTargetPicker')) {
-      liff!.shareTargetPicker([
+    if (!event || !liff) return;
+    if (liff.isApiAvailable('shareTargetPicker')) {
+      liff.shareTargetPicker([
         {
           type: 'text',
           text:
@@ -62,7 +63,11 @@ export const ShareButton = () => {
             <MenuGroup title="リンクを共有してください">
               <Flex px="4" py="2">
                 <Input
-                  value={`https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`}
+                  value={
+                    event
+                      ? `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`
+                      : ''
+                  }
                   isReadOnly
                 />
                 <IconButton

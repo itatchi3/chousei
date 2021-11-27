@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { candidateDateState } from 'src/atoms/eventState';
+import { possibleDateState } from 'src/atoms/eventState';
 import {
   Box,
   Button,
@@ -26,13 +26,13 @@ type Props = {
 };
 
 export const InputDate = ({ indexDate }: Props) => {
-  const [candidateDates, setCandidateDates] = useRecoilState(candidateDateState);
-  const candidateDate = candidateDates[indexDate];
+  const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
+  const possibleDate = possibleDates[indexDate];
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
   const handleDayClick = (day: Date, { selected }: DayModifiers, indexDate: number) => {
-    const selectedDays = candidateDate.date.concat();
+    const selectedDays = possibleDate.date.concat();
     if (selected) {
       const selectedIndex = selectedDays.findIndex((selectedDay) =>
         DateUtils.isSameDay(selectedDay, day),
@@ -50,11 +50,11 @@ export const InputDate = ({ indexDate }: Props) => {
       (date) => `${date.getMonth() + 1}/${date.getDate()}(${dayOfWeekStr[date.getDay()]})`,
     );
 
-    const currentData = candidateDate;
+    const currentData = possibleDate;
     const newData = { ...currentData, date: sortedDates, dateString: sortedDatesString.join(', ') };
-    const newState = cloneDeep(candidateDates);
+    const newState = cloneDeep(possibleDates);
     newState[indexDate] = newData;
-    setCandidateDates(newState);
+    setPossibleDates(newState);
   };
 
   return (
@@ -66,7 +66,7 @@ export const InputDate = ({ indexDate }: Props) => {
       </Box>
       <Input
         placeholder="タップしてください"
-        defaultValue={candidateDates[indexDate].dateString}
+        defaultValue={possibleDates[indexDate].dateString}
         onClick={onOpen}
         readOnly
         sx={{
@@ -87,7 +87,7 @@ export const InputDate = ({ indexDate }: Props) => {
           <ModalBody py="0" px="0">
             <Box>
               <DayPicker
-                selectedDays={candidateDate.date}
+                selectedDays={possibleDate.date}
                 onDayClick={(day, modifires, e) => handleDayClick(day, modifires, indexDate)}
                 weekdaysShort={['日', '月', '火', '水', '木', '金', '土']}
               />

@@ -1,24 +1,69 @@
 import { database } from 'src/utils/firebase';
-import { EventType } from 'src/atoms/eventState';
+import { EventType, eventState } from 'src/atoms/eventState';
 import { GetServerSideProps } from 'next';
 import { EventDetail } from 'src/components/page/EventDetail';
+import { prisma } from 'lib/prisma';
+import superjson from 'superjson';
+import { useRecoilState } from 'recoil';
+import { useEffect } from 'react';
 
 type Props = {
-  eventId: string;
-  eventData: EventType;
+  eventData: string;
 };
 
 const Event = (props: Props) => {
-  return <EventDetail eventId={props.eventId} eventData={props.eventData} />;
+  const eventData: EventType = superjson.parse(props.eventData);
+
+  return <EventDetail eventData={eventData} />;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const eventId = context.query.id;
-  const ref = database.ref(`events/${eventId}`);
-
-  return ref.once('value').then((snapshot) => {
-    const eventData = snapshot.val();
-    return { props: { eventId, eventData } };
-  });
+  const { id } = context.query;
+  try {
+    if (typeof id === 'string') {
+      const eventData = await prisma.event.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          possibleDates: {
+            orderBy: {
+              index: 'asc',
+            },
+            include: {
+              votes: {
+                orderBy: {
+                  updatedAt: 'asc',
+                },
+              },
+            },
+          },
+          comments: {
+            orderBy: {
+              updatedAt: 'asc',
+            },
+            include: {
+              user: true,
+            },
+          },
+          participants: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      return {
+        props: { eventData: superjson.stringify(eventData) },
+      };
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      notFound: true,
+    };
+  }
 };
 export default Event;
