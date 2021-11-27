@@ -1,9 +1,8 @@
 -- CreateTable
 CREATE TABLE `Event` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `description` VARCHAR(255) NULL,
-    `authorId` VARCHAR(255) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -13,11 +12,13 @@ CREATE TABLE `Event` (
 -- CreateTable
 CREATE TABLE `PossibleDate` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `eventId` INTEGER NOT NULL,
-    `userId` INTEGER NOT NULL,
+    `index` INTEGER NOT NULL,
+    `eventId` VARCHAR(191) NOT NULL,
     `date` DATE NOT NULL,
-    `startTime` TIME NOT NULL,
-    `endTime` TIME NOT NULL,
+    `dateString` VARCHAR(191) NOT NULL,
+    `startTime` DATE NOT NULL,
+    `endTime` DATE NOT NULL,
+    `timeWidthString` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -49,7 +50,7 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Comment` (
     `comment` VARCHAR(255) NOT NULL,
-    `eventId` INTEGER NOT NULL,
+    `eventId` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(255) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -59,8 +60,9 @@ CREATE TABLE `Comment` (
 
 -- CreateTable
 CREATE TABLE `EventParticipant` (
-    `eventId` INTEGER NOT NULL,
+    `eventId` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(255) NOT NULL,
+    `status` VARCHAR(10) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 

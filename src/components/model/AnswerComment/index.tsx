@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { database } from 'src/utils/firebase';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { eventState, respondentCommentState } from 'src/atoms/eventState';
+import { eventState } from 'src/atoms/eventState';
 import {
   Modal,
   ModalOverlay,
@@ -16,47 +16,41 @@ import {
 
 export const AnswerComment = () => {
   const event = useRecoilValue(eventState);
-  const [respondentComment, setRespondentComment] = useRecoilState(respondentCommentState);
+  // const [respondentComment, setRespondentComment] = useRecoilState(respondentCommentState);
   const [isAnsweredComment, setIsAnsweredComment] = useState(false);
+  const [comment, setComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
 
   const handleInputComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setRespondentComment((state) => ({
-      ...state,
-      comment: e.target.value,
-    }));
+    setComment(e.target.value);
   };
 
   const registerComment = async () => {
     setIsLoading(true);
-    const respondentData = {
-      userId: respondentComment.userId,
-      name: respondentComment.name,
-      profileImg: respondentComment.profileImg,
-      comment: respondentComment.comment,
-    };
-    await database
-      .ref(`events/${event.id}/respondentComments/${respondentData.userId}`)
-      .set(respondentData);
-    location.reload();
+    // const respondentData = {
+    //   userId: respondentComment.userId,
+    //   name: respondentComment.name,
+    //   profileImg: respondentComment.profileImg,
+    //   comment: respondentComment.comment,
+    // };
+    // await database
+    //   .ref(`events/${event.id}/respondentComments/${respondentData.userId}`)
+    //   .set(respondentData);
+    // location.reload();
   };
 
   useEffect(() => {
-    if (event.respondentComments === undefined) {
-      return;
-    }
-    event.respondentComments!.map((answeredRespondent) => {
-      if (answeredRespondent.userId === respondentComment.userId) {
+    if (!event || !event.comments.length) return;
+
+    event.comments.map((comment) => {
+      if (comment.userId === 'userId') {
         setIsAnsweredComment(true);
-        setRespondentComment((state) => ({
-          ...state,
-          comment: answeredRespondent.comment,
-        }));
+        setComment(comment.comment);
       }
     });
-  }, [respondentComment.userId, event.respondentComments, setRespondentComment]);
+  }, [event]);
 
   return (
     <>
@@ -74,12 +68,7 @@ export const AnswerComment = () => {
         <ModalContent>
           <ModalHeader>コメントを入力してください</ModalHeader>
           <ModalBody>
-            <Textarea
-              value={respondentComment.comment}
-              onChange={handleInputComment}
-              ref={initialRef}
-              rows={6}
-            />
+            <Textarea value={comment} onChange={handleInputComment} ref={initialRef} rows={6} />
           </ModalBody>
           <ModalFooter>
             <Button

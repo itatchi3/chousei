@@ -29,16 +29,16 @@ export const CommentList = () => {
       </Table>
       <Table>
         <Tbody>
-          {event.respondentComments !== undefined &&
-            event.respondentComments.map(
-              (respondent, i) =>
-                respondent.comment !== '' && (
+          {event &&
+            event.comments.map(
+              (_comment, i) =>
+                _comment.comment !== '' && (
                   <Tr key={i}>
                     <Td key={i} p="2" w="24">
                       <Popover placement="top">
                         <PopoverTrigger>
                           <Center>
-                            <Avatar src={respondent.profileImg} size="sm" />
+                            <Avatar src={_comment.user.profileImg} size="sm" />
                           </Center>
                         </PopoverTrigger>
                         <PopoverContent
@@ -49,12 +49,12 @@ export const CommentList = () => {
                           fontSize="xs"
                         >
                           <PopoverArrow />
-                          <PopoverBody>{respondent.name}</PopoverBody>
+                          <PopoverBody>{_comment.user.name}</PopoverBody>
                         </PopoverContent>
                       </Popover>
                     </Td>
                     <Td align="center" pl="0">
-                      {respondent.comment}
+                      {_comment.comment}
                     </Td>
                   </Tr>
                 ),

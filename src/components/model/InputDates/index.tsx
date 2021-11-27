@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import {
-  candidateDateState,
+  possibleDateState,
   isValidateDateState,
   isValidateTimeListState,
 } from 'src/atoms/eventState';
@@ -12,12 +12,12 @@ import { InputDate } from 'src/components/model/InputDate';
 import { InputTimeWidth } from 'src/components/model/InputTimeWidth';
 
 export const InputDates = () => {
-  const [candidateDates, setCandidateDates] = useRecoilState(candidateDateState);
+  const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
   const [isValidateDate, setIsValidateDate] = useRecoilState(isValidateDateState);
   const [isValidateTimeList, setIsValidateTimeList] = useRecoilState(isValidateTimeListState);
-  const addCandidateDate = () => {
-    setCandidateDates([
-      ...candidateDates,
+  const addPossibleDate = () => {
+    setPossibleDates([
+      ...possibleDates,
       {
         date: [],
         dateString: '',
@@ -28,19 +28,19 @@ export const InputDates = () => {
   };
 
   const onDeleteDate = (indexDate: number) => {
-    const newCandidateDates = cloneDeep(candidateDates);
-    newCandidateDates.splice(indexDate, 1);
-    setCandidateDates(newCandidateDates);
+    const newPossibleDates = cloneDeep(possibleDates);
+    newPossibleDates.splice(indexDate, 1);
+    setPossibleDates(newPossibleDates);
   };
 
   useEffect(() => {
     let validateDate = false;
-    let validateTimeList = Array(candidateDates.length).fill(false);
-    candidateDates.map((candidateDate, indexDate) => {
-      if (candidateDate.date.length === 0) {
+    let validateTimeList = Array(possibleDates.length).fill(false);
+    possibleDates.map((possibleDate, indexDate) => {
+      if (possibleDate.date.length === 0) {
         validateDate = true;
       }
-      candidateDate.timeWidth.map((timeWidth) => {
+      possibleDate.timeWidth.map((timeWidth) => {
         if (timeWidth.start >= timeWidth.end) {
           validateTimeList[indexDate] = true;
         }
@@ -48,7 +48,7 @@ export const InputDates = () => {
     });
     setIsValidateDate(validateDate);
     setIsValidateTimeList(validateTimeList);
-  }, [candidateDates, setIsValidateDate, setIsValidateTimeList]);
+  }, [possibleDates, setIsValidateDate, setIsValidateTimeList]);
 
   return (
     <>
@@ -61,7 +61,7 @@ export const InputDates = () => {
         </Text>
       </Flex>
       <VStack px="3" pt="3">
-        {candidateDates.map((_, indexDate) => (
+        {possibleDates.map((_, indexDate) => (
           <Box px="3" py="2" borderWidth="2px" borderRadius="lg" width="100%" key={indexDate}>
             <Flex justifyContent="flex-end" mb="-6">
               <CloseButton
@@ -70,7 +70,7 @@ export const InputDates = () => {
                   _focus: { boxShadow: 'none' },
                 }}
                 onClick={() => onDeleteDate(indexDate)}
-                visibility={candidateDates.length >= 2 ? 'visible' : 'hidden'}
+                visibility={possibleDates.length >= 2 ? 'visible' : 'hidden'}
               />
             </Flex>
             <InputDate indexDate={indexDate} />
@@ -85,7 +85,7 @@ export const InputDates = () => {
               WebkitTapHighlightColor: 'rgba(0,0,0,0)',
               _focus: { boxShadow: 'none' },
             }}
-            onClick={addCandidateDate}
+            onClick={addPossibleDate}
           >
             +
           </Button>

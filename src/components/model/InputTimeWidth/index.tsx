@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { candidateDateState } from 'src/atoms/eventState';
+import { possibleDateState } from 'src/atoms/eventState';
 import {
   Box,
   Button,
@@ -20,25 +20,25 @@ type Props = {
 };
 
 export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
-  const [candidateDates, setCandidateDates] = useRecoilState(candidateDateState);
+  const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
 
   const onDeleteTimeWidth = (indexDate: number, indexWidth: number) => {
-    const newCandidateDates = cloneDeep(candidateDates);
-    newCandidateDates[indexDate].timeWidth.splice(indexWidth, 1);
-    setCandidateDates(newCandidateDates);
+    const newPossibleDates = cloneDeep(possibleDates);
+    newPossibleDates[indexDate].timeWidth.splice(indexWidth, 1);
+    setPossibleDates(newPossibleDates);
   };
 
   const onChangeTimeWidth = (key: string, value: string, indexDate: number, indexWidth: number) => {
-    const currentTimeWidth = candidateDates[indexDate].timeWidth[indexWidth];
+    const currentTimeWidth = possibleDates[indexDate].timeWidth[indexWidth];
     const newTimeWidth = { ...currentTimeWidth, [key]: value };
-    const newState = cloneDeep(candidateDates);
+    const newState = cloneDeep(possibleDates);
     newState[indexDate].timeWidth[indexWidth] = newTimeWidth;
-    setCandidateDates(newState);
+    setPossibleDates(newState);
   };
 
   const addTimeWidths = (indexDate: number) => {
     const lastTimeWidth =
-      candidateDates[indexDate].timeWidth[candidateDates[indexDate].timeWidth.length - 1];
+      possibleDates[indexDate].timeWidth[possibleDates[indexDate].timeWidth.length - 1];
     const [startHour, startMin] = lastTimeWidth.start.split(':').map(Number);
     const [endHour, endMin] = lastTimeWidth.end.split(':').map(Number);
     const minLength = endMin - startMin;
@@ -56,15 +56,15 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
     }
 
     const newTimeWidth = [
-      ...candidateDates[indexDate].timeWidth,
+      ...possibleDates[indexDate].timeWidth,
       {
         start: newStartTIme,
         end: newEndTime,
       },
     ];
-    const newState = cloneDeep(candidateDates);
+    const newState = cloneDeep(possibleDates);
     newState[indexDate].timeWidth = newTimeWidth;
-    setCandidateDates(newState);
+    setPossibleDates(newState);
   };
   return (
     <FormControl isRequired>
@@ -74,7 +74,7 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
         </FormLabel>
       </Box>
       <VStack>
-        {candidateDates[indexDate].timeWidth.map((timeWidth, indexWidth) => (
+        {possibleDates[indexDate].timeWidth.map((timeWidth, indexWidth) => (
           <HStack key={indexWidth} pb="1">
             <CloseButton
               size="sm"
@@ -83,7 +83,7 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
                 _focus: { boxShadow: 'none' },
               }}
               onClick={() => onDeleteTimeWidth(indexDate, indexWidth)}
-              visibility={candidateDates[indexDate].timeWidth.length >= 2 ? 'visible' : 'hidden'}
+              visibility={possibleDates[indexDate].timeWidth.length >= 2 ? 'visible' : 'hidden'}
             />
             <Box
               borderWidth="1px"

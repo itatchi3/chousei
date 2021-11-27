@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import {
-  candidateDateState,
-  TimeWidth,
+  possibleDateState,
   EditingTimeWidth,
   isValidateDateState,
   isValidateTimeListState,
@@ -26,24 +25,17 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 
-type SortedCandidateDate = {
+type SortedPossibleDate = {
   date: Date;
   dateString: string;
   timeWidth: EditingTimeWidth[];
 };
 
-type RegisterCandidateDate = {
-  date: number;
-  dateString: string;
-  timeWidth: TimeWidth;
-};
-
 export const EventRegisterButton = () => {
   const { liff, isInClient } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const candidateDates = useRecoilValue(candidateDateState);
-  const [registerCandidateDates, setRegisterCandidateDates] = useState<RegisterCandidateDate[]>();
-  const [sortedCandidateDates, setSortedCandidateDates] = useState<SortedCandidateDate[]>();
+  const possibleDates = useRecoilValue(possibleDateState);
+  const [sortedPossibleDates, setSortedPossibleDates] = useState<SortedPossibleDate[]>();
   const event = useRecoilValue(overViewState);
   const isValidateDate = useRecoilValue(isValidateDateState);
   const isValidateTimeList = useRecoilValue(isValidateTimeListState);
@@ -52,18 +44,18 @@ export const EventRegisterButton = () => {
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
 
   const formatEvent = () => {
-    const addedStringTimeWidthCandidateDates: SortedCandidateDate[] = [];
-    candidateDates.map((candidateDate) => {
+    const addedStringTimeWidthPossibleDates: SortedPossibleDate[] = [];
+    possibleDates.map((possibleDate) => {
       let stringTimeWidth: EditingTimeWidth[] = [];
-      candidateDate.timeWidth.map((timeWidth) => {
+      possibleDate.timeWidth.map((timeWidth) => {
         stringTimeWidth.push({
           ...timeWidth,
           stringTimeWidth: timeWidth.start + '~' + timeWidth.end,
         });
       });
 
-      candidateDate.date.map((date) => {
-        addedStringTimeWidthCandidateDates.push({
+      possibleDate.date.map((date) => {
+        addedStringTimeWidthPossibleDates.push({
           date: date,
           dateString:
             date.getMonth() + 1 + '/' + date.getDate() + '(' + dayOfWeekStr[date.getDay()] + ')',
@@ -72,31 +64,31 @@ export const EventRegisterButton = () => {
       });
     });
 
-    const sortedCandidateDates: SortedCandidateDate[] = [];
+    const sortedPossibleDates: SortedPossibleDate[] = [];
     const pushedDate: number[] = [];
-    addedStringTimeWidthCandidateDates.map((candidateDate) => {
-      const filteredDates = addedStringTimeWidthCandidateDates.filter(
-        (n) => n.date.getTime() === candidateDate.date.getTime(),
+    addedStringTimeWidthPossibleDates.map((possibleDate) => {
+      const filteredDates = addedStringTimeWidthPossibleDates.filter(
+        (n) => n.date.getTime() === possibleDate.date.getTime(),
       );
       if (filteredDates.length > 1) {
-        if (!pushedDate.includes(candidateDate.date.getTime())) {
+        if (!pushedDate.includes(possibleDate.date.getTime())) {
           let newTimeWidth: EditingTimeWidth[] = [];
           filteredDates.map((filteredDate) => {
             newTimeWidth = [...newTimeWidth, ...filteredDate.timeWidth];
           });
-          sortedCandidateDates.push({ ...candidateDate, timeWidth: newTimeWidth });
-          pushedDate.push(candidateDate.date.getTime());
+          sortedPossibleDates.push({ ...possibleDate, timeWidth: newTimeWidth });
+          pushedDate.push(possibleDate.date.getTime());
         }
       } else {
-        sortedCandidateDates.push(candidateDate);
+        sortedPossibleDates.push(possibleDate);
       }
     });
 
-    sortedCandidateDates.sort((a, b) => a.date.getTime() - b.date.getTime());
-    sortedCandidateDates.map((candidateDate) => {
+    sortedPossibleDates.sort((a, b) => a.date.getTime() - b.date.getTime());
+    sortedPossibleDates.map((possibleDate) => {
       let sortTimeWidth: EditingTimeWidth[] = [];
       let filterTimeWidth: string[] = [];
-      candidateDate.timeWidth.filter((e) => {
+      possibleDate.timeWidth.filter((e) => {
         if (e.stringTimeWidth === undefined) return;
         if (filterTimeWidth.indexOf(e.stringTimeWidth) === -1) {
           filterTimeWidth.push(e.stringTimeWidth);
@@ -111,85 +103,59 @@ export const EventRegisterButton = () => {
         if (a.end < b.end) return -1;
         return 0;
       });
-      candidateDate.timeWidth = sortTimeWidth;
+      possibleDate.timeWidth = sortTimeWidth;
     });
-    setSortedCandidateDates(sortedCandidateDates);
-
-    let registerCandidateDate: RegisterCandidateDate[] = [];
-    sortedCandidateDates.map((candidateDate) => {
-      candidateDate.timeWidth.map((timeWidth) => {
-        const [startHour, startMinute] = timeWidth.start.split(':');
-        const start = new Date(
-          candidateDate.date.getFullYear(),
-          candidateDate.date.getMonth(),
-          candidateDate.date.getDate(),
-          Number(startHour),
-          Number(startMinute),
-        );
-        const [endHour, endMinute] = timeWidth.end.split(':');
-        const end = new Date(
-          candidateDate.date.getFullYear(),
-          candidateDate.date.getMonth(),
-          candidateDate.date.getDate(),
-          Number(endHour),
-          Number(endMinute),
-        );
-        if (timeWidth.stringTimeWidth) {
-          registerCandidateDate.push({
-            date: candidateDate.date.getTime(),
-            dateString: candidateDate.dateString,
-            timeWidth: {
-              start: start.getTime(),
-              end: end.getTime(),
-              stringTimeWidth: timeWidth.stringTimeWidth,
-            },
-          });
-        }
-      });
-    });
-    setRegisterCandidateDates(registerCandidateDate);
+    setSortedPossibleDates(sortedPossibleDates);
     onOpen();
   };
+
   const handleSubmit = async () => {
     setIsLoading(true);
-    const eventPush = await database.ref('events').push({
-      name: event.eventName,
-      description: event.description,
-      candidateDates: registerCandidateDates,
-    });
-    const eventId = eventPush.key;
-    if (isInClient) {
-      await liff!
-        .sendMessages([
-          {
-            type: 'text',
-            text: '出欠表が完成したよ！',
-          },
-          {
-            type: 'text',
-            text:
-              '【イベント名】\n' +
-              event.eventName +
-              '\n' +
-              '【補足・備考】\n' +
-              event.description +
-              '\n' +
-              'https://liff.line.me/' +
-              process.env.NEXT_PUBLIC_LIFF_ID +
-              '/event/' +
-              eventId,
-          },
-        ])
-        .then(() => {
-          console.log('message sent');
-        })
-        .catch((err) => {
-          console.log('error', err);
-          alert(err);
-        });
-      liff!.closeWindow();
-    } else {
-      router.push(`/event/${eventId}`);
+    try {
+      const body = {
+        name: event.eventName,
+        description: event.description,
+        sortedPossibleDates: sortedPossibleDates,
+      };
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/createEvent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      console.log(res.json());
+      // const json: { ok?: boolean; id?: string; error?: string } = await res.json();
+      // if (json.ok) {
+      //   if (isInClient) {
+      //     await liff!.sendMessages([
+      //       {
+      //         type: 'text',
+      //         text: '出欠表が完成したよ！',
+      //       },
+      //       {
+      //         type: 'text',
+      //         text:
+      //           '【イベント名】\n' +
+      //           event.eventName +
+      //           '\n' +
+      //           '【補足・備考】\n' +
+      //           event.description +
+      //           '\n' +
+      //           'https://liff.line.me/' +
+      //           process.env.NEXT_PUBLIC_LIFF_ID +
+      //           '/event/' +
+      //           json.id,
+      //       },
+      //     ]);
+      //     liff!.closeWindow();
+      //   } else {
+      //     router.push(`/event/${json.id}`);
+      //   }
+      // } else {
+      //   throw json.error;
+      // }
+    } catch (error) {
+      alert(error);
     }
   };
 
@@ -226,10 +192,10 @@ export const EventRegisterButton = () => {
               {event.description}
             </Box>
             <Box fontWeight="bold">候補時間</Box>
-            {sortedCandidateDates?.map((sortedCandidateDate, i) => (
+            {sortedPossibleDates?.map((sortedPossibleDate, i) => (
               <Box key={i} pb="2">
-                <Box pl="2">{sortedCandidateDate.dateString}</Box>
-                {sortedCandidateDate.timeWidth.map((timeWidth, j) => (
+                <Box pl="2">{sortedPossibleDate.dateString}</Box>
+                {sortedPossibleDate.timeWidth.map((timeWidth, j) => (
                   <Box key={j} textAlign="center">
                     {timeWidth.stringTimeWidth}
                   </Box>

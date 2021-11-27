@@ -14,29 +14,29 @@ datasource db {
 }
 
 model Event {
-  id            Int                @id @default(autoincrement())
+  id            String             @id @default(cuid())
   name          String             @db.VarChar(255)
   description   String?            @db.VarChar(255)
   possibleDates PossibleDate[]
   comments      Comment[]
-  author        User               @relation(fields: [authorId], references: [id])
-  authorId      String             @db.VarChar(255)
   participants  EventParticipant[]
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
 }
 
 model PossibleDate {
-  id        Int      @id @default(autoincrement())
-  event     Event    @relation(fields: [eventId], references: [id])
-  eventId   Int
-  userId    Int
-  date      DateTime @db.Date
-  startTime DateTime @db.Time
-  endTime   DateTime @db.Time
-  votes     Vote[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  index           Int
+  event           Event    @relation(fields: [eventId], references: [id])
+  eventId         String
+  date            DateTime @db.Date
+  dateString      String
+  startTime       DateTime @db.Date
+  endTime         DateTime @db.Date
+  timeWidthString String
+  votes           Vote[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Vote {
@@ -57,7 +57,6 @@ model User {
   profileImg         String             @db.VarChar(255)
   votes              Vote[]
   comments           Comment[]
-  createdEvents      Event[]
   participatedEvents EventParticipant[]
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
@@ -66,7 +65,7 @@ model User {
 model Comment {
   comment   String   @db.VarChar(255)
   event     Event    @relation(fields: [eventId], references: [id])
-  eventId   Int
+  eventId   String
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.VarChar(255)
   createdAt DateTime @default(now())
@@ -77,9 +76,10 @@ model Comment {
 
 model EventParticipant {
   event     Event    @relation(fields: [eventId], references: [id])
-  eventId   Int
+  eventId   String
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.VarChar(255)
+  status    String   @db.VarChar(10)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
