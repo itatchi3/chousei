@@ -13,6 +13,7 @@ import {
   Button,
   Textarea,
 } from '@chakra-ui/react';
+import { getVercelUrl } from 'lib/getVercelUrl';
 
 export const AnswerComment = () => {
   const event = useRecoilValue(eventState);
@@ -37,7 +38,9 @@ export const AnswerComment = () => {
         idToken: idToken,
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upDateComment`, {
+      const url = getVercelUrl();
+
+      const res = await fetch(`${url}/api/upDateComment`, {
         method: 'POST',
         body: JSON.stringify(body),
       });

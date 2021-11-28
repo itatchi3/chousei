@@ -12,9 +12,6 @@ export const LiffAuth: FC = ({ children }) => {
       let idToken: string | null | undefined;
       let userId: string | undefined;
 
-      console.log(process.env.NEXT_PUBLIC_LIFF_ID);
-      console.log(process.env.NEXT_PUBLIC_BASE_URL);
-      console.log(process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN);
       const liffInit = async () => {
         try {
           await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
@@ -24,7 +21,7 @@ export const LiffAuth: FC = ({ children }) => {
       };
 
       await liffInit();
-      console.log(liff.isLoggedIn());
+
       if (process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN === 'false') {
         if (!liff.isLoggedIn()) {
           liff.login();
@@ -46,7 +43,6 @@ export const LiffAuth: FC = ({ children }) => {
         userId: userId,
         isInClient: liff.isInClient(),
       });
-      console.log(liff.isInClient());
     };
     func();
   }, [setLiffObj]);
