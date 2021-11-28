@@ -43,6 +43,7 @@ export const LiffAuth: FC = ({ children }) => {
         userId: userId,
         isInClient: liff.isInClient(),
       });
+      console.log(liff.isInClient());
     };
     func();
   }, [setLiffObj]);
