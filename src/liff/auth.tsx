@@ -12,6 +12,11 @@ export const LiffAuth: FC = ({ children }) => {
       let idToken: string | null | undefined;
       let userId: string | undefined;
 
+      console.log(process.env.NEXT_PUBLIC_LIFF_ID);
+      console.log(process.env.NEXT_PUBLIC_API_BASE_URL);
+      console.log(process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN);
+      console.log(process.env.DATABASE_URL);
+      console.log(process.env.CLIENT_ID);
       const liffInit = async () => {
         try {
           await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
@@ -22,20 +27,20 @@ export const LiffAuth: FC = ({ children }) => {
 
       liffInit();
 
-      if (process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN === 'false') {
-        if (!liff.isInClient()) {
-          liff.login();
-          liffInit();
-        }
+      // if (process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN === 'false') {
+      //   if (!liff.isInClient()) {
+      //     liff.login();
+      //     liffInit();
+      //   }
 
-        try {
-          const profile = await liff.getProfile();
-          userId = profile.userId;
-          idToken = liff.getIDToken();
-        } catch (error) {
-          console.error('error', error);
-        }
-      }
+      //   try {
+      //     const profile = await liff.getProfile();
+      //     userId = profile.userId;
+      //     idToken = liff.getIDToken();
+      //   } catch (error) {
+      //     console.error('error', error);
+      //   }
+      // }
 
       setLiffObj({
         liff: liff,
