@@ -118,8 +118,8 @@ export const EventRegisterButton = () => {
         sortedPossibleDates: sortedPossibleDates,
         idToken: idToken,
       };
-      console.log(idToken, process.env.NEXT_PUBLIC_API_BASE_URL);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/createEvent`, {
+      console.log(idToken, process.env.NEXT_PUBLIC_BASE_URL);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/createEvent`, {
         method: 'POST',
         body: superjson.stringify(body),
       });

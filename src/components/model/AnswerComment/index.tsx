@@ -37,7 +37,7 @@ export const AnswerComment = () => {
         idToken: idToken,
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/upDateComment`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upDateComment`, {
         method: 'POST',
         body: JSON.stringify(body),
       });
