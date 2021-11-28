@@ -113,7 +113,7 @@ export const InputSchedule = () => {
         idToken: idToken,
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/upDateVote`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upDateVote`, {
         method: 'POST',
         body: JSON.stringify(body),
       });
