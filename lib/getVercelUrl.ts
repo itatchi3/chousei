@@ -10,5 +10,5 @@ export const getVercelUrl = () => {
 
   return /^http/.test(process.env.NEXT_PUBLIC_VERCEL_URL)
     ? process.env.VERCEL_URL
-    : `https://${process.env.NEXT_PUBLIC_VERCEL_URLL}`;
+    : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
 };
