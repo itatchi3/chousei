@@ -65,9 +65,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   try {
     const { userId, userName, profileImg } = await getPrifile(idToken);
 
-    // const userId = 'testId';
-    // const userName = 'userName';
-    // const profileImg = 'aaa';
     const result = await prisma.event.create({
       data: {
         name,

@@ -121,42 +121,41 @@ export const EventRegisterButton = () => {
       };
 
       const url = getVercelUrl();
-      console.log(idToken, url);
       const res = await fetch(`${url}/api/createEvent`, {
         method: 'POST',
         body: superjson.stringify(body),
       });
 
-      // const json: { ok?: boolean; id?: string; error?: string } = await res.json();
-      // if (json.ok) {
-      //   if (isInClient) {
-      //     await liff!.sendMessages([
-      //       {
-      //         type: 'text',
-      //         text: '出欠表が完成したよ！',
-      //       },
-      //       {
-      //         type: 'text',
-      //         text:
-      //           '【イベント名】\n' +
-      //           event.eventName +
-      //           '\n' +
-      //           '【補足・備考】\n' +
-      //           event.description +
-      //           '\n' +
-      //           'https://liff.line.me/' +
-      //           process.env.NEXT_PUBLIC_LIFF_ID +
-      //           '/event/' +
-      //           json.id,
-      //       },
-      //     ]);
-      //     liff!.closeWindow();
-      //   } else {
-      //     router.push(`/event/${json.id}`);
-      //   }
-      // } else {
-      //   throw json.error;
-      // }
+      const json: { ok?: boolean; id?: string; error?: string } = await res.json();
+      if (json.ok) {
+        if (isInClient) {
+          await liff!.sendMessages([
+            {
+              type: 'text',
+              text: '出欠表が完成したよ！',
+            },
+            {
+              type: 'text',
+              text:
+                '【イベント名】\n' +
+                event.eventName +
+                '\n' +
+                '【補足・備考】\n' +
+                event.description +
+                '\n' +
+                'https://liff.line.me/' +
+                process.env.NEXT_PUBLIC_LIFF_ID +
+                '/event/' +
+                json.id,
+            },
+          ]);
+          liff!.closeWindow();
+        } else {
+          router.push(`/event/${json.id}`);
+        }
+      } else {
+        throw json.error;
+      }
     } catch (error) {
       alert(error);
     }
