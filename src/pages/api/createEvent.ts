@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from 'lib/prisma';
-
 import { EditingTimeWidth } from 'src/atoms/eventState';
+import superjson from 'superjson';
+import { getPrifile } from 'src/liff/getProfile';
 
 type SortedPossibleDate = {
-  date: string;
+  date: Date;
   dateString: string;
   timeWidth: EditingTimeWidth[];
 };
@@ -22,14 +23,15 @@ type ReqestBody = {
   name: string;
   description: string;
   sortedPossibleDates: SortedPossibleDate[];
+  idToken: string | null | undefined;
 };
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { name, description, sortedPossibleDates }: ReqestBody = req.body;
+  const { name, description, sortedPossibleDates, idToken }: ReqestBody = superjson.parse(req.body);
   let count = 0;
   let registerPossibleDates: RegisterPossibleDate[] = [];
   sortedPossibleDates.map((possibleDate) => {
-    const date = new Date(possibleDate.date);
+    const date = possibleDate.date;
     possibleDate.timeWidth.map((timeWidth) => {
       const [startHour, startMinute] = timeWidth.start.split(':');
       const start = new Date(
@@ -60,12 +62,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       }
     });
   });
-
-  const authorId = 'testId';
-  const userName = 'testName';
-  const profileImg = 'testImg';
-
   try {
+    const { userId, userName, profileImg } = await getPrifile(idToken);
+
+    // const userId = 'testId';
+    // const userName = 'userName';
+    // const profileImg = 'aaa';
     const result = await prisma.event.create({
       data: {
         name,
@@ -75,14 +77,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
         participants: {
           create: {
-            status: 'create',
+            isCreate: true,
             user: {
               connectOrCreate: {
                 where: {
-                  id: authorId,
+                  id: userId,
                 },
                 create: {
-                  id: authorId,
+                  id: userId,
                   name: userName,
                   profileImg: profileImg,
                 },
@@ -92,11 +94,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
       },
     });
-    console.log(result);
     res.json({ ok: true, id: result.id });
-    return;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.json({ ok: false, error });
   }
 }

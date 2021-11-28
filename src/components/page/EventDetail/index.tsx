@@ -1,12 +1,7 @@
 import { useEffect } from 'react';
 import { AttendanceTable } from 'src/components/model/AttendanceTable';
-import {
-  respondentVoteListObjectToArray,
-  respondentCommentObjectToArray,
-} from 'src/utils/DataConvert';
 import { useRecoilState } from 'recoil';
 import { eventState, EventType } from 'src/atoms/eventState';
-import { useLiff } from 'src/hooks/auth';
 import { Box, VStack } from '@chakra-ui/react';
 import { ShareButton } from 'src/components/model/ShareButton';
 import { MoveAnswerScheduleButton } from 'src/components/model/MoveAnswerScheduleButton';
@@ -19,39 +14,12 @@ type Props = {
 };
 
 export const EventDetail = ({ eventData }: Props) => {
-  const { liff } = useLiff();
   const [event, setEvent] = useRecoilState(eventState);
-  // const [respondentComment, setRespondentComment] = useRecoilState(respondentCommentState);
 
   useEffect(() => {
     setEvent(eventData);
-
-    // const getProfile = async () => {
-    //   const profile = await liff!.getProfile();
-    //   let profileImg: string;
-    //   if (profile.pictureUrl) {
-    //     profileImg = profile.pictureUrl;
-    //   } else {
-    //     profileImg = '';
-    //   }
-
-    //   setRespondentVoteList((state) => ({
-    //     ...state,
-    //     name: profile.displayName,
-    //     userId: profile.userId,
-    //     profileImg: profileImg,
-    //   }));
-
-    //   setRespondentComment((state) => ({
-    //     ...state,
-    //     name: profile.displayName,
-    //     userId: profile.userId,
-    //     profileImg: profileImg,
-    //   }));
-    // };
-    // getProfile();
   }, [eventData, setEvent]);
-  console.log(event);
+
   return (
     <Box p="3">
       <EventOverView />

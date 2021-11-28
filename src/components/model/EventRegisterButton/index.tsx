@@ -6,8 +6,7 @@ import {
   isValidateDateState,
   isValidateTimeListState,
 } from 'src/atoms/eventState';
-import { database } from 'src/utils/firebase';
-import { useLiff } from 'src/hooks/auth';
+import { useLiff } from 'src/liff/auth';
 import { useRecoilValue } from 'recoil';
 import { overViewState } from 'src/atoms/eventState';
 import {
@@ -24,6 +23,7 @@ import {
   HStack,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import superjson from 'superjson';
 
 type SortedPossibleDate = {
   date: Date;
@@ -32,7 +32,7 @@ type SortedPossibleDate = {
 };
 
 export const EventRegisterButton = () => {
-  const { liff, isInClient } = useLiff();
+  const { liff, isInClient, idToken } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const possibleDates = useRecoilValue(possibleDateState);
   const [sortedPossibleDates, setSortedPossibleDates] = useState<SortedPossibleDate[]>();
@@ -116,14 +116,13 @@ export const EventRegisterButton = () => {
         name: event.eventName,
         description: event.description,
         sortedPossibleDates: sortedPossibleDates,
+        idToken: idToken,
       };
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/createEvent`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: superjson.stringify(body),
       });
 
-      console.log(res.json());
       // const json: { ok?: boolean; id?: string; error?: string } = await res.json();
       // if (json.ok) {
       //   if (isInClient) {

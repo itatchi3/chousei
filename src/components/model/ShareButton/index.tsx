@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
-import { useLiff } from 'src/hooks/auth';
+import { useLiff } from 'src/liff/auth';
 import {
   Menu,
   MenuButton,

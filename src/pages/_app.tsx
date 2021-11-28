@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
 import { FC } from 'react';
-import { LiffAuth, useLiff } from 'src/hooks/auth';
+import { LiffAuth, useLiff } from 'src/liff/auth';
 import { Center, ChakraProvider, Spinner } from '@chakra-ui/react';
 
 const Layout: FC = ({ children }) => {

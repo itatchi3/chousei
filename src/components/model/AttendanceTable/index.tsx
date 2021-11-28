@@ -33,7 +33,7 @@ export const AttendanceTable = () => {
   useEffect(() => {
     if (!event) return;
 
-    const attendanceCounts = event.possibleDates.map((possibleDate, i) => {
+    const attendanceCounts = event.possibleDates.map((possibleDate) => {
       return {
         date: possibleDate.date,
         positiveCount:
@@ -85,7 +85,7 @@ export const AttendanceTable = () => {
               </Th>
               {event
                 ? event.participants
-                    .filter((participant) => participant.status.includes('vote'))
+                    .filter((participant) => participant.isVote)
                     .map((participant, i) => (
                       <Th key={i} p="2">
                         <Popover placement="top">

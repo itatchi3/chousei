@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
-import { database } from 'src/utils/firebase';
 import { Button, Box, HStack, VStack, Center, Flex } from '@chakra-ui/react';
 import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { cloneDeep } from 'lodash';
+import { useLiff } from 'src/liff/auth';
 
 type EventFullCalendar = {
   start: Date;
@@ -29,9 +29,8 @@ export const InputSchedule = () => {
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
-  // const respondent = useRecoilValue(respondentVoteListState);
-
-  const [voteList, setVoteList] = useState<string[]>();
+  const { userId, idToken } = useLiff();
+  const [voteList, setVoteList] = useState<{ id: number; vote: string }[]>();
 
   const router = useRouter();
 
@@ -94,7 +93,7 @@ export const InputSchedule = () => {
       default:
       // do nothing
     }
-    newVoteList[index] = newVote;
+    newVoteList[index].vote = newVote;
     setVoteList(newVoteList);
     eventFullCalendarList[indexDate].map((event, indexEvent) => {
       if (event.id === arg.event.id) {
@@ -107,18 +106,25 @@ export const InputSchedule = () => {
   const registerAttendances = async () => {
     if (!event) return;
     setLoading(true);
-    // const respondentData = {
-    //   userId: respondent.userId,
-    //   name: respondent.name,
-    //   voteList: voteList,
-    //   profileImg: respondent.profileImg,
-    // };
+    try {
+      const body = {
+        voteList: voteList,
+        eventId: event.id,
+        idToken: idToken,
+      };
 
-    // await database
-    //   .ref(`events/${event}/respondentVoteLists/${respondentData.userId}`)
-    //   .set(respondentData);
-
-    // router.push(`/event/${event.id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/upDateVote`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      const json: { ok?: boolean; error?: string } = await res.json();
+      if (!json.ok) {
+        throw json.error;
+      }
+      router.push(`/event/${event.id}`);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   useEffect(() => {
@@ -132,19 +138,19 @@ export const InputSchedule = () => {
     let minutesWhenMaxTime = 0;
 
     event.possibleDates.map((possibleDate, index) => {
-      if (new Date(possibleDate.startTime).getHours() < newMinTime) {
-        newMinTime = new Date(possibleDate.startTime).getHours();
+      if (possibleDate.startTime.getHours() < newMinTime) {
+        newMinTime = possibleDate.startTime.getHours();
       }
-      if (new Date(possibleDate.endTime).getHours() > newMaxTime) {
-        newMaxTime = new Date(possibleDate.endTime).getHours();
-        minutesWhenMaxTime = new Date(possibleDate.endTime).getMinutes();
+      if (possibleDate.endTime.getHours() > newMaxTime) {
+        newMaxTime = possibleDate.endTime.getHours();
+        minutesWhenMaxTime = possibleDate.endTime.getMinutes();
       }
       if (dateList.includes(possibleDate.date)) {
         eventFullCalendar.push({
-          start: new Date(possibleDate.startTime),
-          end: new Date(possibleDate.endTime),
+          start: possibleDate.startTime,
+          end: possibleDate.endTime,
           id: index.toString(),
-          color: checkColor(voteList[index]),
+          color: checkColor(voteList[index].vote),
         });
       } else {
         eventFullCalendarList.push(eventFullCalendar);
@@ -152,10 +158,10 @@ export const InputSchedule = () => {
         dateStringList.push(possibleDate.dateString);
         eventFullCalendar = [
           {
-            start: new Date(possibleDate.startTime),
-            end: new Date(possibleDate.endTime),
+            start: possibleDate.startTime,
+            end: possibleDate.endTime,
             id: index.toString(),
-            color: checkColor(voteList[index]),
+            color: checkColor(voteList[index].vote),
           },
         ];
       }
@@ -180,16 +186,19 @@ export const InputSchedule = () => {
 
   useEffect(() => {
     if (!event) return;
-    const voteList = event.possibleDates.map((possibleDate) => {
+    console.log(event);
+    let voteList: { id: number; vote: string }[] = [];
+    event.possibleDates.map((possibleDate) => {
+      let userVote = { id: possibleDate.id, vote: '△' };
       possibleDate.votes.map((vote) => {
-        if (vote.userId === 'userId') {
-          return vote.vote;
+        if (vote.userId === userId) {
+          userVote = { id: possibleDate.id, vote: vote.vote };
         }
       });
-      return '△';
+      voteList.push(userVote);
     });
     setVoteList(voteList);
-  }, [event]);
+  }, [event, userId]);
 
   return (
     <Box p="3">

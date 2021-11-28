@@ -33,6 +33,13 @@ export type EditingTimeWidth = {
   stringTimeWidth?: string;
 };
 
+export type RiffObj = {
+  liff?: typeof Liff;
+  idToken?: string | null;
+  userId?: string;
+  isInClient?: boolean;
+};
+
 export const eventState = atom<EventType>({
   key: 'eventState',
   default: null,
@@ -67,7 +74,11 @@ export const isValidateTimeListState = atom<boolean[]>({
   default: [false],
 });
 
-export const liffState = atom<typeof Liff | undefined>({
+export const liffObjState = atom<RiffObj>({
   key: 'liffState',
-  default: undefined,
+  default: {
+    liff: undefined,
+    idToken: undefined,
+    userId: undefined,
+  },
 });
