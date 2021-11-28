@@ -1,5 +1,4 @@
 export const getVercelUrl = () => {
-  console.log(process.env.NEXT_PUBLIC_VERCEL_URL);
   if (!process.env.NEXT_PUBLIC_VERCEL_URL) {
     return 'http://localhost:3000';
   }
