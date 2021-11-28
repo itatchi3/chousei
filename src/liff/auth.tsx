@@ -26,9 +26,9 @@ export const LiffAuth: FC = ({ children }) => {
       liffInit();
 
       if (process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN === 'false') {
-        if (!liff.isInClient()) {
+        if (!liff.isLoggedIn()) {
           liff.login();
-          // liffInit();
+          liffInit();
         }
 
         try {
