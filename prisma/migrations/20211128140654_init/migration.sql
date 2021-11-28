@@ -16,8 +16,8 @@ CREATE TABLE `PossibleDate` (
     `eventId` VARCHAR(191) NOT NULL,
     `date` DATE NOT NULL,
     `dateString` VARCHAR(191) NOT NULL,
-    `startTime` DATE NOT NULL,
-    `endTime` DATE NOT NULL,
+    `startTime` DATETIME NOT NULL,
+    `endTime` DATETIME NOT NULL,
     `timeWidthString` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -62,7 +62,9 @@ CREATE TABLE `Comment` (
 CREATE TABLE `EventParticipant` (
     `eventId` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(255) NOT NULL,
-    `status` VARCHAR(10) NOT NULL,
+    `isCheck` BOOLEAN NOT NULL DEFAULT true,
+    `isCreate` BOOLEAN NOT NULL DEFAULT false,
+    `isVote` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 

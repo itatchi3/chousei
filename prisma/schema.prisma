@@ -31,8 +31,8 @@ model PossibleDate {
   eventId         String
   date            DateTime @db.Date
   dateString      String
-  startTime       DateTime @db.Date
-  endTime         DateTime @db.Date
+  startTime       DateTime @db.DateTime
+  endTime         DateTime @db.DateTime
   timeWidthString String
   votes           Vote[]
   createdAt       DateTime @default(now())
@@ -79,7 +79,9 @@ model EventParticipant {
   eventId   String
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.VarChar(255)
-  status    String   @db.VarChar(10)
+  isCheck   Boolean  @default(true)
+  isCreate  Boolean  @default(false)
+  isVote    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

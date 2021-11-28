@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import { database } from 'src/utils/firebase';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
+import { useLiff } from 'src/liff/auth';
 import {
   Modal,
   ModalOverlay,
@@ -16,7 +16,7 @@ import {
 
 export const AnswerComment = () => {
   const event = useRecoilValue(eventState);
-  // const [respondentComment, setRespondentComment] = useRecoilState(respondentCommentState);
+  const { userId, idToken } = useLiff();
   const [isAnsweredComment, setIsAnsweredComment] = useState(false);
   const [comment, setComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,29 +28,39 @@ export const AnswerComment = () => {
   };
 
   const registerComment = async () => {
+    if (!event) return;
     setIsLoading(true);
-    // const respondentData = {
-    //   userId: respondentComment.userId,
-    //   name: respondentComment.name,
-    //   profileImg: respondentComment.profileImg,
-    //   comment: respondentComment.comment,
-    // };
-    // await database
-    //   .ref(`events/${event.id}/respondentComments/${respondentData.userId}`)
-    //   .set(respondentData);
-    // location.reload();
+    try {
+      const body = {
+        comment: comment,
+        eventId: event.id,
+        idToken: idToken,
+      };
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/upDateComment`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      const json: { ok?: boolean; error?: string } = await res.json();
+      if (!json.ok) {
+        throw json.error;
+      }
+      location.reload();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   useEffect(() => {
     if (!event || !event.comments.length) return;
 
-    event.comments.map((comment) => {
-      if (comment.userId === 'userId') {
+    event.comments.map((_comment) => {
+      if (_comment.userId === userId && _comment.comment !== '') {
+        setComment(_comment.comment);
         setIsAnsweredComment(true);
-        setComment(comment.comment);
       }
     });
-  }, [event]);
+  }, [event, userId]);
 
   return (
     <>

@@ -1,11 +1,8 @@
-import { database } from 'src/utils/firebase';
-import { EventType, eventState } from 'src/atoms/eventState';
+import { EventType } from 'src/atoms/eventState';
 import { GetServerSideProps } from 'next';
 import { EventDetail } from 'src/components/page/EventDetail';
 import { prisma } from 'lib/prisma';
 import superjson from 'superjson';
-import { useRecoilState } from 'recoil';
-import { useEffect } from 'react';
 
 type Props = {
   eventData: string;
@@ -47,6 +44,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
           },
           participants: {
+            orderBy: {
+              updatedAt: 'asc',
+            },
             include: {
               user: true,
             },
