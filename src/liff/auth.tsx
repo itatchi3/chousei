@@ -23,12 +23,12 @@ export const LiffAuth: FC = ({ children }) => {
         }
       };
 
-      liffInit();
-
+      await liffInit();
+      console.log(liff.isLoggedIn());
       if (process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN === 'false') {
         if (!liff.isLoggedIn()) {
           liff.login();
-          liffInit();
+          await liffInit();
         }
 
         try {
