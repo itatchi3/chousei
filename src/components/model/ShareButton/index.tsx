@@ -59,7 +59,7 @@ export const ShareButton = () => {
           >
             友達へ共有する
           </MenuButton>
-          <MenuList Width="300px">
+          <MenuList mr="4">
             <MenuGroup title="リンクを共有してください">
               <Flex px="4" py="2">
                 <Input

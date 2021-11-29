@@ -28,6 +28,9 @@ type ReqestBody = {
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { name, description, sortedPossibleDates, idToken }: ReqestBody = superjson.parse(req.body);
+
+  let hrstart = process.hrtime();
+
   let count = 0;
   let registerPossibleDates: RegisterPossibleDate[] = [];
   sortedPossibleDates.map((possibleDate) => {
@@ -62,8 +65,18 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       }
     });
   });
+
+  let hrend = process.hrtime(hrstart);
+  console.info('データ整形 (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
   try {
+    hrstart = process.hrtime();
+
     const { userId, userName, profileImg } = await getPrifile(idToken);
+
+    hrend = process.hrtime(hrstart);
+    console.info('idToken認証 (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
+
+    hrstart = process.hrtime();
 
     const result = await prisma.event.create({
       data: {
@@ -91,6 +104,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
       },
     });
+
+    hrend = process.hrtime(hrstart);
+    console.info('planetscale (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
+
     res.json({ ok: true, id: result.id });
   } catch (error) {
     console.error(error);
