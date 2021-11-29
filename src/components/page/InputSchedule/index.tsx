@@ -31,6 +31,7 @@ export const InputSchedule = () => {
   const event = useRecoilValue(eventState);
   const { userId, idToken } = useLiff();
   const [voteList, setVoteList] = useState<{ id: number; vote: string }[]>();
+  const [firstVoteList, setFirstVoteList] = useState<{ id: number; vote: string }[]>();
 
   const router = useRouter();
 
@@ -129,7 +130,7 @@ export const InputSchedule = () => {
   };
 
   useEffect(() => {
-    if (!event || !voteList) return;
+    if (!event || !firstVoteList) return;
     let dateList: Date[] = [event.possibleDates[0].date];
     let dateStringList: string[] = [event.possibleDates[0].dateString];
     let eventFullCalendarList: EventFullCalendar[][] = [];
@@ -151,7 +152,7 @@ export const InputSchedule = () => {
           start: possibleDate.startTime,
           end: possibleDate.endTime,
           id: index.toString(),
-          color: checkColor(voteList[index].vote),
+          color: checkColor(firstVoteList[index].vote),
         });
       } else {
         eventFullCalendarList.push(eventFullCalendar);
@@ -162,7 +163,7 @@ export const InputSchedule = () => {
             start: possibleDate.startTime,
             end: possibleDate.endTime,
             id: index.toString(),
-            color: checkColor(voteList[index].vote),
+            color: checkColor(firstVoteList[index].vote),
           },
         ];
       }
@@ -183,7 +184,7 @@ export const InputSchedule = () => {
       newTimeList.push(i);
     }
     setViewTimeList(newTimeList);
-  }, [event, voteList]);
+  }, [event, firstVoteList]);
 
   useEffect(() => {
     if (!event) return;
@@ -198,6 +199,7 @@ export const InputSchedule = () => {
       voteList.push(userVote);
     });
     setVoteList(voteList);
+    setFirstVoteList(voteList);
   }, [event, userId]);
 
   return (
