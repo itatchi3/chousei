@@ -53,6 +53,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       res.json({ ok: false, error: `[Validation] ${error.message}` });
     }
 
-    res.json({ ok: false, error: error });
+    res.json({ ok: false, error: `An unexpected error has occurred.` });
   }
 }
