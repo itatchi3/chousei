@@ -4,7 +4,6 @@ import { getPrifile } from 'src/liff/getProfile';
 import { Prisma } from '.prisma/client';
 
 type ReqestBody = {
-  voteList: { id: number; vote: string }[];
   eventId: string;
   idToken: string;
 };
