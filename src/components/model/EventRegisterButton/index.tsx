@@ -204,6 +204,7 @@ export const EventRegisterButton = () => {
       }
     } catch (error) {
       alert(error);
+      setIsLoading(false);
     }
   };
   return (

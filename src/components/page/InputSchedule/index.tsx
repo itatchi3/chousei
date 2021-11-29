@@ -124,6 +124,7 @@ export const InputSchedule = () => {
       router.push(`/event/${event.id}`);
     } catch (error) {
       alert(error);
+      setLoading(false);
     }
   };
 

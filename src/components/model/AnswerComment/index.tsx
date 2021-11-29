@@ -48,6 +48,7 @@ export const AnswerComment = () => {
       location.reload();
     } catch (error) {
       alert(error);
+      setIsLoading(false);
     }
   };
 
