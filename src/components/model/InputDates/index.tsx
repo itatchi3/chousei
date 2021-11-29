@@ -63,8 +63,10 @@ export const InputDates = () => {
       <VStack px="3" pt="3">
         {possibleDates.map((_, indexDate) => (
           <Box px="3" py="2" borderWidth="2px" borderRadius="lg" width="100%" key={indexDate}>
-            <Flex justifyContent="flex-end" mb="-6">
+            <Flex justifyContent="flex-end">
               <CloseButton
+                mb="-6"
+                zIndex="1"
                 sx={{
                   WebkitTapHighlightColor: 'rgba(0,0,0,0)',
                   _focus: { boxShadow: 'none' },
@@ -73,7 +75,9 @@ export const InputDates = () => {
                 visibility={possibleDates.length >= 2 ? 'visible' : 'hidden'}
               />
             </Flex>
-            <InputDate indexDate={indexDate} />
+            <Box zIndex="0">
+              <InputDate indexDate={indexDate} />
+            </Box>
             <Box pt="3">
               <InputTimeWidth indexDate={indexDate} isValidateTimeList={isValidateTimeList} />
             </Box>
