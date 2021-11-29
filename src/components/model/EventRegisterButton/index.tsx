@@ -31,11 +31,21 @@ type SortedPossibleDate = {
   timeWidth: EditingTimeWidth[];
 };
 
+type RegisterPossibleDate = {
+  index: number;
+  date: Date;
+  dateString: string;
+  startTime: Date;
+  endTime: Date;
+  timeWidthString: string;
+};
+
 export const EventRegisterButton = () => {
   const { liff, isInClient, idToken } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const possibleDates = useRecoilValue(possibleDateState);
   const [sortedPossibleDates, setSortedPossibleDates] = useState<SortedPossibleDate[]>();
+  const [registerPossibleDates, setRegisterPossibleDates] = useState<RegisterPossibleDate[]>();
   const event = useRecoilValue(overViewState);
   const isValidateDate = useRecoilValue(isValidateDateState);
   const isValidateTimeList = useRecoilValue(isValidateTimeListState);
@@ -106,6 +116,43 @@ export const EventRegisterButton = () => {
       possibleDate.timeWidth = sortTimeWidth;
     });
     setSortedPossibleDates(sortedPossibleDates);
+
+    let count = 0;
+    let registerPossibleDates: RegisterPossibleDate[] = [];
+    sortedPossibleDates.map((possibleDate) => {
+      const date = possibleDate.date;
+      possibleDate.timeWidth.map((timeWidth) => {
+        const [startHour, startMinute] = timeWidth.start.split(':');
+        const start = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          Number(startHour),
+          Number(startMinute),
+        );
+        const [endHour, endMinute] = timeWidth.end.split(':');
+        const end = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          Number(endHour),
+          Number(endMinute),
+        );
+        if (timeWidth.stringTimeWidth) {
+          registerPossibleDates.push({
+            index: count,
+            date: date,
+            dateString: possibleDate.dateString,
+            startTime: start,
+            endTime: end,
+            timeWidthString: timeWidth.stringTimeWidth,
+          });
+          count += 1;
+        }
+      });
+    });
+    setRegisterPossibleDates(registerPossibleDates);
+
     onOpen();
   };
 
@@ -116,7 +163,7 @@ export const EventRegisterButton = () => {
       const body = {
         name: event.eventName,
         description: event.description,
-        sortedPossibleDates: sortedPossibleDates,
+        registerPossibleDates: registerPossibleDates,
         idToken: idToken,
       };
 
