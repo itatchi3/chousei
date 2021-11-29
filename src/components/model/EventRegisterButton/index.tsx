@@ -24,7 +24,6 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import superjson from 'superjson';
-import { getVercelUrl } from 'lib/getVercelUrl';
 
 type SortedPossibleDate = {
   date: Date;
@@ -120,8 +119,7 @@ export const EventRegisterButton = () => {
         idToken: idToken,
       };
 
-      const url = getVercelUrl();
-      const res = await fetch(`${url}/api/createEvent`, {
+      const res = await fetch(`/api/createEvent`, {
         method: 'POST',
         body: superjson.stringify(body),
       });
