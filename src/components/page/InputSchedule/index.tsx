@@ -7,7 +7,6 @@ import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { cloneDeep } from 'lodash';
 import { useLiff } from 'src/liff/auth';
-import { getVercelUrl } from 'lib/getVercelUrl';
 
 type EventFullCalendar = {
   start: Date;
@@ -114,8 +113,7 @@ export const InputSchedule = () => {
         idToken: idToken,
       };
 
-      const url = getVercelUrl();
-      const res = await fetch(`${url}/api/upDateVote`, {
+      const res = await fetch(`/api/upDateVote`, {
         method: 'POST',
         body: JSON.stringify(body),
       });
