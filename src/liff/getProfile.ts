@@ -25,5 +25,6 @@ export const getPrifile = async (idToken: string | null | undefined) => {
   const userId: string = data.sub;
   const userName: string = data.name;
   const profileImg: string = data.picture;
+  console.log('jsonok');
   return { userId, userName, profileImg };
 };
