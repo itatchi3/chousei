@@ -79,8 +79,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       res.json({ ok: false, error: `[${error.errorCode}] ${error.message}` });
     } else if (error instanceof Prisma.PrismaClientValidationError) {
       res.json({ ok: false, error: `[Validation] ${error.message}` });
+    } else {
+      res.json({ ok: false, error: `An unexpected error has occurred.` });
     }
-
-    res.json({ ok: false, error: `An unexpected error has occurred.` });
   }
 }
