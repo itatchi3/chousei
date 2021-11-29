@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from 'lib/prisma';
-import { EditingTimeWidth } from 'src/atoms/eventState';
 import superjson from 'superjson';
 import { getPrifile } from 'src/liff/getProfile';
 import { Prisma } from '.prisma/client';
@@ -41,6 +40,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     res.json({ ok: false, error: `idTokenError` });
   }
   console.log(userName);
+  console.log(profileImg);
   try {
     const result = await prisma.event.create({
       data: {
@@ -71,17 +71,17 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
     res.json({ ok: true, id: result.id });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      res.json({ ok: false, error: `[${error.code}] ${error.message}` });
-    } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
-      res.json({ ok: false, error: `[UnknownRequest] ${error.message}` });
-    } else if (error instanceof Prisma.PrismaClientRustPanicError) {
-      res.json({ ok: false, error: `[RustPanic] ${error.message}` });
-    } else if (error instanceof Prisma.PrismaClientInitializationError) {
-      res.json({ ok: false, error: `[${error.errorCode}] ${error.message}` });
-    } else if (error instanceof Prisma.PrismaClientValidationError) {
-      res.json({ ok: false, error: `[Validation] ${error.message}` });
-    }
+    // if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    //   res.json({ ok: false, error: `[${error.code}] ${error.message}` });
+    // } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+    //   res.json({ ok: false, error: `[UnknownRequest] ${error.message}` });
+    // } else if (error instanceof Prisma.PrismaClientRustPanicError) {
+    //   res.json({ ok: false, error: `[RustPanic] ${error.message}` });
+    // } else if (error instanceof Prisma.PrismaClientInitializationError) {
+    //   res.json({ ok: false, error: `[${error.errorCode}] ${error.message}` });
+    // } else if (error instanceof Prisma.PrismaClientValidationError) {
+    //   res.json({ ok: false, error: `[Validation] ${error.message}` });
+    // }
 
     res.json({ ok: false, error: `An unexpected error has occurred.` });
   }
