@@ -25,14 +25,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     req.body,
   );
 
-  console.log(registerPossibleDates);
-
   let userId = '';
   let userName = '';
   let profileImg = '';
   try {
     const userProfile = await getPrifile(idToken);
-    console.log('userProfile');
     userId = userProfile.userId;
     userName = userProfile.userName;
     profileImg = userProfile.profileImg;
@@ -40,8 +37,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     res.json({ ok: false, error: `idTokenError` });
     return;
   }
-  console.log(userName);
-  console.log(profileImg);
   try {
     const result = await prisma.event.create({
       data: {

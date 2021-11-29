@@ -15,16 +15,13 @@ export const getPrifile = async (idToken: string | null | undefined) => {
     body: `id_token=${idToken}&client_id=${process.env.CLIENT_ID}`,
   });
 
-  console.log('ok');
-
   const data = await response.json();
   if (response.status !== 200) {
-    console.log('not200');
     throw new Error();
   }
   const userId: string = data.sub;
   const userName: string = data.name;
   const profileImg: string = data.picture;
-  console.log('jsonok');
+
   return { userId, userName, profileImg };
 };
