@@ -1,5 +1,5 @@
 import { EventRegisterButton } from 'src/components/model/EventRegisterButton';
-import { InputDates } from 'src/components/model/InputDates';
+import { InputPossibleDates } from 'src/components/model/InputPossibleDates';
 import { InputEventOverview } from 'src/components/model/InputOverview';
 import { Box, Center } from '@chakra-ui/react';
 
@@ -8,7 +8,7 @@ export const CreateEvent = () => {
     <Box p="3">
       <InputEventOverview />
       <Box pt="4">
-        <InputDates />
+        <InputPossibleDates />
       </Box>
       <Center py="6">
         <EventRegisterButton />

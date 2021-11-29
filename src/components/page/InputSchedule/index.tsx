@@ -264,17 +264,10 @@ export const InputSchedule = () => {
       <Center>
         <VStack pos="fixed" bottom="0" bg="white" w="100%">
           <HStack p="4" spacing={4}>
-            <Button
-              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-              variant={redVarient}
-              colorScheme="red"
-              w="24"
-              onClick={() => handleClickRed()}
-            >
+            <Button variant={redVarient} colorScheme="red" w="24" onClick={() => handleClickRed()}>
               ○
             </Button>
             <Button
-              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={greenVarient}
               colorScheme="green"
               w="24"
@@ -283,7 +276,6 @@ export const InputSchedule = () => {
               △
             </Button>
             <Button
-              sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
               variant={blueVarient}
               colorScheme="blue"
               w="24"
@@ -293,14 +285,7 @@ export const InputSchedule = () => {
             </Button>
           </HStack>
           <Box pb="4">
-            <Button
-              sx={{
-                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                _focus: { boxShadow: 'none' },
-              }}
-              onClick={() => registerAttendances()}
-              isLoading={loading}
-            >
+            <Button onClick={() => registerAttendances()} isLoading={loading}>
               出欠を回答する
             </Button>
           </Box>

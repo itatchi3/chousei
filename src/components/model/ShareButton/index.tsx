@@ -43,20 +43,12 @@ export const ShareButton = () => {
   return (
     <>
       {isInClient ? (
-        <Button
-          sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-          bg="green.300"
-          onClick={shareScheduleByLine}
-        >
+        <Button bg="green.300" onClick={shareScheduleByLine}>
           友達へ共有する
         </Button>
       ) : (
         <Menu>
-          <MenuButton
-            as={Button}
-            colorScheme="green"
-            sx={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)', _focus: { boxShadow: 'none' } }}
-          >
+          <MenuButton as={Button} colorScheme="green">
             友達へ共有する
           </MenuButton>
           <MenuList mr="4">
@@ -74,10 +66,6 @@ export const ShareButton = () => {
                   onClick={onCopy}
                   size="sm"
                   ml="2"
-                  sx={{
-                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                    _focus: { boxShadow: 'none' },
-                  }}
                   icon={<CopyIcon />}
                   aria-label="copy"
                 />

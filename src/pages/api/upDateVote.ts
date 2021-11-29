@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from 'lib/prisma';
+import { prisma } from 'prisma/prisma';
 import { getPrifile } from 'src/liff/getProfile';
 import { Prisma } from '.prisma/client';
 

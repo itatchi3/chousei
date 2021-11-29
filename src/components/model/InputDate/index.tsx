@@ -69,20 +69,12 @@ export const InputDate = ({ indexDate }: Props) => {
         defaultValue={possibleDates[indexDate].dateString}
         onClick={onOpen}
         readOnly
-        sx={{
-          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-          _focus: { boxShadow: 'none' },
-        }}
+        sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
       />
       <Modal isOpen={isOpen} onClose={onClose} size="xs">
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton
-            sx={{
-              WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-              _focus: { boxShadow: 'none' },
-            }}
-          />
+          <ModalCloseButton />
           <ModalHeader></ModalHeader>
           <ModalBody py="0" px="0">
             <Box>
@@ -122,14 +114,7 @@ export const InputDate = ({ indexDate }: Props) => {
           <ModalFooter pt="0">
             <Center>
               <HStack>
-                <Button
-                  sx={{
-                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                    _focus: { boxShadow: 'none' },
-                  }}
-                  colorScheme="blue"
-                  onClick={onClose}
-                >
+                <Button colorScheme="blue" onClick={onClose}>
                   保存
                 </Button>
               </HStack>

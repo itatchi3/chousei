@@ -211,10 +211,6 @@ export const EventRegisterButton = () => {
     <>
       <Button
         bg="green.300"
-        sx={{
-          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-          _focus: { boxShadow: 'none' },
-        }}
         onClick={formatEvent}
         isDisabled={isValidateDate || isValidateTimeList.includes(true) || event.eventName === ''}
       >
@@ -223,12 +219,7 @@ export const EventRegisterButton = () => {
       <Modal isOpen={isOpen} onClose={onClose} size="xs" scrollBehavior={'inside'}>
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton
-            sx={{
-              WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-              _focus: { boxShadow: 'none' },
-            }}
-          />
+          <ModalCloseButton />
           <ModalHeader>内容を確認してください</ModalHeader>
           <ModalBody pt="0" px="50px" mb="4" fontSize="lg">
             <Box fontWeight="bold">イベント名</Box>
@@ -254,15 +245,7 @@ export const EventRegisterButton = () => {
           <ModalFooter pt="0">
             <Center>
               <HStack>
-                <Button
-                  sx={{
-                    WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                    _focus: { boxShadow: 'none' },
-                  }}
-                  colorScheme="blue"
-                  onClick={() => handleSubmit()}
-                  isLoading={isLoading}
-                >
+                <Button colorScheme="blue" onClick={() => handleSubmit()} isLoading={isLoading}>
                   作成
                 </Button>
               </HStack>

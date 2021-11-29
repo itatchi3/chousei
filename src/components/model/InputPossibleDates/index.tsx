@@ -11,7 +11,7 @@ import { cloneDeep } from 'lodash';
 import { InputDate } from 'src/components/model/InputDate';
 import { InputTimeWidth } from 'src/components/model/InputTimeWidth';
 
-export const InputDates = () => {
+export const InputPossibleDates = () => {
   const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
   const [isValidateDate, setIsValidateDate] = useRecoilState(isValidateDateState);
   const [isValidateTimeList, setIsValidateTimeList] = useRecoilState(isValidateTimeListState);
@@ -67,10 +67,6 @@ export const InputDates = () => {
               <CloseButton
                 mb="-6"
                 zIndex="1"
-                sx={{
-                  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                  _focus: { boxShadow: 'none' },
-                }}
                 onClick={() => onDeleteDate(indexDate)}
                 visibility={possibleDates.length >= 2 ? 'visible' : 'hidden'}
               />
@@ -84,15 +80,7 @@ export const InputDates = () => {
           </Box>
         ))}
         <Box pt="2">
-          <Button
-            sx={{
-              WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-              _focus: { boxShadow: 'none' },
-            }}
-            onClick={addPossibleDate}
-          >
-            +
-          </Button>
+          <Button onClick={addPossibleDate}>+</Button>
         </Box>
       </VStack>
     </>
