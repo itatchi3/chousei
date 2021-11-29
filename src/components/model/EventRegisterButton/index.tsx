@@ -111,6 +111,7 @@ export const EventRegisterButton = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    if (!liff) return;
     try {
       const body = {
         name: event.eventName,
@@ -127,7 +128,7 @@ export const EventRegisterButton = () => {
       const json: { ok?: boolean; id?: string; error?: string } = await res.json();
       if (json.ok) {
         if (isInClient) {
-          await liff!.sendMessages([
+          await liff.sendMessages([
             {
               type: 'text',
               text: '出欠表が完成したよ！',
@@ -147,7 +148,7 @@ export const EventRegisterButton = () => {
                 json.id,
             },
           ]);
-          liff!.closeWindow();
+          liff.closeWindow();
         } else {
           router.push(`/event/${json.id}`);
         }
@@ -155,10 +156,9 @@ export const EventRegisterButton = () => {
         throw json.error;
       }
     } catch (error) {
-      alert(error);
+      alert(JSON.stringify(error));
     }
   };
-
   return (
     <>
       <Button
