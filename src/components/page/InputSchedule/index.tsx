@@ -145,7 +145,7 @@ export const InputSchedule = () => {
         newMaxTime = possibleDate.endTime.getHours();
         minutesWhenMaxTime = possibleDate.endTime.getMinutes();
       }
-      if (dateList.includes(possibleDate.date)) {
+      if (dateStringList.includes(possibleDate.dateString)) {
         eventFullCalendar.push({
           start: possibleDate.startTime,
           end: possibleDate.endTime,
@@ -252,6 +252,9 @@ export const InputSchedule = () => {
           .fc-timegrid-event .fc-event-time {
             white-space: normal;
             font-size: 10px;
+          }
+          .fc-timegrid-slot {
+            background-color: white;
           }
         `}</style>
       </Flex>
