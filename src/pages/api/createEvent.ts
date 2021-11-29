@@ -38,6 +38,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     profileImg = userProfile.profileImg;
   } catch {
     res.json({ ok: false, error: `idTokenError` });
+    return;
   }
   console.log(userName);
   console.log(profileImg);
