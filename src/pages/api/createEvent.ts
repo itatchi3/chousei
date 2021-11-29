@@ -97,7 +97,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
     res.json({ ok: true, id: result.id });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error === 'idTokenError') {
+      res.json({ ok: false, error: `idTokenError` });
+    } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
       res.json({ ok: false, error: `[${error.code}] ${error.message}` });
     } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
       res.json({ ok: false, error: `[UnknownRequest] ${error.message}` });
@@ -109,6 +111,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       res.json({ ok: false, error: `[Validation] ${error.message}` });
     }
 
-    res.json({ ok: false, error: error });
+    res.json({ ok: false, error: `An unexpected error has occurred.` });
   }
 }

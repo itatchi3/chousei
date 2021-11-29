@@ -12,9 +12,8 @@ type ReqestBody = {
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { eventId, idToken }: ReqestBody = JSON.parse(req.body);
 
-  const { userId } = await getPrifile(idToken);
-
   try {
+    const { userId } = await getPrifile(idToken);
     await prisma.eventParticipant.upsert({
       where: {
         eventId_userId: {
