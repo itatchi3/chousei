@@ -1,14 +1,16 @@
-import { useRecoilValue } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
 import { Box, Heading } from '@chakra-ui/react';
 
-export const EventOverView = () => {
-  const event = useRecoilValue(eventState);
+type Props = {
+  name: string | null;
+  description: string | null;
+};
+
+export const EventOverView = ({ name, description }: Props) => {
   return (
     <>
-      <Heading>{event && event.name}</Heading>
+      <Heading>{name}</Heading>
       <Box px="1" pt="2">
-        {event && event.description}
+        {description}
       </Box>
     </>
   );

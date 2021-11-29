@@ -1,5 +1,3 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { eventState } from 'src/atoms/eventState';
 import { Avatar } from '@chakra-ui/react';
 import {
   Table,
@@ -16,7 +14,7 @@ import {
   PopoverArrow,
   Box,
 } from '@chakra-ui/react';
-import { useRecoilValue } from 'recoil';
+import { AttendanceTableData } from 'src/pages/event/[id]';
 
 type Count = {
   date: Date;
@@ -25,45 +23,14 @@ type Count = {
   negativeCount: number;
 };
 
-export const AttendanceTable = () => {
-  const event = useRecoilValue(eventState);
-  const [counts, setCounts] = useState<Count[]>([]);
-  const [colours, setColours] = useState<string[]>([]);
+type Props = {
+  attendanceTableData: AttendanceTableData;
+};
 
-  useEffect(() => {
-    if (!event) return;
-
-    const attendanceCounts = event.possibleDates.map((possibleDate) => {
-      return {
-        date: possibleDate.date,
-        positiveCount:
-          possibleDate.votes !== undefined
-            ? possibleDate.votes.filter((_vote) => _vote.vote === '○').length
-            : 0,
-        evenCount:
-          possibleDate.votes !== undefined
-            ? possibleDate.votes.filter((_vote) => _vote.vote === '△').length
-            : 0,
-        negativeCount:
-          possibleDate.votes !== undefined
-            ? possibleDate.votes.filter((_vote) => _vote.vote === '×').length
-            : 0,
-      };
-    });
-    setCounts(attendanceCounts);
-
-    const scores = attendanceCounts.map((count) => {
-      return count.positiveCount * 3 + count.evenCount * 2;
-    });
-    const max = Math.max(...scores);
-    const evaluations = scores.map((score) => {
-      return score === max && score > 0 ? 'green.100' : 'white';
-    });
-    setCounts(attendanceCounts);
-    setColours(evaluations);
-
-    // TODO: 候補日編集機能をつける場合は投票した人を格納する変数がいる
-  }, [event]);
+export const AttendanceTable = ({ attendanceTableData }: Props) => {
+  const event = attendanceTableData.eventData;
+  const counts = attendanceTableData.counts;
+  const colors = attendanceTableData.colors;
 
   return (
     <>
@@ -114,7 +81,7 @@ export const AttendanceTable = () => {
           <Tbody>
             {event && counts.length
               ? event.possibleDates.map((possibleDate, i) => (
-                  <Tr key={i} bg={colours[i]}>
+                  <Tr key={i} bg={colors[i]}>
                     <Td pl="20px" pr="2px">
                       <Box>{possibleDate.dateString + '  ' + possibleDate.timeWidthString}</Box>
                     </Td>
