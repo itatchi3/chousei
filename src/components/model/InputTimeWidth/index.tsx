@@ -78,10 +78,6 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
           <HStack key={indexWidth} pb="1">
             <CloseButton
               size="sm"
-              sx={{
-                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                _focus: { boxShadow: 'none' },
-              }}
               onClick={() => onDeleteTimeWidth(indexDate, indexWidth)}
               visibility={possibleDates[indexDate].timeWidth.length >= 2 ? 'visible' : 'hidden'}
             />
@@ -152,14 +148,7 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
             width: 100%;
           }
         `}</style>
-        <Button
-          sx={{
-            WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-            _focus: { boxShadow: 'none' },
-          }}
-          onClick={() => addTimeWidths(indexDate)}
-          disabled={isValidateTimeList[indexDate]}
-        >
+        <Button onClick={() => addTimeWidths(indexDate)} disabled={isValidateTimeList[indexDate]}>
           +
         </Button>
       </VStack>

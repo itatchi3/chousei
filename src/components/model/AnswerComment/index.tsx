@@ -65,13 +65,7 @@ export const AnswerComment = () => {
 
   return (
     <>
-      <Button
-        sx={{
-          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-          _focus: { boxShadow: 'none' },
-        }}
-        onClick={onOpen}
-      >
+      <Button onClick={onOpen}>
         {isAnsweredComment ? 'コメントを修正する' : 'コメントを入力する'}
       </Button>
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} size="xs">
@@ -82,27 +76,10 @@ export const AnswerComment = () => {
             <Textarea value={comment} onChange={handleInputComment} ref={initialRef} rows={6} />
           </ModalBody>
           <ModalFooter>
-            <Button
-              sx={{
-                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                _focus: { boxShadow: 'none' },
-              }}
-              colorScheme="blue"
-              mr={3}
-              onClick={registerComment}
-              isLoading={isLoading}
-            >
+            <Button colorScheme="blue" mr={3} onClick={registerComment} isLoading={isLoading}>
               保存
             </Button>
-            <Button
-              sx={{
-                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-                _focus: { boxShadow: 'none' },
-              }}
-              onClick={onClose}
-            >
-              閉じる
-            </Button>
+            <Button onClick={onClose}>閉じる</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -32,15 +32,7 @@ export const MoveAnswerScheduleButton = () => {
   }, [event, userId]);
   return (
     <>
-      <Button
-        sx={{
-          WebkitTapHighlightColor: 'rgba(0,0,0,0)',
-          _focus: { boxShadow: 'none' },
-        }}
-        w="44"
-        isLoading={isLoading}
-        onClick={moveAnswerSchedule}
-      >
+      <Button w="44" isLoading={isLoading} onClick={moveAnswerSchedule}>
         {isAnsweredVoteList ? '予定を修正する' : ' 予定を入力する'}
       </Button>
     </>
