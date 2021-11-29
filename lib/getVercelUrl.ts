@@ -1,10 +1,10 @@
 export const getVercelUrl = () => {
   if (!process.env.NEXT_PUBLIC_VERCEL_URL) {
-    return 'http://localhost:3000';
+    return 'https://localhost:3000';
   }
 
   if (/localhost/.test(process.env.NEXT_PUBLIC_VERCEL_URL)) {
-    return 'http://localhost:3000';
+    return 'https://localhost:3000';
   }
 
   return /^http/.test(process.env.NEXT_PUBLIC_VERCEL_URL)
