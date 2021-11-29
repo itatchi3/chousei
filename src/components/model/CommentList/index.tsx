@@ -1,4 +1,3 @@
-import { eventState } from 'src/atoms/eventState';
 import { Avatar } from '@chakra-ui/react';
 import {
   Table,
@@ -13,11 +12,16 @@ import {
   PopoverBody,
   PopoverArrow,
 } from '@chakra-ui/react';
-import { useRecoilValue } from 'recoil';
+import { Comment, User } from '.prisma/client';
 
-export const CommentList = () => {
-  const event = useRecoilValue(eventState);
-
+type Props = {
+  comments:
+    | (Comment & {
+        user: User;
+      })[]
+    | null;
+};
+export const CommentList = ({ comments }: Props) => {
   return (
     <>
       <Table>
@@ -29,8 +33,8 @@ export const CommentList = () => {
       </Table>
       <Table>
         <Tbody>
-          {event &&
-            event.comments.map(
+          {comments &&
+            comments.map(
               (_comment, i) =>
                 _comment.comment !== '' && (
                   <Tr key={i}>

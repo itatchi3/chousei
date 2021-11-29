@@ -7,10 +7,10 @@ import { useLiff } from 'src/liff/auth';
 import { useEffect } from 'react';
 
 type Props = {
-  attendanceTableData: string;
+  eventDetailData: string;
 };
 
-export type AttendanceTableData = {
+export type EventDetailType = {
   eventData: EventType;
   counts: Counts[];
   colors: string[];
@@ -24,25 +24,25 @@ type Counts = {
 };
 
 const Event = (props: Props) => {
-  const attendanceTableData: AttendanceTableData = superjson.parse(props.attendanceTableData);
+  const eventDetailData: EventDetailType = superjson.parse(props.eventDetailData);
   const { idToken } = useLiff();
 
   useEffect(() => {
     const createParticipate = async () => {
-      if (!attendanceTableData.eventData || !idToken) return;
+      if (!eventDetailData.eventData || !idToken) return;
       try {
         await fetch('/api/createParticipate', {
           method: 'POST',
-          body: JSON.stringify({ idToken, eventId: attendanceTableData.eventData.id }),
+          body: JSON.stringify({ idToken, eventId: eventDetailData.eventData.id }),
         });
       } catch (error) {
         alert(error);
       }
     };
     createParticipate();
-  }, [attendanceTableData, idToken]);
+  }, [eventDetailData, idToken]);
 
-  return <EventDetail attendanceTableData={attendanceTableData} />;
+  return <EventDetail eventDetailData={eventDetailData} />;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -125,14 +125,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return score === max && score > 0 ? 'green.100' : 'white';
   });
 
-  const attendanceTableData = {
+  const eventDetailData = {
     eventData,
     counts: attendanceCounts,
     colors: evaluations,
   };
 
   return {
-    props: { attendanceTableData: superjson.stringify(attendanceTableData) },
+    props: { eventDetailData: superjson.stringify(eventDetailData) },
   };
 };
 export default Event;
