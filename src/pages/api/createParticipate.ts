@@ -21,11 +21,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           userId: userId,
         },
       },
-      update: {
-        isVote: true,
-      },
+      update: {},
       create: {
-        isVote: true,
         event: {
           connect: {
             id: eventId,
