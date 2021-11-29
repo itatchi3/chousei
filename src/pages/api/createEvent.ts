@@ -33,13 +33,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   let profileImg = '';
   try {
     const userProfile = await getPrifile(idToken);
+    console.log('userProfile');
     userId = userProfile.userId;
     userName = userProfile.userName;
     profileImg = userProfile.profileImg;
   } catch {
     res.json({ ok: false, error: `idTokenError` });
   }
-
+  console.log(userName);
   try {
     const result = await prisma.event.create({
       data: {
