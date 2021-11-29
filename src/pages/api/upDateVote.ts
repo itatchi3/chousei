@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from 'lib/prisma';
 import { getPrifile } from 'src/liff/getProfile';
+import { Prisma } from '.prisma/client';
 
 type ReqestBody = {
   voteList: { id: number; vote: string }[];
@@ -68,7 +69,18 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
     res.json({ ok: true });
   } catch (error) {
-    console.error(error);
-    res.json({ ok: false, error });
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      res.json({ ok: false, error: `[${error.code}] ${error.message}` });
+    } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+      res.json({ ok: false, error: `[UnknownRequest] ${error.message}` });
+    } else if (error instanceof Prisma.PrismaClientRustPanicError) {
+      res.json({ ok: false, error: `[RustPanic] ${error.message}` });
+    } else if (error instanceof Prisma.PrismaClientInitializationError) {
+      res.json({ ok: false, error: `[${error.errorCode}] ${error.message}` });
+    } else if (error instanceof Prisma.PrismaClientValidationError) {
+      res.json({ ok: false, error: `[Validation] ${error.message}` });
+    }
+
+    res.json({ ok: false, error: error });
   }
 }
