@@ -14,7 +14,7 @@ import {
   PopoverArrow,
   Box,
 } from '@chakra-ui/react';
-import { AttendanceTableData } from 'src/pages/event/[id]';
+import { EventType } from 'src/atoms/eventState';
 
 type Count = {
   date: Date;
@@ -24,14 +24,12 @@ type Count = {
 };
 
 type Props = {
-  attendanceTableData: AttendanceTableData;
+  event: EventType;
+  counts: Count[];
+  colors: string[];
 };
 
-export const AttendanceTable = ({ attendanceTableData }: Props) => {
-  const event = attendanceTableData.eventData;
-  const counts = attendanceTableData.counts;
-  const colors = attendanceTableData.colors;
-
+export const AttendanceTable = ({ event, counts, colors }: Props) => {
   return (
     <>
       <Box overflowX="scroll">

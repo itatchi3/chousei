@@ -8,28 +8,32 @@ import { MoveAnswerScheduleButton } from 'src/components/model/MoveAnswerSchedul
 import { AnswerComment } from 'src/components/model/AnswerComment';
 import { EventOverView } from 'src/components/model/EventOverView';
 import { CommentList } from 'src/components/model/CommentList';
-import { AttendanceTableData } from 'src/pages/event/[id]';
+import { EventDetailType } from 'src/pages/event/[id]';
 
 type Props = {
-  attendanceTableData: AttendanceTableData;
+  eventDetailData: EventDetailType;
 };
 
-export const EventDetail = ({ attendanceTableData }: Props) => {
+export const EventDetail = ({ eventDetailData }: Props) => {
   const [event, setEvent] = useRecoilState(eventState);
 
   useEffect(() => {
-    setEvent(attendanceTableData.eventData);
-  }, [attendanceTableData.eventData, setEvent]);
+    setEvent(eventDetailData.eventData);
+  }, [eventDetailData.eventData, setEvent]);
 
   return (
     <Box p="3">
       <EventOverView
-        name={attendanceTableData.eventData && attendanceTableData.eventData.name}
-        description={attendanceTableData.eventData && attendanceTableData.eventData.description}
+        name={eventDetailData.eventData && eventDetailData.eventData.name}
+        description={eventDetailData.eventData && eventDetailData.eventData.description}
       />
       <Box pt="4">
-        <AttendanceTable attendanceTableData={attendanceTableData} />
-        <CommentList />
+        <AttendanceTable
+          event={eventDetailData.eventData}
+          counts={eventDetailData.counts}
+          colors={eventDetailData.colors}
+        />
+        <CommentList comments={eventDetailData.eventData && eventDetailData.eventData.comments} />
       </Box>
       <VStack justify="center" p="6">
         <MoveAnswerScheduleButton />
