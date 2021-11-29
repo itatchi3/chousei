@@ -153,10 +153,10 @@ export const EventRegisterButton = () => {
           router.push(`/event/${json.id}`);
         }
       } else {
-        throw json.error;
+        throw new Error(json.error);
       }
     } catch (error) {
-      alert(JSON.stringify(error));
+      alert(error);
     }
   };
   return (
