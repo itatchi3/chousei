@@ -16,7 +16,7 @@ export const LiffAuth: FC = ({ children }) => {
         try {
           await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       };
 
