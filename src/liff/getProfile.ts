@@ -3,8 +3,8 @@ export const getPrifile = async (idToken: string | null | undefined) => {
     throw new Error('Error: could not find idToken');
   }
 
-  if (!process.env.CLIENT_ID) {
-    throw new Error('Error: could not find CLIENT_ID');
+  if (!process.env.NEXT_PUBLIC_CLIENT_ID) {
+    throw new Error('Error: could not find NEXT_PUBLIC_CLIENT_ID');
   }
 
   const response = await fetch('https://api.line.me/oauth2/v2.1/verify', {
@@ -12,7 +12,7 @@ export const getPrifile = async (idToken: string | null | undefined) => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `id_token=${idToken}&client_id=${process.env.CLIENT_ID}`,
+    body: `id_token=${idToken}&client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}`,
   });
 
   const data = await response.json();
