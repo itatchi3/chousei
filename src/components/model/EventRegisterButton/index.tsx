@@ -161,8 +161,6 @@ export const EventRegisterButton = () => {
     setIsLoading(true);
     if (!liff) return;
 
-    console.log(idToken);
-
     try {
       const body = {
         name: event.eventName,
