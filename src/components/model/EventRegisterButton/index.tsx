@@ -24,7 +24,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import superjson from 'superjson';
-import { upDateIdtoken } from 'src/liff/upDateIdtoken';
+import { updateIdtoken } from 'src/liff/updateIdtoken';
 
 type SortedPossibleDate = {
   date: Date;
