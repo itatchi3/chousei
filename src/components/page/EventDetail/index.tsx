@@ -17,13 +17,22 @@ type Props = {
 
 export const EventDetail = ({ eventDetailData }: Props) => {
   const [event, setEvent] = useRecoilState(eventState);
-  const { idToken } = useLiff();
+  const { idToken, userId } = useLiff();
 
   useEffect(() => {
     setEvent(eventDetailData.eventData);
   }, [eventDetailData.eventData, setEvent]);
 
   useEffect(() => {
+    if (!eventDetailData.eventData || !idToken) return;
+
+    let isCheckEvent = false;
+    eventDetailData.eventData.participants.map((participant) => {
+      if (participant.userId === userId) {
+        isCheckEvent = true;
+      }
+    });
+
     const createParticipate = async () => {
       if (!eventDetailData.eventData || !idToken) return;
       try {
@@ -35,8 +44,11 @@ export const EventDetail = ({ eventDetailData }: Props) => {
         alert(error);
       }
     };
-    createParticipate();
-  }, [eventDetailData, idToken]);
+
+    if (!isCheckEvent) {
+      createParticipate();
+    }
+  }, [eventDetailData, idToken, userId]);
 
   return (
     <Box p="3">
