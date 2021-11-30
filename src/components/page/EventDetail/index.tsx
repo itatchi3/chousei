@@ -26,10 +26,23 @@ export const EventDetail = ({ eventDetailData }: Props) => {
   useEffect(() => {
     if (!eventDetailData.eventData || !idToken) return;
 
+    const updateUser = async () => {
+      if (!idToken) return;
+      try {
+        await fetch('/api/updateUser', {
+          method: 'POST',
+          body: JSON.stringify({ idToken }),
+        });
+      } catch (error) {
+        alert(error);
+      }
+    };
+
     let isCheckEvent = false;
     eventDetailData.eventData.participants.map((participant) => {
       if (participant.userId === userId) {
         isCheckEvent = true;
+        updateUser();
       }
     });
 
