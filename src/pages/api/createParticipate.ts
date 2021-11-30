@@ -11,6 +11,15 @@ type ReqestBody = {
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { eventId, idToken }: ReqestBody = JSON.parse(req.body);
 
+  let userId = '';
+  try {
+    const userProfile = await getPrifile(idToken);
+    userId = userProfile.userId;
+  } catch {
+    res.json({ ok: false, error: `idTokenError` });
+    return;
+  }
+
   try {
     const { userId } = await getPrifile(idToken);
     await prisma.eventParticipant.upsert({
