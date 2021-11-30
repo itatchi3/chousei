@@ -15,33 +15,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   const { userId } = await getPrifile(idToken);
 
   try {
-    voteList.map(async (_vote) => {
-      await prisma.vote.upsert({
-        where: {
-          possibleDateId_userId: {
-            possibleDateId: _vote.id,
-            userId: userId,
-          },
-        },
-        update: {
-          vote: _vote.vote,
-        },
-        create: {
-          vote: _vote.vote,
-          possibleDate: {
-            connect: {
-              id: _vote.id,
-            },
-          },
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
-        },
-      });
-    });
-
     await prisma.eventParticipant.upsert({
       where: {
         eventId_userId: {
@@ -66,6 +39,35 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
       },
     });
+
+    await Promise.all(
+      voteList.map(async (_vote) => {
+        await prisma.vote.upsert({
+          where: {
+            possibleDateId_userId: {
+              possibleDateId: _vote.id,
+              userId: userId,
+            },
+          },
+          update: {
+            vote: _vote.vote,
+          },
+          create: {
+            vote: _vote.vote,
+            possibleDate: {
+              connect: {
+                id: _vote.id,
+              },
+            },
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
+        });
+      }),
+    );
 
     res.json({ ok: true });
   } catch (error) {
