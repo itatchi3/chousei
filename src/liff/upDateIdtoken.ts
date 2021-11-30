@@ -1,6 +1,6 @@
 import type Liff from '@line/liff';
 
-export const upDateIdtoken = async (liff: typeof Liff) => {
+export const updateIdtoken = async (liff: typeof Liff) => {
   const liffInit = async () => {
     try {
       await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
