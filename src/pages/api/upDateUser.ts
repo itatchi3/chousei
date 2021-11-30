@@ -4,12 +4,11 @@ import { getPrifile } from 'src/liff/getProfile';
 import { Prisma } from '.prisma/client';
 
 type ReqestBody = {
-  eventId: string;
   idToken: string;
 };
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { eventId, idToken }: ReqestBody = JSON.parse(req.body);
+  const { idToken }: ReqestBody = JSON.parse(req.body);
 
   let userId = '';
   let userName = '';
@@ -26,41 +25,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   }
 
   try {
-    await prisma.user.upsert({
+    await prisma.user.update({
       where: {
         id: userId,
       },
-
-      update: {
+      data: {
         name: userName,
         profileImg: profileImg,
-      },
-      create: {
-        id: userId,
-        name: userName,
-        profileImg: profileImg,
-      },
-    });
-
-    await prisma.eventParticipant.upsert({
-      where: {
-        eventId_userId: {
-          eventId: eventId,
-          userId: userId,
-        },
-      },
-      update: {},
-      create: {
-        event: {
-          connect: {
-            id: eventId,
-          },
-        },
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
       },
     });
 
