@@ -16,7 +16,7 @@ export const LiffAuth: FC = ({ children }) => {
         try {
           await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       };
 
@@ -32,7 +32,7 @@ export const LiffAuth: FC = ({ children }) => {
         userId = profile.userId;
         idToken = liff.getIDToken();
       } catch (error) {
-        alert(error);
+        console.error(error);
       }
 
       setLiffObj({
