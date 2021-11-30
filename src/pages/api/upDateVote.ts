@@ -15,59 +15,61 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   const { userId } = await getPrifile(idToken);
 
   try {
-    await prisma.eventParticipant.upsert({
-      where: {
-        eventId_userId: {
-          eventId: eventId,
-          userId: userId,
-        },
-      },
-      update: {
-        isVote: true,
-      },
-      create: {
-        isVote: true,
-        event: {
-          connect: {
-            id: eventId,
+    const isVoteUpdate = async () => {
+      await prisma.eventParticipant.upsert({
+        where: {
+          eventId_userId: {
+            eventId: eventId,
+            userId: userId,
           },
         },
-        user: {
-          connect: {
-            id: userId,
+        update: {
+          isVote: true,
+        },
+        create: {
+          isVote: true,
+          event: {
+            connect: {
+              id: eventId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
           },
         },
-      },
+      });
+    };
+
+    const voteCreate = voteList.map(async (_vote) => {
+      await prisma.vote.upsert({
+        where: {
+          possibleDateId_userId: {
+            possibleDateId: _vote.id,
+            userId: userId,
+          },
+        },
+        update: {
+          vote: _vote.vote,
+        },
+        create: {
+          vote: _vote.vote,
+          possibleDate: {
+            connect: {
+              id: _vote.id,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
     });
 
-    await Promise.all(
-      voteList.map(async (_vote) => {
-        await prisma.vote.upsert({
-          where: {
-            possibleDateId_userId: {
-              possibleDateId: _vote.id,
-              userId: userId,
-            },
-          },
-          update: {
-            vote: _vote.vote,
-          },
-          create: {
-            vote: _vote.vote,
-            possibleDate: {
-              connect: {
-                id: _vote.id,
-              },
-            },
-            user: {
-              connect: {
-                id: userId,
-              },
-            },
-          },
-        });
-      }),
-    );
+    await Promise.all([isVoteUpdate(), ...voteCreate]);
 
     res.json({ ok: true });
   } catch (error) {
