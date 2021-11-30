@@ -12,16 +12,20 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   const { eventId, idToken }: ReqestBody = JSON.parse(req.body);
 
   let userId = '';
+  let userName = '';
+  let profileImg = '';
+
   try {
     const userProfile = await getPrifile(idToken);
     userId = userProfile.userId;
+    userName = userProfile.userName;
+    profileImg = userProfile.profileImg;
   } catch {
     res.json({ ok: false, error: `idTokenError` });
     return;
   }
 
-  try {
-    const { userId } = await getPrifile(idToken);
+  const participantUpsert = async () => {
     await prisma.eventParticipant.upsert({
       where: {
         eventId_userId: {
@@ -43,6 +47,22 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
       },
     });
+  };
+
+  const userUpdate = async () => {
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name: userName,
+        profileImg: profileImg,
+      },
+    });
+  };
+
+  try {
+    await Promise.all([participantUpsert(), userUpdate()]);
 
     res.json({ ok: true });
   } catch (error) {
