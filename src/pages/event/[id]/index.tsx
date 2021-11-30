@@ -25,22 +25,6 @@ type Counts = {
 
 const Event = (props: Props) => {
   const eventDetailData: EventDetailType = superjson.parse(props.eventDetailData);
-  const { idToken } = useLiff();
-
-  useEffect(() => {
-    const createParticipate = async () => {
-      if (!eventDetailData.eventData || !idToken) return;
-      try {
-        await fetch('/api/createParticipate', {
-          method: 'POST',
-          body: JSON.stringify({ idToken, eventId: eventDetailData.eventData.id }),
-        });
-      } catch (error) {
-        alert(error);
-      }
-    };
-    createParticipate();
-  }, [eventDetailData, idToken]);
 
   return <EventDetail eventDetailData={eventDetailData} />;
 };

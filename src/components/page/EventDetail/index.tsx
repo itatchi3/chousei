@@ -9,6 +9,7 @@ import { AnswerComment } from 'src/components/model/AnswerComment';
 import { EventOverView } from 'src/components/model/EventOverView';
 import { CommentList } from 'src/components/model/CommentList';
 import { EventDetailType } from 'src/pages/event/[id]';
+import { useLiff } from 'src/liff/auth';
 
 type Props = {
   eventDetailData: EventDetailType;
@@ -16,10 +17,26 @@ type Props = {
 
 export const EventDetail = ({ eventDetailData }: Props) => {
   const [event, setEvent] = useRecoilState(eventState);
+  const { idToken } = useLiff();
 
   useEffect(() => {
     setEvent(eventDetailData.eventData);
   }, [eventDetailData.eventData, setEvent]);
+
+  useEffect(() => {
+    const createParticipate = async () => {
+      if (!eventDetailData.eventData || !idToken) return;
+      try {
+        await fetch('/api/createParticipate', {
+          method: 'POST',
+          body: JSON.stringify({ idToken, eventId: eventDetailData.eventData.id }),
+        });
+      } catch (error) {
+        alert(error);
+      }
+    };
+    createParticipate();
+  }, [eventDetailData, idToken]);
 
   return (
     <Box p="3">
