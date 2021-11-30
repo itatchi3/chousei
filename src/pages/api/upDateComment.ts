@@ -40,29 +40,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       },
     });
 
-    await prisma.eventParticipant.upsert({
-      where: {
-        eventId_userId: {
-          eventId: eventId,
-          userId: userId,
-        },
-      },
-      update: {},
-      create: {
-        isVote: true,
-        event: {
-          connect: {
-            id: eventId,
-          },
-        },
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-      },
-    });
-
     res.json({ ok: true });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
