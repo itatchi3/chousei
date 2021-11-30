@@ -18,6 +18,22 @@ LINE上で動く，スマホ入力に特化した，時間ごとの調整アプ�
 https://chousei.vercel.app/
 
 
+
+
+
+
+
+
+https://user-images.githubusercontent.com/72689870/144118399-3dc24830-9716-4b43-9762-1b3b9a836440.mp4
+
+
+
+
+
+
+
+
+
 ## なぜ作ったの？
 所属していたアカペラサークルでは，グループごとに練習や会議などをよく行うため，時間ごとの日程調整をよく行います．しかし，既存のサービスではスマホでかなり使いづらく，サークル員の不満が募っていました．  
 
@@ -122,6 +138,6 @@ LIFFを用いることで，会員登録やインストールといった手間�
 <img src="https://user-images.githubusercontent.com/72689870/144106847-c81d1bc6-dbf9-4942-97f7-2e6cf4e982ef.jpg" width="200px"> <img src="https://user-images.githubusercontent.com/72689870/144104580-5040cc3f-ffeb-426e-b2d5-fc19b42a1d3c.jpg" width="200px"> <img src="https://user-images.githubusercontent.com/72689870/144108097-2f03e81b-0ff3-44e3-8285-2dae74db4f4d.jpg" width="200px">
 
 友達に共有したい場合は，イベントのリンクをコピーして友達に送信するか，友達に共有するボタンを押して，共有したい友達を選択します．
-
+リンクを踏むとチョーセイと友達登録する確認画面が開き，友達登録をすると，自動的にログインされます．
 
 <img src="https://user-images.githubusercontent.com/72689870/122577529-da844600-d08d-11eb-887a-96190c5da022.jpg" width="200px">
