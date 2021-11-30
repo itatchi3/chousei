@@ -16,25 +16,23 @@ export const LiffAuth: FC = ({ children }) => {
         try {
           await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
         } catch (error) {
-          console.error('liff init error', error);
+          alert(error);
         }
       };
 
       await liffInit();
 
-      if (process.env.NEXT_PUBLIC_LIFF_SKIP_LOGIN === 'false') {
-        if (!liff.isLoggedIn()) {
-          liff.login();
-          await liffInit();
-        }
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        await liffInit();
+      }
 
-        try {
-          const profile = await liff.getProfile();
-          userId = profile.userId;
-          idToken = liff.getIDToken();
-        } catch (error) {
-          console.error('error', error);
-        }
+      try {
+        const profile = await liff.getProfile();
+        userId = profile.userId;
+        idToken = liff.getIDToken();
+      } catch (error) {
+        alert(error);
       }
 
       setLiffObj({

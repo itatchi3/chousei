@@ -24,6 +24,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import superjson from 'superjson';
+import { upDateIdtoken } from 'src/liff/upDateIdtoken';
 
 type SortedPossibleDate = {
   date: Date;
@@ -159,6 +160,9 @@ export const EventRegisterButton = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     if (!liff) return;
+
+    console.log(idToken);
+
     try {
       const body = {
         name: event.eventName,
