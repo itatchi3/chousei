@@ -37,7 +37,7 @@ export const AnswerComment = () => {
         idToken: idToken,
       };
 
-      const res = await fetch(`/api/updateComment`, {
+      const res = await fetch(`/api/upDateComment`, {
         method: 'POST',
         body: JSON.stringify(body),
       });

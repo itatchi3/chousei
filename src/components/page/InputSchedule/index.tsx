@@ -114,7 +114,7 @@ export const InputSchedule = () => {
         idToken: idToken,
       };
 
-      const res = await fetch(`/api/updateVote`, {
+      const res = await fetch(`/api/upDateVote`, {
         method: 'POST',
         body: JSON.stringify(body),
       });
