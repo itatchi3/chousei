@@ -1,4 +1,4 @@
-import { InputSchedule } from 'src/components/page/InputSchedule';
+import { InputSchedule } from 'src/components/InputSchedule';
 
 const Input = () => {
   return <InputSchedule />;
