@@ -1,6 +1,6 @@
-import { EventRegisterButton } from 'src/components/model/EventRegisterButton';
-import { InputPossibleDates } from 'src/components/model/InputPossibleDates';
-import { InputEventOverview } from 'src/components/model/InputOverview';
+import { EventRegisterButton } from 'src/components/CreateEvent/EventRegisterButton';
+import { InputPossibleDates } from 'src/components/CreateEvent/InputPossibleDates';
+import { InputEventOverview } from 'src/components/CreateEvent/InputOverview';
 import { Box, Center } from '@chakra-ui/react';
 
 export const CreateEvent = () => {

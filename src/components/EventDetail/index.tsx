@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { AttendanceTable } from 'src/components/model/AttendanceTable';
+import { AttendanceTable } from 'src/components/EventDetail/AttendanceTable';
 import { useRecoilState } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
 import { Box, VStack } from '@chakra-ui/react';
-import { ShareButton } from 'src/components/model/ShareButton';
-import { MoveAnswerScheduleButton } from 'src/components/model/MoveAnswerScheduleButton';
-import { AnswerComment } from 'src/components/model/AnswerComment';
-import { EventOverView } from 'src/components/model/EventOverView';
-import { CommentList } from 'src/components/model/CommentList';
+import { ShareButton } from 'src/components/EventDetail/ShareButton';
+import { MoveAnswerScheduleButton } from 'src/components/EventDetail/MoveAnswerScheduleButton';
+import { AnswerComment } from 'src/components/EventDetail/AnswerComment';
+import { EventOverView } from 'src/components/EventDetail/EventOverView';
+import { CommentList } from 'src/components/EventDetail/CommentList';
 import { EventDetailType } from 'src/pages/event/[id]';
 import { useLiff } from 'src/liff/auth';
 
