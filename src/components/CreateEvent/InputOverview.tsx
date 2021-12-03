@@ -1,6 +1,6 @@
 import { Box, Circle, Flex, Text } from '@chakra-ui/react';
-import { InputEventName } from 'src/components/CreateEvent/InputOverview/InputEventName';
-import { InputEventDiscription } from 'src/components/CreateEvent/InputOverview/InputEventDiscription';
+import { InputEventName } from 'src/components/CreateEvent/InputEventName';
+import { InputEventDiscription } from 'src/components/CreateEvent/InputEventDiscription';
 
 export const InputEventOverview = () => {
   return (
