@@ -8,8 +8,8 @@ import { Box, Button, Circle, CloseButton, Flex, Text, VStack } from '@chakra-ui
 import 'react-day-picker/lib/style.css';
 import { useEffect } from 'react';
 import { cloneDeep } from 'lodash';
-import { InputDate } from 'src/components/CreateEvent/InputPossibleDates/InputDate';
-import { InputTimeWidth } from 'src/components/CreateEvent/InputPossibleDates/InputTimeWidth';
+import { InputDate } from 'src/components/CreateEvent/InputDate';
+import { InputTimeWidth } from 'src/components/CreateEvent/InputTimeWidth';
 
 export const InputPossibleDates = () => {
   const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
@@ -75,7 +75,10 @@ export const InputPossibleDates = () => {
               <InputDate indexDate={indexDate} />
             </Box>
             <Box pt="3">
-              <InputTimeWidth indexDate={indexDate} isValidateTimeList={isValidateTimeList} />
+              <InputTimeWidth
+                indexDate={indexDate}
+                isValidateTime={isValidateTimeList[indexDate]}
+              />
             </Box>
           </Box>
         ))}

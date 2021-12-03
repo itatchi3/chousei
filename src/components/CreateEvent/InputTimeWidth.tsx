@@ -16,10 +16,10 @@ import { cloneDeep } from 'lodash';
 
 type Props = {
   indexDate: number;
-  isValidateTimeList: boolean[];
+  isValidateTime: boolean;
 };
 
-export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
+export const InputTimeWidth = ({ indexDate, isValidateTime }: Props) => {
   const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
 
   const onDeleteTimeWidth = (indexDate: number, indexWidth: number) => {
@@ -164,7 +164,7 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
             width: 100%;
           }
         `}</style>
-        <Button onClick={() => addTimeWidths(indexDate)} disabled={isValidateTimeList[indexDate]}>
+        <Button onClick={() => addTimeWidths(indexDate)} disabled={isValidateTime}>
           +
         </Button>
       </VStack>
