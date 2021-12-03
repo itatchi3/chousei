@@ -48,6 +48,7 @@ https://user-images.githubusercontent.com/72689870/144118399-3dc24830-9716-4b43-
 |  Next.js  |  SSRを行うため，簡易的なAPIを構築するため  |
 |Vercel| Next.jsとの相性が良いため|
 |  TypeScript  |  静的型付けの恩恵を受けるため  |
+|Recoil|シンプルな状態管理を行うため|
 |LIFF|LINE上で動くようにするため，ログインを自動的に行うため|
 |ChakraUI|ある程度デザインを任せることができ，カスタマイズもかなり可能なため|
 |PlanetScale|他のDBaaSと比べて，無料枠がかなり広いため|
