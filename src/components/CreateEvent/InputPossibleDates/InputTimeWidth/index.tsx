@@ -100,7 +100,6 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
             <Box
               borderWidth="1px"
               borderRadius="lg"
-              width="100px"
               position="relative"
               borderColor={
                 timeWidth.start >= timeWidth.end || timeWidth.start === '' || timeWidth.end === ''
@@ -130,7 +129,6 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
                 borderWidth="1px"
                 borderRadius="lg"
                 position="relative"
-                width="100px"
                 borderColor={
                   timeWidth.start >= timeWidth.end || timeWidth.start === '' || timeWidth.end === ''
                     ? 'red.500'
