@@ -39,16 +39,32 @@ export const InputTimeWidth = ({ indexDate, isValidateTimeList }: Props) => {
   const addTimeWidths = (indexDate: number) => {
     const lastTimeWidth =
       possibleDates[indexDate].timeWidth[possibleDates[indexDate].timeWidth.length - 1];
+    console.log(lastTimeWidth);
     const [startHour, startMin] = lastTimeWidth.start.split(':').map(Number);
     const [endHour, endMin] = lastTimeWidth.end.split(':').map(Number);
-    const minLength = endMin - startMin;
-    const hourLength = endHour - startHour;
+
+    let minLength = endMin - startMin;
+    let hourLength = endHour - startHour;
+    if (minLength < 0) {
+      hourLength -= 1;
+      minLength += 60;
+    }
+
     const newStartTIme = lastTimeWidth.end;
     let newEndTime = '';
+    console.log(endMin + minLength);
+    console.log(('00' + (endMin + minLength)).slice(-2));
+
     if (endMin + minLength < 60) {
-      newEndTime = `${endHour + hourLength}:${('00' + endMin + minLength).slice(-2)}`;
+      newEndTime = `${('00' + (endHour + hourLength)).slice(-2)}:${(
+        '00' +
+        (endMin + minLength)
+      ).slice(-2)}`;
     } else {
-      newEndTime = `${endHour + hourLength + 1}:${('00' + (endMin + minLength - 60)).slice(-2)}`;
+      newEndTime = `${('00' + (endHour + hourLength + 1)).slice(-2)}:${(
+        '00' +
+        (endMin + minLength - 60)
+      ).slice(-2)}`;
     }
 
     if (newEndTime.split(':').map(Number)[0] >= 24) {
