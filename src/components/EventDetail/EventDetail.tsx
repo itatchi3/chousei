@@ -29,10 +29,15 @@ export const EventDetail = ({ eventDetailData }: Props) => {
     const updateUser = async () => {
       if (!idToken) return;
       try {
-        await fetch('/api/updateUser', {
+        const res = await fetch('/api/updateUser', {
           method: 'POST',
           body: JSON.stringify({ idToken }),
         });
+
+        const json: { ok?: boolean; error?: string } = await res.json();
+        if (!json.ok) {
+          throw json.error;
+        }
       } catch (error) {
         alert(error);
       }
@@ -49,10 +54,15 @@ export const EventDetail = ({ eventDetailData }: Props) => {
     const createParticipate = async () => {
       if (!eventDetailData.eventData || !idToken) return;
       try {
-        await fetch('/api/createParticipate', {
+        const res = await fetch('/api/createParticipate', {
           method: 'POST',
           body: JSON.stringify({ idToken, eventId: eventDetailData.eventData.id }),
         });
+
+        const json: { ok?: boolean; error?: string } = await res.json();
+        if (!json.ok) {
+          throw json.error;
+        }
       } catch (error) {
         alert(error);
       }
