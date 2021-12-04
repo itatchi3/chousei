@@ -23,7 +23,7 @@ export const InputSchedule = () => {
   const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState<Date[]>([]);
   const [dateStrings, setDateStrings] = useState<string[]>([]);
-  const [eventFullCalendarList, setEventFullCalendarList] = useState<EventFullCalendar[][]>([]);
+  const [eventFullCalendar, setEventFullCalendar] = useState<EventFullCalendar[]>([]);
   const [minTime, setMinTime] = useState(0);
   const [maxTime, setMaxTime] = useState(24);
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
@@ -34,6 +34,8 @@ export const InputSchedule = () => {
   const [firstVoteList, setFirstVoteList] = useState<{ id: number; vote: string }[]>();
 
   const router = useRouter();
+
+  const hiddenDate = [];
 
   const checkColor = (vote: string) => {
     switch (vote) {
@@ -75,11 +77,11 @@ export const InputSchedule = () => {
     }
   };
 
-  const onClickVoteChange = (arg: EventClickArg, indexDate: number) => {
+  const onClickVoteChange = (arg: EventClickArg) => {
     if (!voteList) return;
     const index = Number(arg.event.id);
     const newVoteList = cloneDeep(voteList);
-    const newEventFullCalendarList = cloneDeep(eventFullCalendarList);
+    const newEventFullCalendar = cloneDeep(eventFullCalendar);
     let newVote: '○' | '△' | '×' = '△';
     switch (color) {
       case 'Red':
@@ -96,12 +98,12 @@ export const InputSchedule = () => {
     }
     newVoteList[index].vote = newVote;
     setVoteList(newVoteList);
-    eventFullCalendarList[indexDate].map((event, indexEvent) => {
+    eventFullCalendar.map((event, indexEvent) => {
       if (event.id === arg.event.id) {
-        newEventFullCalendarList[indexDate][indexEvent].color = checkColor(newVote);
+        newEventFullCalendar[indexEvent].color = checkColor(newVote);
       }
     });
-    setEventFullCalendarList(newEventFullCalendarList);
+    setEventFullCalendar(newEventFullCalendar);
   };
 
   const registerAttendances = async () => {
@@ -133,7 +135,6 @@ export const InputSchedule = () => {
     if (!event || !firstVoteList) return;
     let dateList: Date[] = [event.possibleDates[0].date];
     let dateStringList: string[] = [event.possibleDates[0].dateString];
-    let eventFullCalendarList: EventFullCalendar[][] = [];
     let eventFullCalendar: EventFullCalendar[] = [];
     let newMinTime = 24;
     let newMaxTime = 0;
@@ -149,33 +150,40 @@ export const InputSchedule = () => {
           minutesWhenMaxTime = possibleDate.endTime.getMinutes();
         }
       }
-      if (dateStringList.includes(possibleDate.dateString)) {
-        eventFullCalendar.push({
-          start: possibleDate.startTime,
-          end: possibleDate.endTime,
-          id: index.toString(),
-          color: checkColor(firstVoteList[index].vote),
-        });
-      } else {
-        eventFullCalendarList.push(eventFullCalendar);
-        dateList.push(possibleDate.date);
-        dateStringList.push(possibleDate.dateString);
-        eventFullCalendar = [
-          {
-            start: possibleDate.startTime,
-            end: possibleDate.endTime,
-            id: index.toString(),
-            color: checkColor(firstVoteList[index].vote),
-          },
-        ];
-      }
+      eventFullCalendar.push({
+        start: possibleDate.startTime,
+        end: possibleDate.endTime,
+        id: index.toString(),
+        color: checkColor(firstVoteList[index].vote),
+      });
+      // if (dateStringList.includes(possibleDate.dateString)) {
+      //   eventFullCalendar.push({
+      //     start: possibleDate.startTime,
+      //     end: possibleDate.endTime,
+      //     id: index.toString(),
+      //     color: checkColor(firstVoteList[index].vote),
+      //   });
+      // } else {
+      //   eventFullCalendarList.push(eventFullCalendar);
+      //   dateList.push(possibleDate.date);
+      //   dateStringList.push(possibleDate.dateString);
+      //   eventFullCalendar = [
+      //     {
+      //       start: possibleDate.startTime,
+      //       end: possibleDate.endTime,
+      //       id: index.toString(),
+      //       color: checkColor(firstVoteList[index].vote),
+      //     },
+      //   ];
+      // }
     });
-    if (eventFullCalendar.length) {
-      eventFullCalendarList.push(eventFullCalendar);
-    }
+    // if (eventFullCalendar.length) {
+    //   eventFullCalendarList.push(eventFullCalendar);
+    // }
     setDates(dateList);
     setDateStrings(dateStringList);
-    setEventFullCalendarList(eventFullCalendarList);
+    setEventFullCalendar(eventFullCalendar);
+    // setEventFullCalendarList(eventFullCalendarList);
     setMinTime(newMinTime);
     if (minutesWhenMaxTime) {
       newMaxTime += 1;
@@ -214,13 +222,32 @@ export const InputSchedule = () => {
             </Box>
           ))}
         </VStack>
-        {dates.map((date, index) => {
+        <FullCalendar
+          plugins={[timeGridPlugin]}
+          initialView="timeGridWeek"
+          headerToolbar={false}
+          allDaySlot={false}
+          contentHeight={'auto'}
+          // initialDate={new Date(eventFullCalendarList[0][0].)}
+          events={eventFullCalendar}
+          slotEventOverlap={false}
+          eventTimeFormat={{
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          }}
+          eventClick={(arg) => onClickVoteChange(arg)}
+          slotMinTime={minTime + ':00:00'}
+          slotMaxTime={maxTime + ':00:00'}
+        />
+
+        {/* {dates.map((date, index) => {
           return (
             <Box minWidth="100px" key={index}>
               <Center fontWeight="bold">{dateStrings[index]}</Center>
               <FullCalendar
                 plugins={[timeGridPlugin]}
-                initialView="timeGridDay"
+                initialView="timeGridWeek"
                 headerToolbar={false}
                 allDaySlot={false}
                 contentHeight={'auto'}
@@ -238,7 +265,7 @@ export const InputSchedule = () => {
               />
             </Box>
           );
-        })}
+        })} */}
         {dates.length >= 4 && (
           <VStack pt="4" pl="2">
             {viewTimeList.map((viewTime) => (
@@ -248,8 +275,8 @@ export const InputSchedule = () => {
             ))}
           </VStack>
         )}
-
-        <style jsx global>{`
+        {/* 
+        <style jsx>{`
           .fc-timegrid-slot-label,
           thead {
             display: none !important;
@@ -261,7 +288,31 @@ export const InputSchedule = () => {
           .fc-timegrid-slot {
             background-color: white;
           }
-        `}</style>
+        `}</style> */}
+
+        {/* {hiddenDate.map((date, index) => {
+          return (
+            <style jsx global key={index}>
+              {`
+                [data-date='${date}'] {
+                  display: none !important;
+                }
+                ,
+                .fc-timegrid-slot-label,
+                thead {
+                  display: none !important;
+                }
+                .fc-timegrid-event .fc-event-time {
+                  white-space: normal;
+                  font-size: 10px;
+                }
+                .fc-timegrid-slot {
+                  background-color: white;
+                }
+              `}
+            </style>
+          );
+        })} */}
       </Flex>
       <Center>
         <VStack pos="fixed" bottom="0" bg="white" w="100%">
