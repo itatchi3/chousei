@@ -143,9 +143,11 @@ export const InputSchedule = () => {
       if (possibleDate.startTime.getHours() < newMinTime) {
         newMinTime = possibleDate.startTime.getHours();
       }
-      if (possibleDate.endTime.getHours() > newMaxTime) {
+      if (possibleDate.endTime.getHours() >= newMaxTime) {
         newMaxTime = possibleDate.endTime.getHours();
-        minutesWhenMaxTime = possibleDate.endTime.getMinutes();
+        if (possibleDate.endTime.getMinutes()) {
+          minutesWhenMaxTime = possibleDate.endTime.getMinutes();
+        }
       }
       if (dateStringList.includes(possibleDate.dateString)) {
         eventFullCalendar.push({
