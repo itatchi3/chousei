@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { RecoilRoot } from 'recoil';
-import { EventOverview } from './EventOverView';
+import { EventOverview } from './EventOverview';
 
 export default {
   component: EventOverview,
