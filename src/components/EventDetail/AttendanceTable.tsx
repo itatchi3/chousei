@@ -101,7 +101,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                           <Td key={possibleDate.id + participant.userId}>
                             {possibleDate.votes.map((_vote) => {
                               if (_vote.userId === participant.userId) {
-                                return <Center>{_vote.vote}</Center>;
+                                return <Center key={_vote.userId}>{_vote.vote}</Center>;
                               }
                             })}
                           </Td>
