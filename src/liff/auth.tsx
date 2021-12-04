@@ -23,7 +23,6 @@ export const LiffAuth: FC = ({ children }) => {
       };
 
       await liffInit();
-      console.log(router.pathname);
 
       if (!liff.isLoggedIn()) {
         liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
@@ -45,7 +44,7 @@ export const LiffAuth: FC = ({ children }) => {
       });
     };
     func();
-  }, [setLiffObj]);
+  }, [setLiffObj, router.asPath]);
 
   return <>{children}</>;
 };
