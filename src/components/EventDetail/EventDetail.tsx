@@ -6,7 +6,7 @@ import { Box, VStack } from '@chakra-ui/react';
 import { ShareButton } from 'src/components/EventDetail/ShareButton';
 import { MoveAnswerScheduleButton } from 'src/components/EventDetail/MoveAnswerScheduleButton';
 import { AnswerComment } from 'src/components/EventDetail/AnswerComment';
-import { EventOverview } from 'src/components/EventDetail/EventOverView';
+import { EventOverview } from 'src/components/EventDetail/EventOverview';
 import { CommentList } from 'src/components/EventDetail/CommentList';
 import { EventDetailType } from 'src/pages/event/[id]';
 import { useLiff } from 'src/liff/auth';
