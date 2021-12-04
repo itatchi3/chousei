@@ -2,9 +2,11 @@ import { FC, useEffect } from 'react';
 import type Liff from '@line/liff';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { liffObjState } from 'src/atoms/eventState';
+import { useRouter } from 'next/router';
 
 export const LiffAuth: FC = ({ children }) => {
   const [liffObj, setLiffObj] = useRecoilState(liffObjState);
+  const router = useRouter();
 
   useEffect(() => {
     const func = async () => {
@@ -21,10 +23,10 @@ export const LiffAuth: FC = ({ children }) => {
       };
 
       await liffInit();
+      console.log(router.pathname);
 
       if (!liff.isLoggedIn()) {
-        liff.login();
-        await liffInit();
+        liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
       }
 
       try {
