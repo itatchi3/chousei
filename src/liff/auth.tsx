@@ -36,6 +36,22 @@ export const LiffAuth: FC = ({ children }) => {
         console.error(error);
       }
 
+      if (idToken) {
+        const getProfile = await fetch('https://api.line.me/oauth2/v2.1/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            id_token: idToken,
+            client_id: process.env.NEXT_PUBLIC_CLIENT_ID!,
+          }),
+        });
+
+        if (getProfile.status !== 200) {
+          liff.logout();
+          liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
+        }
+      }
+
       setLiffObj({
         liff: liff,
         idToken: idToken,
