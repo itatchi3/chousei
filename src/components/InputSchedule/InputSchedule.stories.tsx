@@ -269,7 +269,7 @@ const event = {
 
 const inputScheduleInitialize = ({ set }: MutableSnapshot) => {
   set(eventState, event);
-  set(liffObjState, { liff: true as any, idToken: undefined, userId: 'user3' });
+  set(liffObjState, { liff: true as any, accessToken: undefined, userId: 'user3' });
 };
 
 export const inputSchedule = () => {

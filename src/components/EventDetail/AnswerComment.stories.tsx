@@ -306,7 +306,7 @@ const afterCommentState = {
 
 const afterCommentInitialize = ({ set }: MutableSnapshot) => {
   set(eventState, afterCommentState);
-  set(liffObjState, { liff: true as any, idToken: undefined, userId: 'user1' });
+  set(liffObjState, { liff: true as any, accessToken: undefined, userId: 'user1' });
 };
 
 export const afterComment = () => {

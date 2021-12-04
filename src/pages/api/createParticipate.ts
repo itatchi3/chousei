@@ -5,23 +5,23 @@ import { Prisma } from '.prisma/client';
 
 type ReqestBody = {
   eventId: string;
-  idToken: string;
+  accessToken: string;
 };
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { eventId, idToken }: ReqestBody = JSON.parse(req.body);
+  const { eventId, accessToken }: ReqestBody = JSON.parse(req.body);
 
   let userId = '';
   let userName = '';
   let profileImg = '';
 
   try {
-    const userProfile = await getPrifile(idToken);
+    const userProfile = await getPrifile(accessToken);
     userId = userProfile.userId;
     userName = userProfile.userName;
     profileImg = userProfile.profileImg;
   } catch {
-    res.json({ ok: false, error: `idTokenError` });
+    res.json({ ok: false, error: `accessTokenError` });
     return;
   }
 

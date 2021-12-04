@@ -35,7 +35,7 @@ export type EditingTimeWidth = {
 
 export type RiffObj = {
   liff?: typeof Liff;
-  idToken?: string | null;
+  accessToken?: string | null;
   userId?: string;
   isInClient?: boolean;
 };
@@ -78,7 +78,7 @@ export const liffObjState = atom<RiffObj>({
   key: 'liffState',
   default: {
     liff: undefined,
-    idToken: undefined,
+    accessToken: undefined,
     userId: undefined,
   },
 });

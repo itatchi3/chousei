@@ -11,7 +11,7 @@ export const LiffAuth: FC = ({ children }) => {
   useEffect(() => {
     const func = async () => {
       const liff = (await import('@line/liff')).default;
-      let idToken: string | null | undefined;
+      let accessToken: string | null | undefined;
       let userId: string | undefined;
 
       const liffInit = async () => {
@@ -24,21 +24,37 @@ export const LiffAuth: FC = ({ children }) => {
 
       await liffInit();
 
-      if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
-      }
+      // if (!liff.isLoggedIn()) {
+      //   liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
+      // }
 
       try {
         const profile = await liff.getProfile();
         userId = profile.userId;
-        idToken = liff.getIDToken();
+        accessToken = liff.getAccessToken();
       } catch (error) {
         console.error(error);
       }
 
+      const checkAccessToken = await fetch('https://api.line.me/oauth2/v2.1/verify', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log(checkAccessToken);
+
+      console.log(accessToken);
+
+      // if (response.status !== 200) {
+      //   liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL });
+      // }
+
       setLiffObj({
         liff: liff,
-        idToken: idToken,
+        accessToken: accessToken,
         userId: userId,
         isInClient: liff.isInClient(),
       });
@@ -54,7 +70,7 @@ type UseLiffReturn = {
   liff?: typeof Liff;
   isInClient?: boolean;
   userId?: string;
-  idToken?: string | null;
+  accessToken?: string | null;
 };
 
 export const useLiff = (): UseLiffReturn => {
@@ -71,6 +87,6 @@ export const useLiff = (): UseLiffReturn => {
     liff: liffObj.liff,
     isInClient: liffObj.isInClient,
     userId: liffObj.userId,
-    idToken: liffObj.idToken,
+    accessToken: liffObj.accessToken,
   };
 };

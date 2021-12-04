@@ -29,7 +29,7 @@ export const InputSchedule = () => {
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
-  const { userId, idToken } = useLiff();
+  const { userId, accessToken } = useLiff();
   const [voteList, setVoteList] = useState<{ id: number; vote: string }[]>();
   const [firstVoteList, setFirstVoteList] = useState<{ id: number; vote: string }[]>();
 
@@ -111,7 +111,7 @@ export const InputSchedule = () => {
       const body = {
         voteList: voteList,
         eventId: event.id,
-        idToken: idToken,
+        accessToken: accessToken,
       };
 
       const res = await fetch(`/api/updateVote`, {

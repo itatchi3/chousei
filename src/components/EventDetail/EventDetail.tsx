@@ -17,21 +17,21 @@ type Props = {
 
 export const EventDetail = ({ eventDetailData }: Props) => {
   const setEvent = useSetRecoilState(eventState);
-  const { idToken, userId } = useLiff();
+  const { accessToken, userId } = useLiff();
 
   useEffect(() => {
     setEvent(eventDetailData.eventData);
   }, [eventDetailData.eventData, setEvent]);
 
   useEffect(() => {
-    if (!eventDetailData.eventData || !idToken) return;
+    if (!eventDetailData.eventData || !accessToken) return;
 
     const updateUser = async () => {
-      if (!idToken) return;
+      if (!accessToken) return;
       try {
         const res = await fetch('/api/updateUser', {
           method: 'POST',
-          body: JSON.stringify({ idToken }),
+          body: JSON.stringify({ accessToken }),
         });
 
         const json: { ok?: boolean; error?: string } = await res.json();
@@ -52,11 +52,11 @@ export const EventDetail = ({ eventDetailData }: Props) => {
     });
 
     const createParticipate = async () => {
-      if (!eventDetailData.eventData || !idToken) return;
+      if (!eventDetailData.eventData || !accessToken) return;
       try {
         const res = await fetch('/api/createParticipate', {
           method: 'POST',
-          body: JSON.stringify({ idToken, eventId: eventDetailData.eventData.id }),
+          body: JSON.stringify({ accessToken, eventId: eventDetailData.eventData.id }),
         });
 
         const json: { ok?: boolean; error?: string } = await res.json();
@@ -71,7 +71,7 @@ export const EventDetail = ({ eventDetailData }: Props) => {
     if (!isCheckEvent) {
       createParticipate();
     }
-  }, [eventDetailData, idToken, userId]);
+  }, [eventDetailData, accessToken, userId]);
 
   return (
     <Box p="3">

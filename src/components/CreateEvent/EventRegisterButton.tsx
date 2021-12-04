@@ -41,7 +41,7 @@ type RegisterPossibleDate = {
 };
 
 export const EventRegisterButton = () => {
-  const { liff, isInClient, idToken } = useLiff();
+  const { liff, isInClient, accessToken } = useLiff();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const possibleDates = useRecoilValue(possibleDateState);
   const [sortedPossibleDates, setSortedPossibleDates] = useState<SortedPossibleDate[]>();
@@ -165,7 +165,7 @@ export const EventRegisterButton = () => {
         name: event.eventName,
         description: event.description,
         registerPossibleDates: registerPossibleDates,
-        idToken: idToken,
+        accessToken: accessToken,
       };
 
       const res = await fetch(`/api/createEvent`, {

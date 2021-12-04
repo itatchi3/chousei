@@ -16,7 +16,7 @@ import {
 
 export const AnswerComment = () => {
   const event = useRecoilValue(eventState);
-  const { userId, idToken } = useLiff();
+  const { userId, accessToken } = useLiff();
   const [isAnsweredComment, setIsAnsweredComment] = useState(false);
   const [comment, setComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ export const AnswerComment = () => {
       const body = {
         comment: comment,
         eventId: event.id,
-        idToken: idToken,
+        accessToken: accessToken,
       };
 
       const res = await fetch(`/api/updateComment`, {

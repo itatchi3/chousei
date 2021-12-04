@@ -286,7 +286,7 @@ export const beforeVote = () => {
 
 const afterVoteInitialize = ({ set }: MutableSnapshot) => {
   set(eventState, event);
-  set(liffObjState, { liff: true as any, idToken: undefined, userId: 'user1' });
+  set(liffObjState, { liff: true as any, accessToken: undefined, userId: 'user1' });
 };
 
 export const afterVote = () => {

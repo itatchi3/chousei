@@ -17,11 +17,11 @@ type ReqestBody = {
   name: string;
   description: string;
   registerPossibleDates: RegisterPossibleDate[];
-  idToken: string | null | undefined;
+  accessToken: string | null | undefined;
 };
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { name, description, registerPossibleDates, idToken }: ReqestBody = superjson.parse(
+  const { name, description, registerPossibleDates, accessToken }: ReqestBody = superjson.parse(
     req.body,
   );
 
@@ -29,12 +29,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   let userName = '';
   let profileImg = '';
   try {
-    const userProfile = await getPrifile(idToken);
+    const userProfile = await getPrifile(accessToken);
     userId = userProfile.userId;
     userName = userProfile.userName;
     profileImg = userProfile.profileImg;
   } catch {
-    res.json({ ok: false, error: `idTokenError` });
+    res.json({ ok: false, error: `accessTokenError` });
     return;
   }
   try {
