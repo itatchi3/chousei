@@ -24,9 +24,9 @@ export const LiffAuth: FC = ({ children }) => {
 
       await liffInit();
 
-      // if (!liff.isLoggedIn()) {
-      //   liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
-      // }
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
+      }
 
       try {
         const profile = await liff.getProfile();
