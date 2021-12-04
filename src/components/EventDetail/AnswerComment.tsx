@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
 import {

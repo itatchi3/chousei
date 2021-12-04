@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { AttendanceTable } from 'src/components/EventDetail/AttendanceTable';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
 import { Box, VStack } from '@chakra-ui/react';
 import { ShareButton } from 'src/components/EventDetail/ShareButton';
 import { MoveAnswerScheduleButton } from 'src/components/EventDetail/MoveAnswerScheduleButton';
 import { AnswerComment } from 'src/components/EventDetail/AnswerComment';
-import { EventOverView } from 'src/components/EventDetail/EventOverView';
+import { EventOverview } from 'src/components/EventDetail/EventOverView';
 import { CommentList } from 'src/components/EventDetail/CommentList';
 import { EventDetailType } from 'src/pages/event/[id]';
 import { useLiff } from 'src/liff/auth';
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const EventDetail = ({ eventDetailData }: Props) => {
-  const [event, setEvent] = useRecoilState(eventState);
+  const setEvent = useSetRecoilState(eventState);
   const { idToken, userId } = useLiff();
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const EventDetail = ({ eventDetailData }: Props) => {
 
   return (
     <Box p="3">
-      <EventOverView
+      <EventOverview
         name={eventDetailData.eventData && eventDetailData.eventData.name}
         description={eventDetailData.eventData && eventDetailData.eventData.description}
       />
