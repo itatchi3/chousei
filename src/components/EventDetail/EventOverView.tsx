@@ -5,7 +5,7 @@ type Props = {
   description: string | null;
 };
 
-export const EventOverView = ({ name, description }: Props) => {
+export const EventOverview = ({ name, description }: Props) => {
   return (
     <>
       <Heading>{name}</Heading>

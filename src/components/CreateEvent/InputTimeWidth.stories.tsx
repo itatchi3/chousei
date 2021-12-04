@@ -31,6 +31,7 @@ const possibleDate = [
 const initializeStateValidate = ({ set }: MutableSnapshot) => {
   set(possibleDateState, possibleDate);
 };
+
 export const inputTimeWidthValidate = () => {
   return (
     <RecoilRoot initializeState={initializeStateValidate}>

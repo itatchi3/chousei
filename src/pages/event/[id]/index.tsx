@@ -1,6 +1,6 @@
 import { EventType } from 'src/atoms/eventState';
 import { GetServerSideProps } from 'next';
-import { EventDetail } from 'src/components/EventDetail';
+import { EventDetail } from 'src/components/EventDetail/EventDetail';
 import { prisma } from 'prisma/prisma';
 import superjson from 'superjson';
 import { useLiff } from 'src/liff/auth';
