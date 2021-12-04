@@ -36,8 +36,8 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
         <Table size="sm" borderWidth="2px">
           <Thead>
             <Tr h="50px">
-              <Th fontSize="md" w="100px" px="0">
-                <Center w="100px">日程</Center>
+              <Th fontSize="md" w="90px">
+                <Center w="90px">日程</Center>
               </Th>
               <Th fontSize="md">
                 <Center>○</Center>
@@ -80,8 +80,10 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
             {event && counts.length
               ? event.possibleDates.map((possibleDate, i) => (
                   <Tr key={i} bg={colors[i]}>
-                    <Td pl="20px" pr="2px">
-                      <Box>{possibleDate.dateString + '  ' + possibleDate.timeWidthString}</Box>
+                    <Td pl="5" pr="0">
+                      <Center>
+                        {possibleDate.dateString + '  ' + possibleDate.timeWidthString}
+                      </Center>
                     </Td>
                     <Td>
                       <Center>{counts[i].positiveCount}</Center>
@@ -92,12 +94,20 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                     <Td>
                       <Center>{counts[i].negativeCount}</Center>
                     </Td>
-                    {possibleDate.votes !== undefined &&
-                      possibleDate.votes.map((_vote, index) => (
-                        <Td key={index}>
-                          <Center>{_vote.vote}</Center>
-                        </Td>
-                      ))}
+                    {event.participants
+                      .filter((participant) => participant.isVote)
+                      .map((participant) => {
+                        return (
+                          <Td key={possibleDate.id + participant.userId}>
+                            {possibleDate.votes.map((_vote) => {
+                              if (_vote.userId === participant.userId) {
+                                console.log(_vote.vote);
+                                return <Center>{_vote.vote}</Center>;
+                              }
+                            })}
+                          </Td>
+                        );
+                      })}
                   </Tr>
                 ))
               : null}
