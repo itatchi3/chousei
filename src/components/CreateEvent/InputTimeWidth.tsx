@@ -39,7 +39,6 @@ export const InputTimeWidth = ({ indexDate, isValidateTime }: Props) => {
   const addTimeWidths = (indexDate: number) => {
     const lastTimeWidth =
       possibleDates[indexDate].timeWidth[possibleDates[indexDate].timeWidth.length - 1];
-    console.log(lastTimeWidth);
     const [startHour, startMin] = lastTimeWidth.start.split(':').map(Number);
     const [endHour, endMin] = lastTimeWidth.end.split(':').map(Number);
 
@@ -52,8 +51,6 @@ export const InputTimeWidth = ({ indexDate, isValidateTime }: Props) => {
 
     const newStartTIme = lastTimeWidth.end;
     let newEndTime = '';
-    console.log(endMin + minLength);
-    console.log(('00' + (endMin + minLength)).slice(-2));
 
     if (endMin + minLength < 60) {
       newEndTime = `${('00' + (endHour + hourLength)).slice(-2)}:${(
