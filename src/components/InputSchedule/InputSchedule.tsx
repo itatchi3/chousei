@@ -224,8 +224,8 @@ export const InputSchedule = () => {
     setFirstVoteList(voteList);
   }, [event, userId]);
 
-  console.log(widthStyle);
-  console.log(hiddenStyle);
+  console.log(widthStyle, 11111);
+  console.log(hiddenStyle, 22222);
 
   return (
     <Box p="3">
