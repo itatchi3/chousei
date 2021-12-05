@@ -24,6 +24,8 @@ export const InputSchedule = () => {
   const [dates, setDates] = useState<Date[]>([]);
   const [dateStrings, setDateStrings] = useState<string[]>([]);
   const [hiddenDates, setHiddenDates] = useState<string[]>([]);
+  const [hiddenStyle, setHiddenStyle] = useState<string>('');
+  const [widthStyle, setWidthStyle] = useState<string>('');
   const [dateWidth, setDateWidth] = useState(0);
   const [eventFullCalendar, setEventFullCalendar] = useState<EventFullCalendar[]>([]);
   const [minTime, setMinTime] = useState(0);
@@ -131,42 +133,6 @@ export const InputSchedule = () => {
     }
   };
 
-  const fullCalendarStyle = () => {
-    const numberOfDates = dates.length;
-    let widthStyle = '';
-    if (numberOfDates >= 4) {
-      widthStyle = `.fc-scrollgrid, .fc-scrollgrid table {width: ${
-        100 * numberOfDates
-      }px !important;}`;
-    }
-
-    let hiddenStyle = '';
-    hiddenDates.map((hiddenDate) => {
-      hiddenStyle += `[data-date='${hiddenDate}'] {display: none !important}`;
-    });
-    return (
-      <style jsx global>
-        {`
-          ${widthStyle}
-          ${hiddenStyle}
-          .fc-scrollgrid thead {
-            display: none !important;
-          }
-          .fc-timegrid-event .fc-event-time {
-            white-space: normal;
-            font-size: 10px;
-          }
-          .fc-day-today {
-            background-color: white !important;
-          }
-          .fc-timegrid-slot-label {
-            display: none !important;
-          }
-        `}
-      </style>
-    );
-  };
-
   useEffect(() => {
     if (!event || !firstVoteList) return;
     let dateList: Date[] = [event.possibleDates[0].date];
@@ -225,6 +191,21 @@ export const InputSchedule = () => {
     }
     setDateWidth(dateWidth + 1);
     setHiddenDates(hiddenDates);
+
+    const numberOfDates = dateList.length;
+    let widthStyle = '';
+    if (numberOfDates >= 4) {
+      widthStyle = `.fc-scrollgrid, .fc-scrollgrid table {width: ${
+        100 * numberOfDates
+      }px !important;}`;
+    }
+    setWidthStyle(widthStyle);
+
+    let hiddenStyle = '';
+    hiddenDates.map((hiddenDate) => {
+      hiddenStyle += `[data-date='${hiddenDate}'] {display: none !important}`;
+    });
+    setHiddenStyle(hiddenStyle);
   }, [event, firstVoteList]);
 
   useEffect(() => {
@@ -296,7 +277,25 @@ export const InputSchedule = () => {
               ))}
             </Flex>
           )}
-          {fullCalendarStyle()}
+          <style jsx global>
+            {`
+              ${widthStyle}
+              ${hiddenStyle}
+              .fc-scrollgrid thead {
+                display: none !important;
+              }
+              .fc-timegrid-event .fc-event-time {
+                white-space: normal;
+                font-size: 10px;
+              }
+              .fc-day-today {
+                background-color: white !important;
+              }
+              .fc-timegrid-slot-label {
+                display: none !important;
+              }
+            `}
+          </style>
         </Flex>
       </Box>
 
