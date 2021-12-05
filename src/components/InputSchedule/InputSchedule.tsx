@@ -224,6 +224,9 @@ export const InputSchedule = () => {
     setFirstVoteList(voteList);
   }, [event, userId]);
 
+  console.log(widthStyle);
+  console.log(hiddenStyle);
+
   return (
     <Box p="3">
       <Box height={window.innerHeight - 150} overflow="scroll">
