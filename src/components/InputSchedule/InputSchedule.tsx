@@ -223,6 +223,9 @@ export const InputSchedule = () => {
     setVoteList(voteList);
     setFirstVoteList(voteList);
   }, [event, userId]);
+
+  console.log(widthStyle);
+  console.log(hiddenStyle);
   return (
     <Box p="3">
       <Box height={window.innerHeight - 150} overflow="scroll">
@@ -294,12 +297,14 @@ export const InputSchedule = () => {
               }
             `}
           </style>
-          <style jsx global>
-            {`
-              ${widthStyle}
-              ${hiddenStyle}
-            `}
-          </style>
+          {(widthStyle !== '' || hiddenStyle !== '') && (
+            <style jsx global>
+              {`
+                ${widthStyle}
+                ${hiddenStyle}
+              `}
+            </style>
+          )}
         </Flex>
       </Box>
 
