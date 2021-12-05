@@ -224,8 +224,6 @@ export const InputSchedule = () => {
     setFirstVoteList(voteList);
   }, [event, userId]);
 
-  console.log(widthStyle);
-  console.log(hiddenStyle);
   return (
     <Box p="3">
       <Box height={window.innerHeight - 150} overflow="scroll">
@@ -280,28 +278,24 @@ export const InputSchedule = () => {
               ))}
             </Flex>
           )}
-          <style jsx global>
-            {`
-              .fc-scrollgrid thead {
-                display: none !important;
-              }
-              .fc-timegrid-event .fc-event-time {
-                white-space: normal;
-                font-size: 10px;
-              }
-              .fc-day-today {
-                background-color: white !important;
-              }
-              .fc-timegrid-slot-label {
-                display: none !important;
-              }
-            `}
-          </style>
           {(widthStyle !== '' || hiddenStyle !== '') && (
             <style jsx global>
               {`
                 ${widthStyle}
                 ${hiddenStyle}
+              .fc-scrollgrid thead {
+                  display: none !important;
+                }
+                .fc-timegrid-event .fc-event-time {
+                  white-space: normal;
+                  font-size: 10px;
+                }
+                .fc-day-today {
+                  background-color: white !important;
+                }
+                .fc-timegrid-slot-label {
+                  display: none !important;
+                }
               `}
             </style>
           )}
