@@ -279,8 +279,6 @@ export const InputSchedule = () => {
           )}
           <style jsx global>
             {`
-              ${widthStyle}
-              ${hiddenStyle}
               .fc-scrollgrid thead {
                 display: none !important;
               }
