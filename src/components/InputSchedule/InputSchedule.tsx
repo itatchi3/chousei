@@ -294,6 +294,12 @@ export const InputSchedule = () => {
               }
             `}
           </style>
+          <style jsx global>
+            {`
+              ${widthStyle}
+              ${hiddenStyle}
+            `}
+          </style>
         </Flex>
       </Box>
 
