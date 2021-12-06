@@ -1,5 +1,5 @@
 # チョーセイ
-
+<p align="center">
 <img width="250" alt="F61B04A9-F5EB-446A-9196-400FFA6F10B1 2" src="https://user-images.githubusercontent.com/72689870/144109556-a70dad78-55b0-4338-806b-88717ff1ffbc.PNG">
 
 
