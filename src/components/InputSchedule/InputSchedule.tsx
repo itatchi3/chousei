@@ -31,9 +31,11 @@ export const InputSchedule = () => {
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
-  const { userId, idToken } = useLiff();
+  const { userId, idToken, isInClient } = useLiff();
   const [voteList, setVoteList] = useState<{ id: number; vote: string }[]>();
   const [firstVoteList, setFirstVoteList] = useState<{ id: number; vote: string }[]>();
+
+  const [windowSize, setWindowSize] = useState(window.innerWidth - 120);
 
   const router = useRouter();
 
@@ -134,7 +136,7 @@ export const InputSchedule = () => {
   const fullCalendarStyle = () => {
     const numberOfDates = dates.length;
     let widthStyle = '';
-    if (numberOfDates >= 4) {
+    if ((isInClient && numberOfDates >= 4) || (!isInClient && windowSize <= 100 * numberOfDates)) {
       widthStyle = `.fc-scrollgrid, .fc-scrollgrid table {width: ${
         100 * numberOfDates
       }px !important;}`;
@@ -242,6 +244,15 @@ export const InputSchedule = () => {
     setVoteList(voteList);
     setFirstVoteList(voteList);
   }, [event, userId]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize(window.innerWidth - 120);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   return (
     <Box p="3">
       <Box height={window.innerHeight - 150} overflow="scroll">
