@@ -3,8 +3,6 @@ import { GetServerSideProps } from 'next';
 import { EventDetail } from 'src/components/EventDetail/EventDetail';
 import { prisma } from 'prisma/prisma';
 import superjson from 'superjson';
-import { useLiff } from 'src/liff/auth';
-import { useEffect } from 'react';
 
 type Props = {
   eventDetailData: string;

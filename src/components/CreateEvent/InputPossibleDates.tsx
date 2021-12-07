@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   possibleDateState,
   isValidateDateState,
@@ -13,7 +13,7 @@ import { InputTimeWidth } from 'src/components/CreateEvent/InputTimeWidth';
 
 export const InputPossibleDates = () => {
   const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
-  const [isValidateDate, setIsValidateDate] = useRecoilState(isValidateDateState);
+  const setIsValidateDate = useSetRecoilState(isValidateDateState);
   const [isValidateTimeList, setIsValidateTimeList] = useRecoilState(isValidateTimeListState);
   const addPossibleDate = () => {
     setPossibleDates([

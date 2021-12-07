@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/react';
-import { MutableSnapshot, RecoilRoot } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
+import { RecoilRoot } from 'recoil';
 import { AttendanceTable } from './AttendanceTable';
 
 export default {

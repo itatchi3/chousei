@@ -1,11 +1,11 @@
 import { FC, useEffect } from 'react';
 import type Liff from '@line/liff';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { liffObjState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 
 export const LiffAuth: FC = ({ children }) => {
-  const [liffObj, setLiffObj] = useRecoilState(liffObjState);
+  const setLiffObj = useSetRecoilState(liffObjState);
   const router = useRouter();
 
   useEffect(() => {
