@@ -121,11 +121,11 @@ const event = {
       id: 4,
       index: 4,
       eventId: 'event1',
-      date: new Date(2021, 11, 3),
-      dateString: '12/3(金)',
-      startTime: new Date(2021, 11, 3, 14, 0),
-      endTime: new Date(2021, 11, 3, 16, 0),
-      timeWidthString: '14:00〜16:00',
+      date: new Date(2021, 11, 4),
+      dateString: '12/4(金)',
+      startTime: new Date(2021, 11, 4, 14, 0),
+      endTime: new Date(2021, 11, 4, 16, 30),
+      timeWidthString: '14:00〜16:30',
       votes: [
         {
           userId: 'user1',
