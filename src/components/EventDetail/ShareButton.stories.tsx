@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { MutableSnapshot, RecoilRoot } from 'recoil';
-import { eventState, liffObjState } from 'src/atoms/eventState';
+import { eventState } from 'src/atoms/eventState';
 import { ShareButton } from './ShareButton';
 
 export default {
