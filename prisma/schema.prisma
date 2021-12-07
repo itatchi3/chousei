@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Event {
+  id            String             @id @default(cuid())
+  name          String             @db.VarChar(255)
+  description   String?            @db.VarChar(255)
+  possibleDates PossibleDate[]
+  comments      Comment[]
+  participants  EventParticipant[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model PossibleDate {
+  id              Int      @id @default(autoincrement())
+  index           Int
+  event           Event    @relation(fields: [eventId], references: [id])
+  eventId         String
+  date            DateTime @db.Date
+  dateString      String
+  startTime       DateTime @db.DateTime
+  endTime         DateTime @db.DateTime
+  timeWidthString String
+  votes           Vote[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Vote {
+  vote           String       @db.Char(1)
+  possibleDate   PossibleDate @relation(fields: [possibleDateId], references: [id])
+  possibleDateId Int
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String       @db.VarChar(255)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@id([possibleDateId, userId])
+}
+
+model User {
+  id                 String             @id @db.VarChar(255)
+  name               String             @db.VarChar(255)
+  profileImg         String             @db.VarChar(255)
+  votes              Vote[]
+  comments           Comment[]
+  participatedEvents EventParticipant[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+model Comment {
+  comment   String   @db.VarChar(255)
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([eventId, userId])
+}
+
+model EventParticipant {
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.VarChar(255)
+  isCheck   Boolean  @default(true)
+  isCreate  Boolean  @default(false)
+  isVote    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([eventId, userId])
+}

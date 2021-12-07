@@ -1,24 +1,120 @@
-import { database } from 'src/utils/firebase';
 import { EventType } from 'src/atoms/eventState';
 import { GetServerSideProps } from 'next';
-import { EventDetail } from 'src/components/page/EventDetail';
+import { EventDetail } from 'src/components/EventDetail/EventDetail';
+import { prisma } from 'prisma/prisma';
+import superjson from 'superjson';
 
 type Props = {
-  eventId: string;
+  eventDetailData: string;
+};
+
+export type EventDetailType = {
   eventData: EventType;
+  counts: Counts[];
+  colors: string[];
+};
+
+type Counts = {
+  date: Date;
+  positiveCount: number;
+  evenCount: number;
+  negativeCount: number;
 };
 
 const Event = (props: Props) => {
-  return <EventDetail eventId={props.eventId} eventData={props.eventData} />;
+  const eventDetailData: EventDetailType = superjson.parse(props.eventDetailData);
+
+  return <EventDetail eventDetailData={eventDetailData} />;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const eventId = context.query.id;
-  const ref = database.ref(`events/${eventId}`);
+  const { id } = context.query;
+  let eventData: EventType;
+  try {
+    if (typeof id === 'string') {
+      eventData = await prisma.event.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          possibleDates: {
+            orderBy: {
+              index: 'asc',
+            },
+            include: {
+              votes: {
+                orderBy: {
+                  updatedAt: 'asc',
+                },
+              },
+            },
+          },
+          comments: {
+            orderBy: {
+              updatedAt: 'asc',
+            },
+            include: {
+              user: true,
+            },
+          },
+          participants: {
+            orderBy: {
+              updatedAt: 'asc',
+            },
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
 
-  return ref.once('value').then((snapshot) => {
-    const eventData = snapshot.val();
-    return { props: { eventId, eventData } };
+      if (!eventData) {
+        throw new Error('EventDate undefined');
+      }
+    } else {
+      throw new Error('Query Error');
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      notFound: true,
+    };
+  }
+
+  const attendanceCounts = eventData.possibleDates.map((possibleDate) => {
+    return {
+      date: possibleDate.date,
+      positiveCount:
+        possibleDate.votes !== undefined
+          ? possibleDate.votes.filter((_vote) => _vote.vote === '○').length
+          : 0,
+      evenCount:
+        possibleDate.votes !== undefined
+          ? possibleDate.votes.filter((_vote) => _vote.vote === '△').length
+          : 0,
+      negativeCount:
+        possibleDate.votes !== undefined
+          ? possibleDate.votes.filter((_vote) => _vote.vote === '×').length
+          : 0,
+    };
   });
+
+  const scores = attendanceCounts.map((count) => {
+    return count.positiveCount * 3 + count.evenCount * 2;
+  });
+  const max = Math.max(...scores);
+  const evaluations = scores.map((score) => {
+    return score === max && score > 0 ? 'green.100' : 'white';
+  });
+
+  const eventDetailData = {
+    eventData,
+    counts: attendanceCounts,
+    colors: evaluations,
+  };
+
+  return {
+    props: { eventDetailData: superjson.stringify(eventDetailData) },
+  };
 };
 export default Event;
