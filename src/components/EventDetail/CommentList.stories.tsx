@@ -1,7 +1,6 @@
 import { Meta } from '@storybook/react';
-import { MutableSnapshot, RecoilRoot } from 'recoil';
+import { RecoilRoot } from 'recoil';
 import { CommentList } from './CommentList';
-import { eventState } from 'src/atoms/eventState';
 
 export default {
   component: CommentList,

@@ -1,12 +1,7 @@
 import { Meta } from '@storybook/react';
 import { MutableSnapshot, RecoilRoot } from 'recoil';
 import { InputTimeWidth } from './InputTimeWidth';
-import {
-  possibleDateState,
-  isValidateDateState,
-  isValidateTimeListState,
-  overViewState,
-} from 'src/atoms/eventState';
+import { possibleDateState } from 'src/atoms/eventState';
 
 export default {
   component: InputTimeWidth,
