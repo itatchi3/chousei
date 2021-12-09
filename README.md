@@ -53,7 +53,7 @@ https://user-images.githubusercontent.com/72689870/144118399-3dc24830-9716-4b43-
 |ChakraUI|ある程度デザインを任せることができ，カスタマイズもかなり可能なため|
 |PlanetScale|他のDBaaSと比べて，無料枠がかなり広いため|
 |Prisma|型安全にDBを操作できるため|
-
+|Storybook|UIチェックのため|
 ## ユーザー認証
 LINEログインを用いています．LINE（ios/android）でURLを開いた場合は自動的にログインされます．
 
