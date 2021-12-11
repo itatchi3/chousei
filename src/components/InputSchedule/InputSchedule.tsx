@@ -32,12 +32,17 @@ export const InputSchedule = () => {
 
   const event = useRecoilValue(eventState);
   const { userId, idToken, isInClient } = useLiff();
-  const [voteList, setVoteList] = useState<{ id: number; vote: string }[]>();
-  const [firstVoteList, setFirstVoteList] = useState<{ id: number; vote: string }[]>();
 
   const [windowSize, setWindowSize] = useState(window.innerWidth - 120);
 
   const router = useRouter();
+
+  const eventColor = {
+    red: '#C53030',
+    green: '#2F855A',
+    blue: '#3182CE',
+    gray: '#000000',
+  };
 
   const checkColor = (vote: string) => {
     switch (vote) {
@@ -80,37 +85,50 @@ export const InputSchedule = () => {
   };
 
   const onClickVoteChange = (arg: EventClickArg) => {
-    if (!voteList) return;
-    const index = Number(arg.event.id);
-    const newVoteList = cloneDeep(voteList);
     const newEventFullCalendar = cloneDeep(eventFullCalendar);
-    let newVote: '○' | '△' | '×' = '△';
+    let newEventColor = eventColor.green;
     switch (color) {
       case 'Red':
-        newVote = '○';
+        newEventColor = eventColor.red;
         break;
       case 'Green':
-        newVote = '△';
+        newEventColor = eventColor.green;
         break;
       case 'Blue':
-        newVote = '×';
+        newEventColor = eventColor.blue;
         break;
       default:
-      // do nothing
+        newEventColor = eventColor.gray;
+        break;
     }
-    newVoteList[index].vote = newVote;
-    setVoteList(newVoteList);
-    eventFullCalendar.map((event, indexEvent) => {
-      if (event.id === arg.event.id) {
-        newEventFullCalendar[indexEvent].color = checkColor(newVote);
-      }
-    });
+
+    newEventFullCalendar[Number(arg.event.id)].color = newEventColor;
     setEventFullCalendar(newEventFullCalendar);
   };
 
   const registerAttendances = async () => {
     if (!event) return;
     setLoading(true);
+    const voteList = eventFullCalendar.map((eventFullCalendar, index) => {
+      let vote = { id: event.possibleDates[index].id, vote: '' };
+      switch (eventFullCalendar.color) {
+        case eventColor.red:
+          vote.vote = '○';
+          break;
+        case eventColor.green:
+          vote.vote = '△';
+          break;
+        case eventColor.blue:
+          vote.vote = '×';
+          break;
+        case eventColor.gray:
+          vote.vote = '△';
+        default:
+        // do nothing
+      }
+      return vote;
+    });
+
     try {
       const body = {
         voteList: voteList,
@@ -129,6 +147,7 @@ export const InputSchedule = () => {
       router.push(`/event/${event.id}`);
     } catch (error) {
       alert(error);
+      console.error(error);
       setLoading(false);
     }
   };
@@ -170,7 +189,7 @@ export const InputSchedule = () => {
   };
 
   useEffect(() => {
-    if (!event || !firstVoteList) return;
+    if (!event || !userId) return;
     let dateList: Date[] = [event.possibleDates[0].date];
     let dateStringList: string[] = [event.possibleDates[0].dateString];
     let dateTimeList: number[] = [event.possibleDates[0].date.getTime()];
@@ -189,11 +208,19 @@ export const InputSchedule = () => {
           minutesWhenMaxTime = possibleDate.endTime.getMinutes();
         }
       }
+
+      let userVote = '△';
+      possibleDate.votes.map((vote) => {
+        if (vote.userId === userId) {
+          userVote = vote.vote;
+        }
+      });
+
       eventFullCalendar.push({
         start: possibleDate.startTime,
         end: possibleDate.endTime,
         id: index.toString(),
-        color: checkColor(firstVoteList[index].vote),
+        color: checkColor(userVote),
       });
       if (!dateStringList.includes(possibleDate.dateString)) {
         dateList.push(possibleDate.date);
@@ -227,22 +254,6 @@ export const InputSchedule = () => {
     }
     setDateWidth(dateWidth + 1);
     setHiddenDates(hiddenDates);
-  }, [event, firstVoteList]);
-
-  useEffect(() => {
-    if (!event) return;
-    let voteList: { id: number; vote: string }[] = [];
-    event.possibleDates.map((possibleDate) => {
-      let userVote = { id: possibleDate.id, vote: '△' };
-      possibleDate.votes.map((vote) => {
-        if (vote.userId === userId) {
-          userVote = { id: possibleDate.id, vote: vote.vote };
-        }
-      });
-      voteList.push(userVote);
-    });
-    setVoteList(voteList);
-    setFirstVoteList(voteList);
   }, [event, userId]);
 
   useEffect(() => {
@@ -284,7 +295,7 @@ export const InputSchedule = () => {
                 allDaySlot={false}
                 contentHeight={'auto'}
                 initialDate={dates[0]}
-                events={eventFullCalendar}
+                eventSources={[{ events: eventFullCalendar }]}
                 slotEventOverlap={false}
                 eventTimeFormat={{
                   hour: '2-digit',
