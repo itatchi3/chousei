@@ -103,8 +103,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return count.positiveCount * 3 + count.evenCount * 2;
   });
   const max = Math.max(...scores);
-  const evaluations = scores.map((score) => {
-    return score === max && score > 0 ? 'green.100' : 'white';
+  const evaluations = scores.map((score, index) => {
+    let color = 'white';
+    if (attendanceCounts[index].positiveCount === 0) {
+      color = 'green.100';
+    }
+    if (score === max) {
+      color = 'green.200';
+    }
+    return color;
   });
 
   const eventDetailData = {
