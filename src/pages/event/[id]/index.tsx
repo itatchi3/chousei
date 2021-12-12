@@ -96,20 +96,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         possibleDate.votes !== undefined
           ? possibleDate.votes.filter((_vote) => _vote.vote === '×').length
           : 0,
+      votescount: possibleDate.votes.length,
     };
   });
 
   const scores = attendanceCounts.map((count) => {
-    return count.positiveCount * 3 + count.evenCount * 2;
+    return count.positiveCount * 2 + count.evenCount;
   });
-  const max = Math.max(...scores);
   const evaluations = scores.map((score, index) => {
     let color = 'white';
-    if (attendanceCounts[index].positiveCount === 0 && score !== 0) {
-      color = 'green.100';
-    }
-    if (score === max && score !== 0) {
+    const ratio = score / (attendanceCounts[index].votescount * 2);
+    if (ratio === 1) {
       color = 'green.200';
+    } else if (ratio > 0.7) {
+      color = 'green.100';
     }
     return color;
   });
