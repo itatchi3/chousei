@@ -108,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (attendanceCounts[index].positiveCount === 0 && score !== 0) {
       color = 'green.100';
     }
-    if (score === max) {
+    if (score === max && score !== 0) {
       color = 'green.200';
     }
     return color;
