@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const max = Math.max(...scores);
   const evaluations = scores.map((score, index) => {
     let color = 'white';
-    if (attendanceCounts[index].positiveCount === 0) {
+    if (attendanceCounts[index].positiveCount === 0 && score !== 0) {
       color = 'green.100';
     }
     if (score === max) {
