@@ -1,4 +1,4 @@
-import { Avatar } from '@chakra-ui/react';
+import { Avatar, PopoverAnchor } from '@chakra-ui/react';
 import {
   Table,
   Thead,
@@ -53,12 +53,12 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                     .filter((participant) => participant.isVote)
                     .map((participant, i) => (
                       <Th key={i} p="2">
-                        <Popover placement="top" strategy="fixed">
-                          <PopoverTrigger>
-                            <Center>
+                        <Popover placement="top" strategy="fixed" flip={false}>
+                          <Center>
+                            <PopoverTrigger>
                               <Avatar src={participant.user.profileImg} size="sm" />
-                            </Center>
-                          </PopoverTrigger>
+                            </PopoverTrigger>
+                          </Center>
                           <PopoverContent
                             w="auto"
                             sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
