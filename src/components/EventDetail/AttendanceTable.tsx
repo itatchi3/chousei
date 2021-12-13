@@ -53,12 +53,12 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                     .filter((participant) => participant.isVote)
                     .map((participant, i) => (
                       <Th key={i} p="2">
-                        {/* <Popover placement="top">
-                          <PopoverTrigger> */}
-                        <Center>
-                          <Avatar src={participant.user.profileImg} size="sm" />
-                        </Center>
-                        {/* </PopoverTrigger>
+                        <Popover placement="top" strategy="fixed">
+                          <PopoverTrigger>
+                            <Center>
+                              <Avatar src={participant.user.profileImg} size="sm" />
+                            </Center>
+                          </PopoverTrigger>
                           <PopoverContent
                             w="auto"
                             sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
@@ -66,12 +66,11 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                             color="gray.600"
                             fontSize="xs"
                             textTransform="none"
-                            rootProps={{ style: { right: 10 } }}
                           >
                             <PopoverArrow />
                             <PopoverBody>{participant.user.name}</PopoverBody>
                           </PopoverContent>
-                        </Popover> */}
+                        </Popover>
                       </Th>
                     ))
                 : null}
