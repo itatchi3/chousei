@@ -1,4 +1,4 @@
-import { Avatar, PopoverAnchor } from '@chakra-ui/react';
+import { Avatar } from '@chakra-ui/react';
 import {
   Table,
   Thead,
