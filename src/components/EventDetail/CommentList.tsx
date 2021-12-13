@@ -39,7 +39,7 @@ export const CommentList = ({ comments }: Props) => {
                 _comment.comment !== '' && (
                   <Tr key={i}>
                     <Td key={i} p="2" w="24">
-                      <Popover placement="top">
+                      <Popover placement="top" flip={false}>
                         <PopoverTrigger>
                           <Center>
                             <Avatar src={_comment.user.profileImg} size="sm" />
