@@ -53,7 +53,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                     .filter((participant) => participant.isVote)
                     .map((participant, i) => (
                       <Th key={i} p="2">
-                        <Popover placement="top">
+                        <Popover placement="top" strategy="fixed">
                           <PopoverTrigger>
                             <Center>
                               <Avatar src={participant.user.profileImg} size="sm" />
