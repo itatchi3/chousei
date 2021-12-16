@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   FormControl,
   FormLabel,
   HStack,
@@ -77,7 +78,7 @@ export const InputDate = ({ indexDate }: Props) => {
           <ModalCloseButton />
           <ModalHeader></ModalHeader>
           <ModalBody py="0" px="0">
-            <Box>
+            <Flex justifyContent="center">
               <DayPicker
                 selectedDays={possibleDate.date}
                 onDayClick={(day, modifires, e) => handleDayClick(day, modifires, indexDate)}
@@ -109,7 +110,7 @@ export const InputDate = ({ indexDate }: Props) => {
                   color: #000000;
                 }
               `}</style>
-            </Box>
+            </Flex>
           </ModalBody>
           <ModalFooter pt="0">
             <Center>

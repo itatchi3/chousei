@@ -82,3 +82,8 @@ export const liffObjState = atom<RiffObj>({
     userId: undefined,
   },
 });
+
+export const isCancelModalState = atom<boolean>({
+  key: 'isCancelModalState',
+  default: false,
+});

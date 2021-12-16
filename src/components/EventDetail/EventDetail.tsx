@@ -10,6 +10,7 @@ import { EventOverview } from 'src/components/EventDetail/EventOverview';
 import { CommentList } from 'src/components/EventDetail/CommentList';
 import { EventDetailType } from 'src/pages/event/[id]';
 import { useLiff } from 'src/liff/auth';
+import { NotFriendModal } from 'src/components/EventDetail/NotFriendModal';
 
 type Props = {
   eventDetailData: EventDetailType;
@@ -94,6 +95,7 @@ export const EventDetail = ({ eventDetailData }: Props) => {
           <ShareButton />
         </Box>
       </VStack>
+      <NotFriendModal />
     </Box>
   );
 };
