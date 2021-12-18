@@ -33,7 +33,8 @@ export const InputSchedule = () => {
   const event = useRecoilValue(eventState);
   const { userId, idToken, isInClient } = useLiff();
 
-  const [windowSize, setWindowSize] = useState(window.innerWidth - 120);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
   const router = useRouter();
 
@@ -155,7 +156,10 @@ export const InputSchedule = () => {
   const fullCalendarStyle = () => {
     const numberOfDates = dates.length;
     let widthStyle = '';
-    if ((isInClient && numberOfDates >= 4) || (!isInClient && windowSize <= 100 * numberOfDates)) {
+    if (
+      (isInClient && numberOfDates >= 4) ||
+      (!isInClient && windowWidth - 120 <= 100 * numberOfDates)
+    ) {
       widthStyle = `.fc-scrollgrid, .fc-scrollgrid table {width: ${
         100 * numberOfDates
       }px !important;}`;
@@ -258,7 +262,8 @@ export const InputSchedule = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowSize(window.innerWidth - 120);
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
     };
     window.addEventListener('resize', handleResize);
     handleResize();
@@ -266,7 +271,7 @@ export const InputSchedule = () => {
   }, []);
   return (
     <Box p="3">
-      <Box height={window.innerHeight - 150} overflow="scroll">
+      <Box height={windowHeight - 150} overflow="scroll">
         <Flex>
           <Flex flexDirection="column" pt="3" pr="2">
             {viewTimeList.map((viewTime) => (
@@ -323,7 +328,7 @@ export const InputSchedule = () => {
       </Box>
 
       <Center>
-        <VStack pos="fixed" bottom="0" bg="white" w="100%">
+        <VStack pos="fixed" bottom="0" bg="white" w="100%" zIndex="1">
           <HStack p="4" spacing={4}>
             <Button variant={redVarient} colorScheme="red" w="24" onClick={() => handleClickRed()}>
               ○
