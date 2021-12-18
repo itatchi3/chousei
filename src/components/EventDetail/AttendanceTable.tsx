@@ -88,7 +88,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   return (
     <>
       <Box ref={scroll} overflowX="scroll">
-        <Box ref={ref} position="fixed" left="12px" zIndex="1">
+        {/* <Box ref={ref} position="fixed" left="12px" zIndex="1">
           <Table size="sm" borderWidth="2px" w={`${tableWidth}px`}>
             <Tbody>
               <Tr bgColor="white" h="50px">
@@ -133,7 +133,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               </Tr>
             </Tbody>
           </Table>
-        </Box>
+        </Box> */}
         <Box ref={table}>
           <Table
             size="sm"
@@ -147,6 +147,15 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               height: '1px',
               width: '12px',
               content: '""',
+            }}
+            _before={{
+              content: '""',
+              width: '101%',
+              height: '25px',
+              background: 'white',
+              position: 'absolute',
+              top: '0',
+              left: '-2px',
             }}
           >
             <Thead>
