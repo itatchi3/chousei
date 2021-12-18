@@ -148,6 +148,15 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               width: '12px',
               content: '""',
             }}
+            _before={{
+              content: '""',
+              width: '101%',
+              height: '50px',
+              background: 'white',
+              position: 'absolute',
+              top: '0',
+              left: '-2px',
+            }}
           >
             <Thead>
               <Tr h="52px">
