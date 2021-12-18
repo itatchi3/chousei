@@ -80,14 +80,14 @@ export const EventDetail = ({ eventDetailData }: Props) => {
         name={eventDetailData.eventData && eventDetailData.eventData.name}
         description={eventDetailData.eventData && eventDetailData.eventData.description}
       />
-      <Box pt="4">
+      <Box pt="4" mx="-3">
         <AttendanceTable
           event={eventDetailData.eventData}
           counts={eventDetailData.counts}
           colors={eventDetailData.colors}
         />
-        <CommentList comments={eventDetailData.eventData && eventDetailData.eventData.comments} />
       </Box>
+      <CommentList comments={eventDetailData.eventData && eventDetailData.eventData.comments} />
       <VStack justify="center" p="6">
         <MoveAnswerScheduleButton />
         <AnswerComment />
