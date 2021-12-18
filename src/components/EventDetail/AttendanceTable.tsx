@@ -137,7 +137,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
         <Box ref={table}>
           <Table
             size="sm"
-            borderWidth="2px"
+            borderWidth="0 2px 2px"
             ml="12px"
             position="relative"
             _after={{
@@ -150,7 +150,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
             }}
           >
             <Thead>
-              <Tr h="50px">
+              <Tr h="52px">
                 <Td w="90px">
                   <Box w="90px" />
                 </Td>
