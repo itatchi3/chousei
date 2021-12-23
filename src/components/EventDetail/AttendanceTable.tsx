@@ -155,7 +155,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
             _before={{
               content: '""',
               width: '101%',
-              height: '25px',
+              height: '52px',
               background: 'white',
               position: 'absolute',
               top: '0',
