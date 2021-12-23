@@ -112,7 +112,11 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                           <Popover placement="top" strategy="fixed">
                             <Center>
                               <PopoverTrigger>
-                                <Avatar src={participant.user.profileImg} size="sm" />
+                                <Avatar
+                                  src={participant.user.profileImg}
+                                  size="sm"
+                                  name={participant.user.name}
+                                />
                               </PopoverTrigger>
                             </Center>
                             <PopoverContent
