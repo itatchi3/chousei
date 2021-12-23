@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AttendanceTable } from 'src/components/EventDetail/AttendanceTable';
 import { useSetRecoilState } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
-import { Box, VStack } from '@chakra-ui/react';
+import { Box, Flex, VStack } from '@chakra-ui/react';
 import { ShareButton } from 'src/components/EventDetail/ShareButton';
 import { MoveAnswerScheduleButton } from 'src/components/EventDetail/MoveAnswerScheduleButton';
 import { AnswerComment } from 'src/components/EventDetail/AnswerComment';
@@ -11,6 +11,7 @@ import { CommentList } from 'src/components/EventDetail/CommentList';
 import { EventDetailType } from 'src/pages/event/[id]';
 import { useLiff } from 'src/liff/auth';
 import { NotFriendModal } from 'src/components/EventDetail/NotFriendModal';
+import { EditButton } from './EditButton';
 
 type Props = {
   eventDetailData: EventDetailType;
@@ -18,6 +19,7 @@ type Props = {
 
 export const EventDetail = ({ eventDetailData }: Props) => {
   const setEvent = useSetRecoilState(eventState);
+  const [isCreate, setIsCreate] = useState(false);
   const { idToken, userId } = useLiff();
 
   useEffect(() => {
@@ -49,6 +51,9 @@ export const EventDetail = ({ eventDetailData }: Props) => {
       if (participant.userId === userId) {
         isCheckEvent = true;
         updateUser();
+        if (participant.isCreate) {
+          setIsCreate(true);
+        }
       }
     });
 
@@ -76,11 +81,18 @@ export const EventDetail = ({ eventDetailData }: Props) => {
 
   return (
     <Box p="3">
-      <EventOverview
-        name={eventDetailData.eventData && eventDetailData.eventData.name}
-        description={eventDetailData.eventData && eventDetailData.eventData.description}
-      />
-      <Box pt="4" mx="-3">
+      <Box pb="4">
+        <EventOverview
+          name={eventDetailData.eventData && eventDetailData.eventData.name}
+          description={eventDetailData.eventData && eventDetailData.eventData.description}
+        />
+      </Box>
+      {isCreate && (
+        <Flex justifyContent="end" mt="-4" mr="-2">
+          <EditButton />
+        </Flex>
+      )}
+      <Box mx="-3">
         <AttendanceTable
           event={eventDetailData.eventData}
           counts={eventDetailData.counts}
