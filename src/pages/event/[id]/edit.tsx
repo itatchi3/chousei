@@ -1,14 +1,14 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
-import { InputSchedule } from 'src/components/InputSchedule/InputSchedule';
+import { EditEvent } from 'src/components/EditEvent/EditEvent';
 
-const Input = () => {
+const Edit = () => {
   const event = useRecoilValue(eventState);
   return (
     <>
       {event ? (
-        <InputSchedule />
+        <EditEvent />
       ) : (
         <Flex height="100vh" px="5" justifyContent="center" alignItems="center">
           <Box fontWeight="bold">
@@ -21,4 +21,5 @@ const Input = () => {
     </>
   );
 };
-export default Input;
+
+export default Edit;
