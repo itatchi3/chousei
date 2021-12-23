@@ -267,7 +267,11 @@ export const EventRegisterButton = () => {
         bg="green.300"
         onClick={formatEvent}
         isDisabled={
-          isValidateDate || isValidateTimeList.includes(true) || overView.eventName === ''
+          isValidateDate ||
+          isValidateTimeList.includes(true) ||
+          overView.eventName === '' ||
+          overView.eventName.length > 255 ||
+          overView.description.length > 255
         }
       >
         {!event ? 'イベントを作成する' : 'イベントを編集する'}

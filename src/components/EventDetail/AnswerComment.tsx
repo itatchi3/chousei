@@ -71,12 +71,29 @@ export const AnswerComment = () => {
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} size="xs">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>コメントを入力してください</ModalHeader>
+          {comment.length <= 255 ? (
+            <ModalHeader>コメントを入力してください</ModalHeader>
+          ) : (
+            <ModalHeader color="crimson">255字以内にしてください</ModalHeader>
+          )}
+
           <ModalBody>
-            <Textarea value={comment} onChange={handleInputComment} ref={initialRef} rows={6} />
+            <Textarea
+              isInvalid={comment.length > 255}
+              value={comment}
+              onChange={handleInputComment}
+              ref={initialRef}
+              rows={6}
+            />
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={registerComment} isLoading={isLoading}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={registerComment}
+              isLoading={isLoading}
+              isDisabled={comment.length > 255}
+            >
               保存
             </Button>
             <Button onClick={onClose}>閉じる</Button>
