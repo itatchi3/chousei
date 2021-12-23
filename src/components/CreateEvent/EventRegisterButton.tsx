@@ -5,6 +5,7 @@ import {
   EditingTimeWidth,
   isValidateDateState,
   isValidateTimeListState,
+  eventState,
 } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
 import { useRecoilValue } from 'recoil';
@@ -46,9 +47,10 @@ export const EventRegisterButton = () => {
   const possibleDates = useRecoilValue(possibleDateState);
   const [sortedPossibleDates, setSortedPossibleDates] = useState<SortedPossibleDate[]>();
   const [registerPossibleDates, setRegisterPossibleDates] = useState<RegisterPossibleDate[]>();
-  const event = useRecoilValue(overViewState);
+  const overView = useRecoilValue(overViewState);
   const isValidateDate = useRecoilValue(isValidateDateState);
   const isValidateTimeList = useRecoilValue(isValidateTimeListState);
+  const event = useRecoilValue(eventState);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
@@ -162,12 +164,11 @@ export const EventRegisterButton = () => {
 
     try {
       const body = {
-        name: event.eventName,
-        description: event.description,
+        name: overView.eventName,
+        description: overView.description,
         registerPossibleDates: registerPossibleDates,
         idToken: idToken,
       };
-
       const res = await fetch(`/api/createEvent`, {
         method: 'POST',
         body: superjson.stringify(body),
@@ -179,16 +180,16 @@ export const EventRegisterButton = () => {
           await liff.sendMessages([
             {
               type: 'text',
-              text: '出欠表が完成したよ！',
+              text: 'イベントが完成したよ！',
             },
             {
               type: 'text',
               text:
                 '【イベント名】\n' +
-                event.eventName +
+                overView.eventName +
                 '\n' +
                 '【補足・備考】\n' +
-                event.description +
+                overView.description +
                 '\n' +
                 'https://liff.line.me/' +
                 process.env.NEXT_PUBLIC_LIFF_ID +
@@ -208,14 +209,68 @@ export const EventRegisterButton = () => {
       setIsLoading(false);
     }
   };
+
+  const handleUpdate = async () => {
+    setIsLoading(true);
+    if (!liff || !event) return;
+
+    try {
+      const body = {
+        name: overView.eventName,
+        description: overView.description,
+        registerPossibleDates: registerPossibleDates,
+        eventId: event.id,
+      };
+      const res = await fetch(`/api/updateEvent`, {
+        method: 'POST',
+        body: superjson.stringify(body),
+      });
+
+      const json: { ok?: boolean; error?: string } = await res.json();
+      if (json.ok) {
+        if (isInClient) {
+          await liff.sendMessages([
+            {
+              type: 'text',
+              text: 'イベントを編集したよ！',
+            },
+            {
+              type: 'text',
+              text:
+                '【イベント名】\n' +
+                overView.eventName +
+                '\n' +
+                '【補足・備考】\n' +
+                overView.description +
+                '\n' +
+                'https://liff.line.me/' +
+                process.env.NEXT_PUBLIC_LIFF_ID +
+                '/event/' +
+                event.id,
+            },
+          ]);
+          liff.closeWindow();
+        } else {
+          router.push(`/event/${event.id}`);
+        }
+      } else {
+        throw new Error(json.error);
+      }
+    } catch (error) {
+      alert(error);
+      setIsLoading(false);
+    }
+  };
   return (
     <>
       <Button
         bg="green.300"
         onClick={formatEvent}
-        isDisabled={isValidateDate || isValidateTimeList.includes(true) || event.eventName === ''}
+        isDisabled={
+          isValidateDate || isValidateTimeList.includes(true) || overView.eventName === ''
+        }
       >
-        イベントを作成する
+        {!event ? 'イベントを作成する' : 'イベントを編集する'}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} size="xs" scrollBehavior={'inside'}>
         <ModalOverlay />
@@ -225,11 +280,11 @@ export const EventRegisterButton = () => {
           <ModalBody pt="0" px="50px" mb="4" fontSize="lg">
             <Box fontWeight="bold">イベント名</Box>
             <Box pl="2" pb="4">
-              {event.eventName}
+              {overView.eventName}
             </Box>
             <Box fontWeight="bold">補足・備考</Box>
             <Box pl="2" pb="4">
-              {event.description}
+              {overView.description}
             </Box>
             <Box fontWeight="bold">候補時間</Box>
             {sortedPossibleDates?.map((sortedPossibleDate, i) => (
@@ -246,9 +301,15 @@ export const EventRegisterButton = () => {
           <ModalFooter pt="0">
             <Center>
               <HStack>
-                <Button colorScheme="blue" onClick={() => handleSubmit()} isLoading={isLoading}>
-                  作成
-                </Button>
+                {!event ? (
+                  <Button colorScheme="blue" onClick={() => handleSubmit()} isLoading={isLoading}>
+                    確認
+                  </Button>
+                ) : (
+                  <Button colorScheme="blue" onClick={() => handleUpdate()} isLoading={isLoading}>
+                    確認
+                  </Button>
+                )}
               </HStack>
             </Center>
           </ModalFooter>
