@@ -1,4 +1,3 @@
-import { Box, Flex } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
@@ -61,15 +60,5 @@ export const EditEvent = () => {
     editingPossibleDateList.push(editingPossibleDate);
     setPossibleDates(editingPossibleDateList);
   }, [event, setOverView, setPossibleDates]);
-  return (
-    <>
-      {event ? (
-        <CreateEvent />
-      ) : (
-        <Flex height="100vh" justifyContent="center" alignItems="center">
-          <Box fontWeight="bold">イベント詳細画面へ戻ってください</Box>
-        </Flex>
-      )}
-    </>
-  );
+  return <CreateEvent />;
 };
