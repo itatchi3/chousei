@@ -45,11 +45,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       },
     });
 
-    console.log(eventIdList);
-
     if (eventIdList.length === 0) {
       res.json({ ok: true, eventList: null });
-      console.log(1111);
       return;
     }
 
