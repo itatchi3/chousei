@@ -30,11 +30,11 @@ export const EventDetail = ({ eventDetailData }: Props) => {
     if (!eventDetailData.eventData || !idToken) return;
 
     const updateUser = async () => {
-      if (!idToken) return;
+      if (!eventDetailData.eventData || !idToken) return;
       try {
         const res = await fetch('/api/updateUser', {
           method: 'POST',
-          body: JSON.stringify({ idToken }),
+          body: JSON.stringify({ idToken, eventId: eventDetailData.eventData.id }),
         });
 
         const json: { ok?: boolean; error?: string } = await res.json();
