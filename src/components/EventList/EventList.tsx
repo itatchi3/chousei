@@ -164,7 +164,7 @@ export const EventList = () => {
           )}
 
           <Center py="6">
-            <Button onClick={() => moveEventCreate} isLoading={isButtonLoading}>
+            <Button onClick={() => moveEventCreate()} isLoading={isButtonLoading}>
               新しいイベントを作成する
             </Button>
           </Center>
