@@ -71,7 +71,6 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
     setTableWidth(table.current.getBoundingClientRect().width);
 
     return () => {
-      console.log('unmount');
       window.removeEventListener('scroll', stickyHeader);
       window.removeEventListener('resize', updateWindowWidth);
       window.removeEventListener('resize', stickyHeader);
