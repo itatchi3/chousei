@@ -5,10 +5,11 @@ import { Prisma } from '.prisma/client';
 
 type ReqestBody = {
   idToken: string;
+  eventId: string;
 };
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { idToken }: ReqestBody = JSON.parse(req.body);
+  const { idToken, eventId }: ReqestBody = JSON.parse(req.body);
 
   let userId = '';
   let userName = '';
@@ -32,6 +33,18 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       data: {
         name: userName,
         profileImg: profileImg,
+      },
+    });
+
+    await prisma.eventParticipant.update({
+      where: {
+        eventId_userId: {
+          eventId: eventId,
+          userId: userId,
+        },
+      },
+      data: {
+        isCheck: true,
       },
     });
 
