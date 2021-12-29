@@ -88,7 +88,7 @@ export const EventDetail = ({ eventDetailData }: Props) => {
         />
       </Box>
       {isCreate && (
-        <Flex justifyContent="end" mt="-4" mr="-2">
+        <Flex justifyContent="flex-end" mt="-4" mr="-2">
           <EditButton />
         </Flex>
       )}
