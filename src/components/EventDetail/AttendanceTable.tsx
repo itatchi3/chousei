@@ -65,6 +65,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
     };
 
     window.addEventListener('scroll', stickyHeader);
+    window.addEventListener('touchmove', stickyHeader);
     window.addEventListener('resize', updateWindowWidth);
     window.addEventListener('resize', stickyHeader);
     scroll.current.addEventListener('scroll', horizontalScroll);
@@ -72,6 +73,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
 
     return () => {
       window.removeEventListener('scroll', stickyHeader);
+      window.removeEventListener('touchmove', stickyHeader);
       window.removeEventListener('resize', updateWindowWidth);
       window.removeEventListener('resize', stickyHeader);
     };
