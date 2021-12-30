@@ -39,21 +39,23 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
 
   useEffect(() => {
     if (!scroll.current || !table.current || !ref.current) return;
-    const firstTableTop = table.current.getBoundingClientRect().top;
 
     const stickyHeader = () => {
       if (!scroll.current || !table.current || !ref.current) return;
       const tableTop = scroll.current.getBoundingClientRect().top;
       const scrollLeft = scroll.current.scrollLeft;
       const scrollY = window.scrollY;
+
+      const tableTopRelative = tableTop + scrollY;
+
       if (tableTop >= 0) {
         ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY}px, 0)`;
       } else if (tableTop < -table.current.getBoundingClientRect().height + 100) {
         ref.current.style.transform = `translate3d(${-scrollLeft}px, ${
-          -firstTableTop + table.current.getBoundingClientRect().height - 100 + tableTop
+          -tableTopRelative + table.current.getBoundingClientRect().height - 100 + tableTop
         }px, 0)`;
       } else {
-        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-firstTableTop}px, 0)`;
+        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-tableTopRelative}px, 0)`;
       }
     };
 
