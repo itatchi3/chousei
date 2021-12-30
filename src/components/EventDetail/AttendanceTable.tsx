@@ -39,24 +39,22 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
 
   useEffect(() => {
     if (!scroll.current || !table.current || !ref.current) return;
+    const firstTableTop = table.current.getBoundingClientRect().top;
+
     const stickyHeader = () => {
       if (!scroll.current || !table.current || !ref.current) return;
       const tableTop = scroll.current.getBoundingClientRect().top;
-      if (tableTop >= 0) {
-        ref.current.style.top = `${tableTop}px`;
-      } else if (tableTop < -table.current.getBoundingClientRect().height + 100) {
-        ref.current.style.top = `${
-          table.current.getBoundingClientRect().height - 100 + tableTop
-        }px`;
-      } else {
-        ref.current.style.top = '0px';
-      }
-    };
-
-    const horizontalScroll = () => {
-      if (!scroll.current || !ref.current) return;
       const scrollLeft = scroll.current.scrollLeft;
-      ref.current.style.left = `${-scrollLeft + 12}px`;
+      const scrollY = window.scrollY;
+      if (tableTop >= 0) {
+        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY}px, 0)`;
+      } else if (tableTop < -table.current.getBoundingClientRect().height + 100) {
+        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${
+          -firstTableTop + table.current.getBoundingClientRect().height - 100 + tableTop
+        }px, 0)`;
+      } else {
+        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-firstTableTop}px, 0)`;
+      }
     };
 
     const updateWindowWidth = () => {
@@ -65,15 +63,13 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
     };
 
     window.addEventListener('scroll', stickyHeader);
-    window.addEventListener('touchmove', stickyHeader);
     window.addEventListener('resize', updateWindowWidth);
     window.addEventListener('resize', stickyHeader);
-    scroll.current.addEventListener('scroll', horizontalScroll);
+    scroll.current.addEventListener('scroll', stickyHeader);
     setTableWidth(table.current.getBoundingClientRect().width);
 
     return () => {
       window.removeEventListener('scroll', stickyHeader);
-      window.removeEventListener('touchmove', stickyHeader);
       window.removeEventListener('resize', updateWindowWidth);
       window.removeEventListener('resize', stickyHeader);
     };
