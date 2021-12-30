@@ -94,7 +94,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   return (
     <>
       <Box ref={scroll} overflowX="scroll">
-        <Box ref={ref} position="fixed" left="12px" zIndex="1">
+        <Box ref={ref} position="fixed" left="12px" zIndex="1" willChange="transform">
           <Table size="sm" borderWidth="2px" w={`${tableWidth}px`}>
             <Tbody>
               <Tr bgColor="white" h="50px">
