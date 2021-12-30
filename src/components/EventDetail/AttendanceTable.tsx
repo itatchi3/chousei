@@ -36,26 +36,33 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   const table = useRef<HTMLDivElement>(null);
   const [tableWidth, setTableWidth] = useState(0);
   const [votedCount, setVotedCount] = useState(0);
+  const ticking = useRef<boolean>(false);
 
   useEffect(() => {
     if (!scroll.current || !table.current || !ref.current) return;
 
     const stickyHeader = () => {
-      if (!scroll.current || !table.current || !ref.current) return;
-      const tableTop = scroll.current.getBoundingClientRect().top;
-      const scrollLeft = scroll.current.scrollLeft;
-      const scrollY = window.scrollY;
+      if (!ticking.current) {
+        requestAnimationFrame(() => {
+          ticking.current = false;
+          if (!scroll.current || !table.current || !ref.current) return;
+          const tableTop = scroll.current.getBoundingClientRect().top;
+          const scrollLeft = scroll.current.scrollLeft;
+          const scrollY = window.scrollY;
 
-      const tableTopRelative = tableTop + scrollY;
+          const tableTopRelative = tableTop + scrollY;
 
-      if (tableTop >= 0) {
-        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY}px, 0)`;
-      } else if (tableTop < -table.current.getBoundingClientRect().height + 100) {
-        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${
-          -tableTopRelative + table.current.getBoundingClientRect().height - 100 + tableTop
-        }px, 0)`;
-      } else {
-        ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-tableTopRelative}px, 0)`;
+          if (tableTop >= 0) {
+            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY}px, 0)`;
+          } else if (tableTop < -table.current.getBoundingClientRect().height + 100) {
+            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${
+              -tableTopRelative + table.current.getBoundingClientRect().height - 100 + tableTop
+            }px, 0)`;
+          } else {
+            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-tableTopRelative}px, 0)`;
+          }
+        });
+        ticking.current = true;
       }
     };
 
@@ -64,10 +71,10 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
       setTableWidth(table.current.getBoundingClientRect().width);
     };
 
-    window.addEventListener('scroll', stickyHeader);
+    window.addEventListener('scroll', stickyHeader, { passive: true });
     window.addEventListener('resize', updateWindowWidth);
     window.addEventListener('resize', stickyHeader);
-    scroll.current.addEventListener('scroll', stickyHeader);
+    scroll.current.addEventListener('scroll', stickyHeader, { passive: true });
     setTableWidth(table.current.getBoundingClientRect().width);
 
     return () => {
