@@ -54,7 +54,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
           const tableTopRelative = tableTop + scrollY;
 
           if (tableTop >= 0) {
-            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY}px, 0)`;
+            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY + 1}px, 0)`;
           } else if (tableTop < -tableHeight + 100) {
             ref.current.style.transform = `translate3d(${-scrollLeft}px, ${
               -tableTopRelative + tableHeight - 100 + tableTop
