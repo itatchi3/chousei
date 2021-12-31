@@ -95,7 +95,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   return (
     <>
       <Box ref={ref} position="fixed" left="12px" zIndex="1" willChange="transform">
-        <Table size="sm" borderWidth="2px" w={`${tableWidth}px`}>
+        <Table size="sm" borderWidth="1px" w={`${tableWidth}px`}>
           <Tbody>
             <Tr bgColor="white" h="50px">
               <Th fontSize="md" w="90px">
@@ -148,7 +148,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
         <Box ref={table}>
           <Table
             size="sm"
-            borderWidth="0 2px 2px"
+            borderWidth="0 1px 0"
             ml="12px"
             position="relative"
             _after={{
