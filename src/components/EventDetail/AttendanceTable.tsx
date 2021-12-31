@@ -115,7 +115,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                     .filter((participant) => participant.isVote)
                     .map((participant, i) => (
                       <Th key={i} py="2" pr={i === votedCount - 1 ? '7px' : '2'} pl="2" minW="12">
-                        <Popover placement="top">
+                        <Popover eventListeners={false}>
                           <Center>
                             <PopoverTrigger>
                               <Avatar
