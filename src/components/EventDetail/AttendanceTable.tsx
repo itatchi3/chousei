@@ -49,14 +49,15 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
           const tableTop = scroll.current.getBoundingClientRect().top;
           const scrollLeft = scroll.current.scrollLeft;
           const scrollY = window.scrollY;
+          const tableHeight = table.current.getBoundingClientRect().height;
 
           const tableTopRelative = tableTop + scrollY;
 
           if (tableTop >= 0) {
             ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY}px, 0)`;
-          } else if (tableTop < -table.current.getBoundingClientRect().height + 100) {
+          } else if (tableTop < -tableHeight + 100) {
             ref.current.style.transform = `translate3d(${-scrollLeft}px, ${
-              -tableTopRelative + table.current.getBoundingClientRect().height - 100 + tableTop
+              -tableTopRelative + tableHeight - 100 + tableTop
             }px, 0)`;
           } else {
             ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-tableTopRelative}px, 0)`;
@@ -93,57 +94,57 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
 
   return (
     <>
+      <Box ref={ref} position="fixed" left="12px" zIndex="1" willChange="transform">
+        <Table size="sm" borderWidth="2px" w={`${tableWidth}px`}>
+          <Tbody>
+            <Tr bgColor="white" h="50px">
+              <Th fontSize="md" w="90px">
+                <Center w="90px">日程</Center>
+              </Th>
+              <Th fontSize="md" minW="12">
+                <Center>○</Center>
+              </Th>
+              <Th fontSize="md" minW="12">
+                <Center>△</Center>
+              </Th>
+              <Th fontSize="md" minW="12">
+                <Center>×</Center>
+              </Th>
+              {event
+                ? event.participants
+                    .filter((participant) => participant.isVote)
+                    .map((participant, i) => (
+                      <Th key={i} py="2" pr={i === votedCount - 1 ? '7px' : '2'} pl="2" minW="12">
+                        <Popover placement="top">
+                          <Center>
+                            <PopoverTrigger>
+                              <Avatar
+                                src={participant.user.profileImg}
+                                size="sm"
+                                name={participant.user.name}
+                              />
+                            </PopoverTrigger>
+                          </Center>
+                          <PopoverContent
+                            w="auto"
+                            sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
+                            fontWeight="bold"
+                            color="gray.600"
+                            fontSize="xs"
+                            textTransform="none"
+                          >
+                            <PopoverArrow />
+                            <PopoverBody>{participant.user.name}</PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                      </Th>
+                    ))
+                : null}
+            </Tr>
+          </Tbody>
+        </Table>
+      </Box>
       <Box ref={scroll} overflowX="scroll">
-        <Box ref={ref} position="fixed" left="12px" zIndex="1" willChange="transform">
-          <Table size="sm" borderWidth="2px" w={`${tableWidth}px`}>
-            <Tbody>
-              <Tr bgColor="white" h="50px">
-                <Th fontSize="md" w="90px">
-                  <Center w="90px">日程</Center>
-                </Th>
-                <Th fontSize="md" minW="12">
-                  <Center>○</Center>
-                </Th>
-                <Th fontSize="md" minW="12">
-                  <Center>△</Center>
-                </Th>
-                <Th fontSize="md" minW="12">
-                  <Center>×</Center>
-                </Th>
-                {event
-                  ? event.participants
-                      .filter((participant) => participant.isVote)
-                      .map((participant, i) => (
-                        <Th key={i} py="2" pr={i === votedCount - 1 ? '7px' : '2'} pl="2" minW="12">
-                          <Popover placement="top">
-                            <Center>
-                              <PopoverTrigger>
-                                <Avatar
-                                  src={participant.user.profileImg}
-                                  size="sm"
-                                  name={participant.user.name}
-                                />
-                              </PopoverTrigger>
-                            </Center>
-                            <PopoverContent
-                              w="auto"
-                              sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
-                              fontWeight="bold"
-                              color="gray.600"
-                              fontSize="xs"
-                              textTransform="none"
-                            >
-                              <PopoverArrow />
-                              <PopoverBody>{participant.user.name}</PopoverBody>
-                            </PopoverContent>
-                          </Popover>
-                        </Th>
-                      ))
-                  : null}
-              </Tr>
-            </Tbody>
-          </Table>
-        </Box>
         <Box ref={table}>
           <Table
             size="sm"
