@@ -36,34 +36,44 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   const table = useRef<HTMLDivElement>(null);
   const [tableWidth, setTableWidth] = useState(0);
   const [votedCount, setVotedCount] = useState(0);
-  const ticking = useRef<boolean>(false);
+  const tickingX = useRef<boolean>(false);
+  const tickingY = useRef<boolean>(false);
 
   useEffect(() => {
     if (!scroll.current || !table.current || !ref.current) return;
+    const tableHeight = table.current.getBoundingClientRect().height;
 
     const stickyHeader = () => {
-      if (!ticking.current) {
+      if (!tickingY.current) {
         requestAnimationFrame(() => {
-          ticking.current = false;
-          if (!scroll.current || !table.current || !ref.current) return;
+          tickingY.current = false;
+          if (!scroll.current || !ref.current) return;
           const tableTop = scroll.current.getBoundingClientRect().top;
-          const scrollLeft = scroll.current.scrollLeft;
-          const scrollY = window.scrollY;
-          const tableHeight = table.current.getBoundingClientRect().height;
-
-          const tableTopRelative = tableTop + scrollY;
 
           if (tableTop >= 0) {
-            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-scrollY}px, 0)`;
+            ref.current.style.position = 'absolute';
+            ref.current.style.top = '1px';
           } else if (tableTop < -tableHeight + 100) {
-            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${
-              -tableTopRelative + tableHeight - 100 + tableTop
-            }px, 0)`;
+            ref.current.style.position = 'fixed';
+            ref.current.style.top = `${tableHeight - 100 + tableTop}px`;
           } else {
-            ref.current.style.transform = `translate3d(${-scrollLeft}px, ${-tableTopRelative}px, 0)`;
+            ref.current.style.position = 'fixed';
+            ref.current.style.top = '0';
           }
         });
-        ticking.current = true;
+        tickingY.current = true;
+      }
+    };
+
+    const horizontalScroll = () => {
+      if (!tickingX.current) {
+        requestAnimationFrame(() => {
+          tickingX.current = false;
+          if (!scroll.current || !ref.current || !table.current) return;
+          const scrollLeft = scroll.current.scrollLeft;
+          ref.current.style.left = `${-scrollLeft + 12}px`;
+        });
+        tickingX.current = true;
       }
     };
 
@@ -75,7 +85,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
     window.addEventListener('scroll', stickyHeader, { passive: true });
     window.addEventListener('resize', updateWindowWidth);
     window.addEventListener('resize', stickyHeader);
-    scroll.current.addEventListener('scroll', stickyHeader, { passive: true });
+    scroll.current.addEventListener('scroll', horizontalScroll, { passive: true });
     setTableWidth(table.current.getBoundingClientRect().width);
 
     return () => {
@@ -93,8 +103,8 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   }, [event]);
 
   return (
-    <>
-      <Box ref={ref} position="fixed" left="12px" zIndex="1" willChange="transform">
+    <Box position="relative" overflow="hidden">
+      <Box ref={ref} zIndex="10" position="absolute" top="1px" left="12px">
         <Table size="sm" borderWidth="1px" w={`${tableWidth}px`}>
           <Tbody>
             <Tr bgColor="white" h="50px">
@@ -215,6 +225,6 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
           <Box />
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
