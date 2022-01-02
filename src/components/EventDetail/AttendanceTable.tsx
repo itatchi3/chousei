@@ -52,7 +52,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
 
           if (tableTop >= 0) {
             ref.current.style.position = 'absolute';
-            ref.current.style.top = '1px';
+            ref.current.style.top = '2px';
           } else if (tableTop < -tableHeight + 100) {
             ref.current.style.position = 'fixed';
             ref.current.style.top = `${tableHeight - 100 + tableTop}px`;
@@ -104,7 +104,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
 
   return (
     <Box position="relative" overflow="hidden">
-      <Box ref={ref} zIndex="10" position="absolute" top="1px" left="12px">
+      <Box ref={ref} zIndex="10" position="absolute" top="2px" left="12px">
         <Table size="sm" borderWidth="1px" w={`${tableWidth}px`}>
           <Tbody>
             <Tr bgColor="white" h="50px">
