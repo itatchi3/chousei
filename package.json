@@ -21,6 +21,7 @@
     "@fullcalendar/timegrid": "^5.9.0",
     "@line/liff": "^2.12.0",
     "@prisma/client": "^3.5.0",
+    "@types/uuid": "^8.3.4",
     "babel-plugin-superjson-next": "^0.4.2",
     "firebase": "^8.9.1",
     "framer-motion": "^4.1.17",
@@ -31,7 +32,8 @@
     "react-day-picker": "^7.4.10",
     "react-dom": "^17.0.2",
     "recoil": "^0.4.0",
-    "superjson": "^1.8.0"
+    "superjson": "^1.8.0",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
