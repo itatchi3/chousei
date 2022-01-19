@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import 'react-day-picker/lib/style.css';
 import { cloneDeep } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
   indexDate: number;
@@ -71,6 +72,7 @@ export const InputTimeWidth = ({ indexDate, isValidateTime }: Props) => {
     const newTimeWidth = [
       ...possibleDates[indexDate].timeWidth,
       {
+        id: uuidv4(),
         start: newStartTIme,
         end: newEndTime,
       },
@@ -88,7 +90,7 @@ export const InputTimeWidth = ({ indexDate, isValidateTime }: Props) => {
       </Box>
       <VStack>
         {possibleDates[indexDate].timeWidth.map((timeWidth, indexWidth) => (
-          <HStack key={indexWidth} pb="1">
+          <HStack key={timeWidth.id} pb="1">
             <CloseButton
               size="sm"
               onClick={() => onDeleteTimeWidth(indexDate, indexWidth)}

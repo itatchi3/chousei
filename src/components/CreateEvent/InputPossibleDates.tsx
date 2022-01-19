@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { cloneDeep } from 'lodash';
 import { InputDate } from 'src/components/CreateEvent/InputDate';
 import { InputTimeWidth } from 'src/components/CreateEvent/InputTimeWidth';
+import { v4 as uuidv4 } from 'uuid';
 
 export const InputPossibleDates = () => {
   const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
@@ -19,9 +20,10 @@ export const InputPossibleDates = () => {
     setPossibleDates([
       ...possibleDates,
       {
+        id: uuidv4(),
         date: [],
         dateString: '',
-        timeWidth: [{ start: '12:00', end: '13:00' }],
+        timeWidth: [{ id: uuidv4(), start: '12:00', end: '13:00' }],
       },
     ]);
     setIsValidateTimeList([...isValidateTimeList, false]);
@@ -61,8 +63,8 @@ export const InputPossibleDates = () => {
         </Text>
       </Flex>
       <VStack px="3" pt="3">
-        {possibleDates.map((_, indexDate) => (
-          <Box px="3" py="2" borderWidth="2px" borderRadius="lg" width="100%" key={indexDate}>
+        {possibleDates.map((possibleDate, indexDate) => (
+          <Box px="3" py="2" borderWidth="2px" borderRadius="lg" width="100%" key={possibleDate.id}>
             <Flex justifyContent="flex-end">
               <CloseButton
                 mb="-6"

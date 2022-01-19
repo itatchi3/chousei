@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 import type Liff from '@line/liff';
 import { Comment, Event, EventParticipant, PossibleDate, User, Vote } from '.prisma/client';
+import { v4 as uuidv4 } from 'uuid';
 
 export type EventType =
   | (Event & {
@@ -22,12 +23,14 @@ export type EditingOverViewType = {
 };
 
 export type EditingPossibleDate = {
+  id: string;
   date: Date[];
   dateString: string;
   timeWidth: EditingTimeWidth[];
 };
 
 export type EditingTimeWidth = {
+  id: string;
   start: string;
   end: string;
   stringTimeWidth?: string;
@@ -57,9 +60,10 @@ export const possibleDateState = atom<EditingPossibleDate[]>({
   key: 'possibleDateState',
   default: [
     {
+      id: uuidv4(),
       date: [],
       dateString: '',
-      timeWidth: [{ start: '12:00', end: '13:00' }],
+      timeWidth: [{ id: uuidv4(), start: '12:00', end: '13:00' }],
     },
   ],
 });
