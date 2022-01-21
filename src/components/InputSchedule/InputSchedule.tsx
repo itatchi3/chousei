@@ -187,6 +187,9 @@ export const InputSchedule = () => {
           .fc-timegrid-slot-label {
             display: none !important;
           }
+          .fc-timegrid-slot {
+            height: 25px !important;
+          }
         `}
       </style>
     );
@@ -273,11 +276,11 @@ export const InputSchedule = () => {
     <Box p="3">
       <Box height={windowHeight - 150} overflow="scroll">
         <Flex>
-          <Flex flexDirection="column" pt="3" pr="2">
+          <Flex flexDirection="column" mt="-1" pr="2">
             {viewTimeList.map((viewTime) => (
-              <Box key={viewTime} fontSize="xs" pb="8">
+              <Center key={viewTime} fontSize="xs" h="50px">
                 {viewTime + ':00'}
-              </Box>
+              </Center>
             ))}
           </Flex>
           <Box>
@@ -315,11 +318,11 @@ export const InputSchedule = () => {
           </Box>
 
           {dates.length >= 4 && (
-            <Flex flexDirection="column" pt="3" pl="2">
+            <Flex flexDirection="column" mt="-1" pl="2">
               {viewTimeList.map((viewTime) => (
-                <Box key={viewTime} fontSize="xs" pb="8">
+                <Center key={viewTime} fontSize="xs" h="50px">
                   {viewTime + ':00'}
-                </Box>
+                </Center>
               ))}
             </Flex>
           )}
