@@ -65,7 +65,7 @@ export const AnswerComment = () => {
 
   return (
     <>
-      <Button onClick={onOpen}>
+      <Button onClick={onOpen} w="44">
         {isAnsweredComment ? 'コメントを修正する' : 'コメントを入力する'}
       </Button>
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} size="xs">
