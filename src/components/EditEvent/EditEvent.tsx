@@ -7,6 +7,7 @@ import {
   possibleDateState,
 } from 'src/atoms/eventState';
 import { CreateEvent } from '../CreateEvent/CreateEvent';
+import { v4 as uuidv4 } from 'uuid';
 
 export const EditEvent = () => {
   const event = useRecoilValue(eventState);
@@ -20,6 +21,7 @@ export const EditEvent = () => {
 
     let editingPossibleDateList: EditingPossibleDate[] = [];
     let editingPossibleDate: EditingPossibleDate = {
+      id: uuidv4(),
       date: [event.possibleDates[0].date],
       dateString: event.possibleDates[0].dateString,
       timeWidth: [],
@@ -38,6 +40,7 @@ export const EditEvent = () => {
           minute: '2-digit',
         });
         editingPossibleDate.timeWidth.push({
+          id: uuidv4(),
           start: startTimeString,
           end: endTimeString,
           stringTimeWidth: possibleDate.timeWidthString,
@@ -50,6 +53,7 @@ export const EditEvent = () => {
       } else {
         editingPossibleDateList.push(editingPossibleDate);
         editingPossibleDate = {
+          id: uuidv4(),
           date: [possibleDate.date],
           dateString: possibleDate.dateString,
           timeWidth: [],

@@ -14,11 +14,12 @@ export default {
 
 const possibleDate = [
   {
+    id: '0',
     date: [new Date(2021, 11, 1), new Date(2021, 11, 3)],
     dateString: '12/1(水), 12/3(金)',
     timeWidth: [
-      { start: '12:00', end: '13:00' },
-      { start: '14:00', end: '16:00' },
+      { id: '0', start: '12:00', end: '13:00' },
+      { id: '1', start: '14:00', end: '16:00' },
     ],
   },
 ];

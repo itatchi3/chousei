@@ -17,9 +17,10 @@ export const inputTimeWidth = () => {
 
 const possibleDate = [
   {
+    id: '0',
     date: [],
     dateString: '',
-    timeWidth: [{ start: '14:00', end: '13:00' }],
+    timeWidth: [{ id: '0', start: '14:00', end: '13:00' }],
   },
 ];
 
