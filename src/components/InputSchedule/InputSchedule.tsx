@@ -13,13 +13,14 @@ type EventFullCalendar = {
   end: Date;
   id: string;
   color: string;
+  textColor: string;
 };
 
 export const InputSchedule = () => {
   const [color, setColor] = useState('Red');
-  const [redVarient, setRedVarient] = useState<'solid' | 'outline'>('solid');
   const [greenVarient, setGreenVarient] = useState<'solid' | 'outline'>('outline');
-  const [blueVarient, setBlueVarient] = useState<'solid' | 'outline'>('outline');
+  const [yellowVarient, setYellowVarient] = useState<'solid' | 'outline'>('outline');
+  const [redVarient, setRedVarient] = useState<'solid' | 'outline'>('solid');
   const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState<Date[]>([]);
   const [dateStrings, setDateStrings] = useState<string[]>([]);
@@ -39,71 +40,84 @@ export const InputSchedule = () => {
   const router = useRouter();
 
   const eventColor = {
-    red: '#C53030',
-    green: '#2F855A',
-    blue: '#3182CE',
-    gray: '#000000',
+    green: '#9AE6B4',
+    yellow: '#FEF0B3',
+    red: '#FBDFDF',
+    gray: '#E2E8F0',
+  };
+
+  const eventTextColor = {
+    green: 'darkgreen',
+    yellow: 'chocolate',
+    red: 'crimson',
+    black: 'black',
   };
 
   const checkColor = (vote: string) => {
     switch (vote) {
       case '○':
-        return '#C53030';
+        return '#9AE6B4';
       case '△':
-        return '#2F855A';
+        return '#FEF0B3';
       case '×':
-        return '#3182CE';
+        return '#FBDFDF';
       default:
-        return '#000000';
-    }
-  };
-
-  const handleClickRed = () => {
-    if (color !== 'Red') {
-      setRedVarient('solid');
-      setGreenVarient('outline');
-      setBlueVarient('outline');
-      setColor('Red');
+        return '#E2E8F0';
     }
   };
 
   const handleClickGreen = () => {
     if (color !== 'Green') {
-      setRedVarient('outline');
       setGreenVarient('solid');
-      setBlueVarient('outline');
+      setYellowVarient('outline');
+      setRedVarient('outline');
       setColor('Green');
     }
   };
 
-  const handleClickBlue = () => {
-    if (color !== 'Blue') {
-      setRedVarient('outline');
+  const handleClickYellow = () => {
+    if (color !== 'Yellow') {
       setGreenVarient('outline');
-      setBlueVarient('solid');
-      setColor('Blue');
+      setYellowVarient('solid');
+      setRedVarient('outline');
+      setColor('Yellow');
+    }
+  };
+
+  const handleClickRed = () => {
+    if (color !== 'Red') {
+      setGreenVarient('outline');
+      setYellowVarient('outline');
+      setRedVarient('solid');
+      setColor('Red');
     }
   };
 
   const onClickVoteChange = (arg: EventClickArg) => {
     const newEventFullCalendar = cloneDeep(eventFullCalendar);
     let newEventColor = eventColor.green;
+    let newTextColor = eventTextColor.black;
     switch (color) {
-      case 'Red':
-        newEventColor = eventColor.red;
-        break;
       case 'Green':
         newEventColor = eventColor.green;
+        newTextColor = eventTextColor.green;
         break;
-      case 'Blue':
-        newEventColor = eventColor.blue;
+      case 'Yellow':
+        newEventColor = eventColor.yellow;
+        newTextColor = eventTextColor.yellow;
+        break;
+      case 'Red':
+        newEventColor = eventColor.red;
+        newTextColor = eventTextColor.red;
         break;
       default:
         newEventColor = eventColor.gray;
+        newTextColor = eventTextColor.black;
         break;
     }
 
     newEventFullCalendar[Number(arg.event.id)].color = newEventColor;
+    newEventFullCalendar[Number(arg.event.id)].textColor = newTextColor;
     setEventFullCalendar(newEventFullCalendar);
   };
 
@@ -113,17 +127,17 @@ export const InputSchedule = () => {
     const voteList = eventFullCalendar.map((eventFullCalendar, index) => {
       let vote = { id: event.possibleDates[index].id, vote: '' };
       switch (eventFullCalendar.color) {
-        case eventColor.red:
+        case eventColor.green:
           vote.vote = '○';
           break;
-        case eventColor.green:
+        case eventColor.yellow:
           vote.vote = '△';
           break;
-        case eventColor.blue:
+        case eventColor.red:
           vote.vote = '×';
           break;
         case eventColor.gray:
-          vote.vote = '△';
+          vote.vote = '';
         default:
         // do nothing
       }
@@ -204,6 +218,13 @@ export const InputSchedule = () => {
     let newMinTime = 24;
     let newMaxTime = 0;
     let minutesWhenMaxTime = 0;
+    let isVote = false;
+
+    event.participants.map((participant) => {
+      if (participant.userId === userId && participant.isVote) {
+        isVote = true;
+      }
+    });
 
     event.possibleDates.map((possibleDate, index) => {
       if (possibleDate.startTime.getHours() < newMinTime) {
@@ -216,18 +237,34 @@ export const InputSchedule = () => {
         }
       }
 
-      let userVote = '△';
+      let userVote = isVote ? '' : '○';
       possibleDate.votes.map((vote) => {
         if (vote.userId === userId) {
           userVote = vote.vote;
         }
       });
 
+      let textColor = eventTextColor.black;
+      switch (userVote) {
+        case '○':
+          textColor = eventTextColor.green;
+          break;
+        case '△':
+          textColor = eventTextColor.yellow;
+          break;
+        case '×':
+          textColor = eventTextColor.red;
+          break;
+        default:
+          break;
+      }
+
       eventFullCalendar.push({
         start: possibleDate.startTime,
         end: possibleDate.endTime,
         id: index.toString(),
         color: checkColor(userVote),
+        textColor: textColor,
       });
       if (!dateStringList.includes(possibleDate.dateString)) {
         dateList.push(possibleDate.date);
@@ -333,22 +370,30 @@ export const InputSchedule = () => {
       <Center>
         <VStack pos="fixed" bottom="0" bg="white" w="100%" zIndex="1">
           <HStack p="4" spacing={4}>
-            <Button variant={redVarient} colorScheme="red" w="24" onClick={() => handleClickRed()}>
+            <Button
+              variant={greenVarient}
+              colorScheme="circle"
+              color={eventTextColor.green}
+              w="24"
+              onClick={() => handleClickGreen()}
+            >
               ○
             </Button>
             <Button
-              variant={greenVarient}
-              colorScheme="green"
+              variant={yellowVarient}
+              colorScheme="triangle"
+              color={eventTextColor.yellow}
               w="24"
-              onClick={() => handleClickGreen()}
+              onClick={() => handleClickYellow()}
             >
               △
             </Button>
             <Button
-              variant={blueVarient}
-              colorScheme="blue"
+              variant={redVarient}
+              colorScheme="x"
+              color={eventTextColor.red}
               w="24"
-              onClick={() => handleClickBlue()}
+              onClick={() => handleClickRed()}
             >
               ×
             </Button>
