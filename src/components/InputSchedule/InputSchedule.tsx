@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
@@ -36,6 +36,9 @@ export const InputSchedule = () => {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const ref = useRef<HTMLDivElement>(null);
+  const scroll = useRef<HTMLDivElement>(null);
+  const tickingX = useRef<boolean>(false);
 
   const router = useRouter();
 
@@ -301,36 +304,54 @@ export const InputSchedule = () => {
   }, [event, userId]);
 
   useEffect(() => {
+    if (!scroll.current) return;
+    const horizontalScroll = () => {
+      if (!tickingX.current) {
+        requestAnimationFrame(() => {
+          tickingX.current = false;
+          if (!scroll.current || !ref.current) return;
+          const scrollLeft = scroll.current.scrollLeft;
+          ref.current.style.left = `${-scrollLeft}px`;
+        });
+        tickingX.current = true;
+      }
+    };
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
+    scroll.current.addEventListener('scroll', horizontalScroll, { passive: true });
     window.addEventListener('resize', handleResize);
     handleResize();
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
   return (
-    <Box p="3">
-      <Box height={windowHeight - 150} overflow="scroll">
+    <Box overflow="hidden">
+      <Box ref={ref} position="fixed" top="0px" zIndex="2" bg="white" px="55px">
+        {dateStrings.length > 0 && (
+          <Flex w={`${100 * dates.length}px`}>
+            {dateStrings.map((dateString, index) => (
+              <Center w="100px" fontWeight="bold" fontSize="sm" key={index}>
+                {dateString}
+              </Center>
+            ))}
+          </Flex>
+        )}
+      </Box>
+
+      <Box height={windowHeight - 150} ref={scroll} overflow="scroll" zIndex="1" px="3" pt="3">
         <Flex>
-          <Flex flexDirection="column" mt="-1" pr="2">
+          <Flex flexDirection="column" mt="-1" pr="2" zIndex="1">
             {viewTimeList.map((viewTime) => (
               <Center key={viewTime} fontSize="xs" h="50px">
                 {viewTime + ':00'}
               </Center>
             ))}
           </Flex>
-          <Box>
-            {dateStrings.length > 0 && (
-              <Flex>
-                {dateStrings.map((dateString, index) => (
-                  <Center w="100%" fontWeight="bold" fontSize="sm" key={index}>
-                    {dateString}
-                  </Center>
-                ))}
-              </Flex>
-            )}
-
+          <Box pt="5">
             {dateWidth > 0 && dates.length > 0 && (
               <FullCalendar
                 plugins={[timeGridPlugin]}
@@ -355,7 +376,7 @@ export const InputSchedule = () => {
           </Box>
 
           {dates.length >= 4 && (
-            <Flex flexDirection="column" mt="-1" pl="2">
+            <Flex flexDirection="column" mt="-1" pl="2" pr="3" zIndex="1">
               {viewTimeList.map((viewTime) => (
                 <Center key={viewTime} fontSize="xs" h="50px">
                   {viewTime + ':00'}
