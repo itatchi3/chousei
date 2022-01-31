@@ -14,6 +14,7 @@ type EventFullCalendar = {
   id: string;
   color: string;
   textColor: string;
+  title: string;
 };
 
 export const InputSchedule = () => {
@@ -36,9 +37,11 @@ export const InputSchedule = () => {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const [calendarWidth, setCalendarWidth] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
   const tickingX = useRef<boolean>(false);
+  const calendar = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
 
@@ -100,27 +103,33 @@ export const InputSchedule = () => {
     const newEventFullCalendar = cloneDeep(eventFullCalendar);
     let newEventColor = eventColor.green;
     let newTextColor = eventTextColor.black;
+    let newTitle = '';
     switch (color) {
       case 'Green':
         newEventColor = eventColor.green;
         newTextColor = eventTextColor.green;
+        newTitle = '○';
         break;
       case 'Yellow':
         newEventColor = eventColor.yellow;
         newTextColor = eventTextColor.yellow;
+        newTitle = '△';
         break;
       case 'Red':
         newEventColor = eventColor.red;
         newTextColor = eventTextColor.red;
+        newTitle = '×';
         break;
       default:
         newEventColor = eventColor.gray;
         newTextColor = eventTextColor.black;
+        newTitle = '';
         break;
     }
 
     newEventFullCalendar[Number(arg.event.id)].color = newEventColor;
     newEventFullCalendar[Number(arg.event.id)].textColor = newTextColor;
+    newEventFullCalendar[Number(arg.event.id)].title = newTitle;
     setEventFullCalendar(newEventFullCalendar);
   };
 
@@ -175,7 +184,7 @@ export const InputSchedule = () => {
     let widthStyle = '';
     if (
       (isInClient && numberOfDates >= 4) ||
-      (!isInClient && windowWidth - 120 <= 100 * numberOfDates)
+      (!isInClient && windowWidth - 100 <= 100 * numberOfDates)
     ) {
       widthStyle = `.fc-scrollgrid, .fc-scrollgrid table {width: ${
         100 * numberOfDates
@@ -207,13 +216,19 @@ export const InputSchedule = () => {
           .fc-timegrid-slot {
             height: 25px !important;
           }
+          .fc-event-title {
+            text-align: center;
+          }
+          .fc-event-time {
+            text-align: center;
+          }
         `}
       </style>
     );
   };
 
   useEffect(() => {
-    if (!event || !userId) return;
+    if (!event || !userId || !scroll.current) return;
     let dateList: Date[] = [event.possibleDates[0].date];
     let dateStringList: string[] = [event.possibleDates[0].dateString];
     let dateTimeList: number[] = [event.possibleDates[0].date.getTime()];
@@ -268,6 +283,7 @@ export const InputSchedule = () => {
         id: index.toString(),
         color: checkColor(userVote),
         textColor: textColor,
+        title: userVote,
       });
       if (!dateStringList.includes(possibleDate.dateString)) {
         dateList.push(possibleDate.date);
@@ -301,10 +317,7 @@ export const InputSchedule = () => {
     }
     setDateWidth(dateWidth + 1);
     setHiddenDates(hiddenDates);
-  }, [event, userId]);
 
-  useEffect(() => {
-    if (!scroll.current) return;
     const horizontalScroll = () => {
       if (!tickingX.current) {
         requestAnimationFrame(() => {
@@ -320,6 +333,9 @@ export const InputSchedule = () => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
+
+      if (!calendar.current) return;
+      setCalendarWidth(calendar.current.getBoundingClientRect().width);
     };
     scroll.current.addEventListener('scroll', horizontalScroll, { passive: true });
     window.addEventListener('resize', handleResize);
@@ -327,14 +343,25 @@ export const InputSchedule = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [event, userId]);
+
+  useEffect(() => {
+    if (!calendar.current) return;
+    setCalendarWidth(calendar.current.getBoundingClientRect().width);
+  }, [dates]);
+
   return (
     <Box overflow="hidden">
-      <Box ref={ref} position="fixed" top="0px" zIndex="2" bg="white" px="55px">
+      <Box ref={ref} position="fixed" top="0px" zIndex="2" bg="white" px="44px">
         {dateStrings.length > 0 && (
-          <Flex w={`${100 * dates.length}px`}>
+          <Flex>
             {dateStrings.map((dateString, index) => (
-              <Center w="100px" fontWeight="bold" fontSize="sm" key={index}>
+              <Center
+                w={`${calendarWidth / dates.length}px`}
+                fontWeight="bold"
+                fontSize="sm"
+                key={index}
+              >
                 {dateString}
               </Center>
             ))}
@@ -342,16 +369,16 @@ export const InputSchedule = () => {
         )}
       </Box>
 
-      <Box height={windowHeight - 150} ref={scroll} overflow="scroll" zIndex="1" px="3" pt="3">
+      <Box height={windowHeight - 150} ref={scroll} overflow="scroll" zIndex="1" px="2" pt="3">
         <Flex>
-          <Flex flexDirection="column" mt="-1" pr="2" zIndex="1">
+          <Flex flexDirection="column" mt="-1" pr="1" zIndex="1">
             {viewTimeList.map((viewTime) => (
               <Center key={viewTime} fontSize="xs" h="50px">
                 {viewTime + ':00'}
               </Center>
             ))}
           </Flex>
-          <Box pt="5">
+          <Box pt="5" ref={calendar}>
             {dateWidth > 0 && dates.length > 0 && (
               <FullCalendar
                 plugins={[timeGridPlugin]}
@@ -376,7 +403,7 @@ export const InputSchedule = () => {
           </Box>
 
           {dates.length >= 4 && (
-            <Flex flexDirection="column" mt="-1" pl="2" pr="3" zIndex="1">
+            <Flex flexDirection="column" mt="-1" pl="1" pr="2" zIndex="1">
               {viewTimeList.map((viewTime) => (
                 <Center key={viewTime} fontSize="xs" h="50px">
                   {viewTime + ':00'}
