@@ -28,19 +28,19 @@ export const EventList = () => {
   const [eventList, setEventList] = useState<EventType[] | null>(null);
   const [avatarNumber, setAvatarNumber] = useState(0);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
-  const [isEventLoadingList, setIsEventLoadingList] = useState<boolean[]>([]);
+  const [isEventLoadingArray, setIsEventLoadingArray] = useState<boolean[]>([]);
 
   const router = useRouter();
 
   const eventClick = (eventId: string, index: number) => {
-    const newIsEventLoadingList = isEventLoadingList.map((_, i) => {
+    const newIsEventLoadingArray = isEventLoadingArray.map((_, i) => {
       if (i === index) {
         return true;
       } else {
         return false;
       }
     });
-    setIsEventLoadingList(newIsEventLoadingList);
+    setIsEventLoadingArray(newIsEventLoadingArray);
     router.push(`/event/${eventId}`);
   };
 
@@ -61,7 +61,7 @@ export const EventList = () => {
         if (json.eventList) {
           const eventListData: EventType[] = superjson.parse(json.eventList);
           setEventList(eventListData);
-          setIsEventLoadingList(Array(eventListData.length).fill(false));
+          setIsEventLoadingArray(Array(eventListData.length).fill(false));
         }
       } else {
         console.error(json.error);
@@ -140,7 +140,7 @@ export const EventList = () => {
                         </GridItem>
                       ))}
                     </SimpleGrid>
-                    {isEventLoadingList[index] && (
+                    {isEventLoadingArray[index] && (
                       <Center
                         background="rgba(0,0,0,0.2)"
                         position="absolute"

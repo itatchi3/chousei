@@ -73,7 +73,7 @@ export const isValidateDateState = atom<boolean>({
   default: false,
 });
 
-export const isValidateTimeListState = atom<boolean[]>({
+export const isValidateTimeArrayState = atom<boolean[]>({
   key: 'isValidateTimeState',
   default: [false],
 });
