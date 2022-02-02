@@ -104,7 +104,7 @@ export const EventDetail = ({ eventDetailData }: Props) => {
         <MoveAnswerScheduleButton />
         <AnswerComment />
         <Box pt="4">
-          <ShareButton />
+          <ShareButton colors={eventDetailData.colors} counts={eventDetailData.counts} />
         </Box>
       </VStack>
       <NotFriendModal />
