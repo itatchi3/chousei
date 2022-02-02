@@ -16,13 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { EventType } from 'src/atoms/eventState';
-
-type Count = {
-  date: Date;
-  positiveCount: number;
-  evenCount: number;
-  negativeCount: number;
-};
+import { Count } from 'src/pages/event/[id]';
 
 type Props = {
   event: EventType;
