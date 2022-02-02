@@ -274,7 +274,10 @@ const shareButtonInitialize = ({ set }: MutableSnapshot) => {
 export const shareButton = () => {
   return (
     <RecoilRoot initializeState={shareButtonInitialize}>
-      <ShareButton />
+      <ShareButton
+        counts={[{ date: new Date(), positiveCount: 0, evenCount: 0, negativeCount: 0 }]}
+        colors={['white']}
+      />
     </RecoilRoot>
   );
 };

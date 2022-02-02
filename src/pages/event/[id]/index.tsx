@@ -10,11 +10,11 @@ type Props = {
 
 export type EventDetailType = {
   eventData: EventType;
-  counts: Counts[];
+  counts: Count[];
   colors: string[];
 };
 
-type Counts = {
+export type Count = {
   date: Date;
   positiveCount: number;
   evenCount: number;
