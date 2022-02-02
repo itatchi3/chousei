@@ -13,8 +13,14 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
+import { Count } from 'src/pages/event/[id]';
 
-export const ShareButton = () => {
+type Props = {
+  colors: string[];
+  counts: Count[];
+};
+
+export const ShareButton = ({ colors, counts }: Props) => {
   const event = useRecoilValue(eventState);
   const { liff, isInClient } = useLiff();
   const { onCopy } = useClipboard(
@@ -24,17 +30,30 @@ export const ShareButton = () => {
   const shareScheduleByLine = () => {
     if (!event || !liff) return;
     if (liff.isApiAvailable('shareTargetPicker')) {
+      let shareText =
+        '【イベント名】\n' +
+        event.name +
+        '\n' +
+        '【補足・備考】\n' +
+        event.description +
+        '\n' +
+        `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`;
+
+      if (colors.includes('green.100') || colors.includes('green.200')) {
+        shareText += '\n【おすすめ】';
+        let recomendePossibleDate = '';
+        colors.map((color, i) => {
+          if (color !== 'white') {
+            recomendePossibleDate += `\n${event.possibleDates[i].dateString}${event.possibleDates[i].timeWidthString}\n○${counts[i].positiveCount} △${counts[i].evenCount} ×${counts[i].negativeCount}`;
+          }
+        });
+        shareText += recomendePossibleDate;
+      }
+
       liff.shareTargetPicker([
         {
           type: 'text',
-          text:
-            '【イベント名】\n' +
-            event.name +
-            '\n' +
-            '【概要】\n' +
-            event.description +
-            '\n' +
-            `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`,
+          text: shareText,
         },
       ]);
     }
