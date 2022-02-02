@@ -7,6 +7,7 @@ import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { cloneDeep } from 'lodash';
 import { useLiff } from 'src/liff/auth';
+import { PossibleDate, Vote } from '@prisma/client';
 
 type EventFullCalendar = {
   start: Date;
@@ -34,11 +35,11 @@ export const InputSchedule = () => {
   const [eventColumnNumArray, setEventColumnNumArray] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
-  const { userId, idToken, isInClient } = useLiff();
+  const { userId, idToken } = useLiff();
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const [calendarWidth, setCalendarWidth] = useState(0);
+
   const ref = useRef<HTMLDivElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
   const tickingX = useRef<boolean>(false);
@@ -323,46 +324,54 @@ export const InputSchedule = () => {
     setDateWidth(dateWidth + 1);
     setHiddenDates(hiddenDates);
 
-    let eventColumnCount = 1;
-    let maxEventColumn = 1;
-    let comparisonIndex = 0;
-    let dateIndex = 0;
-    let newEventColumnNumArray: number[] = [];
-    for (let i = 1; i < event.possibleDates.length; i++) {
-      console.log(i);
-
-      if (event.possibleDates[i].dateString !== dateStringList[dateIndex]) {
-        newEventColumnNumArray.push(maxEventColumn);
-        eventColumnCount = 1;
-        maxEventColumn = 1;
-        comparisonIndex = i;
-        if (dateIndex < dateStringList.length - 1) {
-          dateIndex += 1;
+    let possibleDatesPerDayArray: (PossibleDate & {
+      votes: Vote[];
+    })[][] = [];
+    dateStringList.map((dateString) => {
+      let possibleDatesPerDay: (PossibleDate & {
+        votes: Vote[];
+      })[] = [];
+      event.possibleDates.map((possibleDate) => {
+        if (possibleDate.dateString === dateString) {
+          possibleDatesPerDay.push(possibleDate);
         }
-        console.log('next');
-        continue;
-      }
+      });
+      possibleDatesPerDayArray.push(possibleDatesPerDay);
+    });
 
-      if (
-        event.possibleDates[i].startTime.getTime() <
-        event.possibleDates[comparisonIndex].endTime.getTime()
-      ) {
-        eventColumnCount += 1;
-        console.log('count');
-      } else {
-        comparisonIndex = i;
-        eventColumnCount = 1;
-      }
-      if (eventColumnCount > maxEventColumn) {
-        maxEventColumn = eventColumnCount;
-        console.log('maxUpdate');
-      }
-      console.log(i, eventColumnCount, 'hikaku', comparisonIndex);
-      console.log(i, maxEventColumn, 'hikaku', comparisonIndex);
-    }
-    newEventColumnNumArray.push(maxEventColumn);
+    let newEventColumnNumArray: number[] = [];
+    possibleDatesPerDayArray.map((possibleDatesPerDay) => {
+      let times: { time: Date; type: string }[] = [];
+      possibleDatesPerDay.map((possibleDate) => {
+        times.push({ time: possibleDate.startTime, type: 'start' });
+        times.push({ time: possibleDate.endTime, type: 'end' });
+      });
+
+      times = times.sort((time1, time2) => {
+        if (time1.time.getTime() > time2.time.getTime()) {
+          return 1;
+        }
+        if (time1.time.getTime() < time2.time.getTime()) {
+          return -1;
+        }
+        return 0;
+      });
+
+      let columnNumCount = 0;
+      let maxColumnNum = 0;
+      times.map((time) => {
+        if (time.type === 'start') {
+          columnNumCount += 1;
+        } else {
+          columnNumCount -= 1;
+        }
+        if (columnNumCount > maxColumnNum) {
+          maxColumnNum = columnNumCount;
+        }
+      });
+      newEventColumnNumArray.push(maxColumnNum);
+    });
     setEventColumnNumArray(newEventColumnNumArray);
-    console.log(newEventColumnNumArray);
 
     const horizontalScroll = () => {
       if (!tickingX.current) {
@@ -379,9 +388,6 @@ export const InputSchedule = () => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
-
-      if (!calendar.current) return;
-      setCalendarWidth(calendar.current.getBoundingClientRect().width);
     };
     scroll.current.addEventListener('scroll', horizontalScroll, { passive: true });
     window.addEventListener('resize', handleResize);
@@ -391,14 +397,9 @@ export const InputSchedule = () => {
     };
   }, [event, userId]);
 
-  useEffect(() => {
-    if (!calendar.current) return;
-    setCalendarWidth(calendar.current.getBoundingClientRect().width);
-  }, [dates]);
-
   return (
     <Box overflow="hidden">
-      <Box ref={ref} position="fixed" top="0px" zIndex="2" bg="white" px="44px">
+      <Box ref={ref} position="fixed" top="0px" zIndex="2" bg="white" px="46px">
         {dateStrings.length > 0 && (
           <Flex>
             {dateStrings.map((dateString, index) => (
