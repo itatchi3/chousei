@@ -38,7 +38,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     return;
   }
 
-  let dateCheckList: boolean[] = Array(previousPossibleDates.length).fill(false);
+  let dateCheckArray: boolean[] = Array(previousPossibleDates.length).fill(false);
 
   registerPossibleDates.map((registerPossibleDate) => {
     previousPossibleDates.map((previousPossibleDate, index) => {
@@ -47,13 +47,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         registerPossibleDate.endTime.getTime() === previousPossibleDate.endTime.getTime()
       ) {
         registerPossibleDate.id = previousPossibleDate.id;
-        dateCheckList[index] = true;
+        dateCheckArray[index] = true;
       }
     });
   });
 
   const deletePreviousPossibleDates = previousPossibleDates.filter(
-    (_, index) => !dateCheckList[index],
+    (_, index) => !dateCheckArray[index],
   );
 
   const deletePossibleDates = deletePreviousPossibleDates.map(

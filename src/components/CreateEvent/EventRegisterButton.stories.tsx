@@ -3,7 +3,7 @@ import { MutableSnapshot, RecoilRoot } from 'recoil';
 import {
   possibleDateState,
   isValidateDateState,
-  isValidateTimeListState,
+  isValidateTimeArrayState,
   overViewState,
 } from 'src/atoms/eventState';
 import { EventRegisterButton } from './EventRegisterButton';
@@ -24,19 +24,19 @@ const possibleDate = [
   },
 ];
 
-const isValidateTimeList = [false];
+const isValidateTimeArray = [false];
 
 const initializeState = ({ set }: MutableSnapshot) => {
   set(overViewState, { eventName: 'test', description: '' });
   set(possibleDateState, possibleDate);
   set(isValidateDateState, false);
-  set(isValidateTimeListState, isValidateTimeList);
+  set(isValidateTimeArrayState, isValidateTimeArray);
 };
 
 const initializeStateNoEventName = ({ set }: MutableSnapshot) => {
   set(possibleDateState, possibleDate);
   set(isValidateDateState, false);
-  set(isValidateTimeListState, isValidateTimeList);
+  set(isValidateTimeArrayState, isValidateTimeArray);
 };
 
 export const eventRegisterButton = () => {

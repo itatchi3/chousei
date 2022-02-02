@@ -31,7 +31,7 @@ export const InputSchedule = () => {
   const [eventFullCalendar, setEventFullCalendar] = useState<EventFullCalendar[]>([]);
   const [minTime, setMinTime] = useState(0);
   const [maxTime, setMaxTime] = useState(24);
-  const [viewTimeList, setViewTimeList] = useState<number[]>([]);
+  const [viewTimes, setViewTimes] = useState<number[]>([]);
   const [eventColumnNumArray, setEventColumnNumArray] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
@@ -138,7 +138,7 @@ export const InputSchedule = () => {
   const registerAttendances = async () => {
     if (!event) return;
     setLoading(true);
-    const voteList = eventFullCalendar.map((eventFullCalendar, index) => {
+    const votes = eventFullCalendar.map((eventFullCalendar, index) => {
       let vote = { id: event.possibleDates[index].id, vote: '' };
       switch (eventFullCalendar.color) {
         case eventColor.green:
@@ -160,7 +160,7 @@ export const InputSchedule = () => {
 
     try {
       const body = {
-        voteList: voteList,
+        votes: votes,
         eventId: event.id,
         idToken: idToken,
       };
@@ -235,9 +235,9 @@ export const InputSchedule = () => {
 
   useEffect(() => {
     if (!event || !userId || !scroll.current) return;
-    let dateList: Date[] = [event.possibleDates[0].date];
-    let dateStringList: string[] = [event.possibleDates[0].dateString];
-    let dateTimeList: number[] = [event.possibleDates[0].date.getTime()];
+    let dates: Date[] = [event.possibleDates[0].date];
+    let dateStrings: string[] = [event.possibleDates[0].dateString];
+    let dateTimes: number[] = [event.possibleDates[0].date.getTime()];
     let eventFullCalendar: EventFullCalendar[] = [];
     let newMinTime = 24;
     let newMaxTime = 0;
@@ -291,32 +291,32 @@ export const InputSchedule = () => {
         textColor: textColor,
         title: userVote,
       });
-      if (!dateStringList.includes(possibleDate.dateString)) {
-        dateList.push(possibleDate.date);
-        dateStringList.push(possibleDate.dateString);
+      if (!dateStrings.includes(possibleDate.dateString)) {
+        dates.push(possibleDate.date);
+        dateStrings.push(possibleDate.dateString);
       }
-      dateTimeList.push(possibleDate.date.getTime());
+      dateTimes.push(possibleDate.date.getTime());
     });
-    setDates(dateList);
-    setDateStrings(dateStringList);
+    setDates(dates);
+    setDateStrings(dateStrings);
     setEventFullCalendar(eventFullCalendar);
     setMinTime(newMinTime);
     if (minutesWhenMaxTime) {
       newMaxTime += 1;
     }
     setMaxTime(newMaxTime);
-    let newTimeList: number[] = [];
+    let newTimes: number[] = [];
     for (let i = newMinTime; i <= newMaxTime; i++) {
-      newTimeList.push(i);
+      newTimes.push(i);
     }
-    setViewTimeList(newTimeList);
+    setViewTimes(newTimes);
 
-    const dateWidth = (dateTimeList[dateTimeList.length - 1] - dateTimeList[0]) / 86400000;
+    const dateWidth = (dateTimes[dateTimes.length - 1] - dateTimes[0]) / 86400000;
     let hiddenDates: string[] = [];
     for (let i = 1; i < dateWidth; i++) {
-      let date = cloneDeep(dateList[0]);
+      let date = cloneDeep(dates[0]);
       date.setDate(date.getDate() + i);
-      if (!dateTimeList.includes(date.getTime())) {
+      if (!dateTimes.includes(date.getTime())) {
         const hiddenDate = date.toISOString().slice(0, 10);
         hiddenDates.push(hiddenDate);
       }
@@ -327,7 +327,7 @@ export const InputSchedule = () => {
     let possibleDatesPerDayArray: (PossibleDate & {
       votes: Vote[];
     })[][] = [];
-    dateStringList.map((dateString) => {
+    dateStrings.map((dateString) => {
       let possibleDatesPerDay: (PossibleDate & {
         votes: Vote[];
       })[] = [];
@@ -421,7 +421,7 @@ export const InputSchedule = () => {
       <Box height={windowHeight - 150} ref={scroll} overflow="scroll" zIndex="1" px="2" pt="3">
         <Flex>
           <Flex flexDirection="column" mt="-9px" pr="1" zIndex="1">
-            {viewTimeList.map((viewTime) => (
+            {viewTimes.map((viewTime) => (
               <Center key={viewTime} fontSize="xs" h="60px">
                 {viewTime + ':00'}
               </Center>
@@ -453,7 +453,7 @@ export const InputSchedule = () => {
 
           {dates.length >= 4 && (
             <Flex flexDirection="column" mt="-9px" pl="1" pr="2" zIndex="1">
-              {viewTimeList.map((viewTime) => (
+              {viewTimes.map((viewTime) => (
                 <Center key={viewTime} fontSize="xs" h="60px">
                   {viewTime + ':00'}
                 </Center>

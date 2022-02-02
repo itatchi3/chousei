@@ -2,7 +2,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   possibleDateState,
   isValidateDateState,
-  isValidateTimeListState,
+  isValidateTimeArrayState,
 } from 'src/atoms/eventState';
 import { Box, Button, Circle, CloseButton, Flex, Text, VStack } from '@chakra-ui/react';
 import 'react-day-picker/lib/style.css';
@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const InputPossibleDates = () => {
   const [possibleDates, setPossibleDates] = useRecoilState(possibleDateState);
   const setIsValidateDate = useSetRecoilState(isValidateDateState);
-  const [isValidateTimeList, setIsValidateTimeList] = useRecoilState(isValidateTimeListState);
+  const [isValidateTimeArray, setIsValidateTimeArray] = useRecoilState(isValidateTimeArrayState);
   const addPossibleDate = () => {
     setPossibleDates([
       ...possibleDates,
@@ -26,7 +26,7 @@ export const InputPossibleDates = () => {
         timeWidth: [{ id: uuidv4(), start: '12:00', end: '13:00' }],
       },
     ]);
-    setIsValidateTimeList([...isValidateTimeList, false]);
+    setIsValidateTimeArray([...isValidateTimeArray, false]);
   };
 
   const onDeleteDate = (indexDate: number) => {
@@ -37,20 +37,20 @@ export const InputPossibleDates = () => {
 
   useEffect(() => {
     let validateDate = false;
-    let validateTimeList = Array(possibleDates.length).fill(false);
+    let validateTimeArray = Array(possibleDates.length).fill(false);
     possibleDates.map((possibleDate, indexDate) => {
       if (possibleDate.date.length === 0) {
         validateDate = true;
       }
       possibleDate.timeWidth.map((timeWidth) => {
         if (timeWidth.start >= timeWidth.end) {
-          validateTimeList[indexDate] = true;
+          validateTimeArray[indexDate] = true;
         }
       });
     });
     setIsValidateDate(validateDate);
-    setIsValidateTimeList(validateTimeList);
-  }, [possibleDates, setIsValidateDate, setIsValidateTimeList]);
+    setIsValidateTimeArray(validateTimeArray);
+  }, [possibleDates, setIsValidateDate, setIsValidateTimeArray]);
 
   return (
     <>
@@ -79,7 +79,7 @@ export const InputPossibleDates = () => {
             <Box pt="3">
               <InputTimeWidth
                 indexDate={indexDate}
-                isValidateTime={isValidateTimeList[indexDate]}
+                isValidateTime={isValidateTimeArray[indexDate]}
               />
             </Box>
           </Box>

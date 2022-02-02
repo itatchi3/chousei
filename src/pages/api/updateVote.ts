@@ -4,13 +4,13 @@ import { getPrifile } from 'src/liff/getProfile';
 import { Prisma } from '.prisma/client';
 
 type ReqestBody = {
-  voteList: { id: number; vote: string }[];
+  votes: { id: number; vote: string }[];
   eventId: string;
   idToken: string;
 };
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { voteList, eventId, idToken }: ReqestBody = JSON.parse(req.body);
+  const { votes, eventId, idToken }: ReqestBody = JSON.parse(req.body);
 
   let userId = '';
   try {
@@ -49,7 +49,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       });
     };
 
-    const voteCreate = voteList.map(async (_vote) => {
+    const voteCreate = votes.map(async (_vote) => {
       await prisma.vote.upsert({
         where: {
           possibleDateId_userId: {

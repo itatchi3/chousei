@@ -8,7 +8,7 @@ import { Button } from '@chakra-ui/react';
 export const MoveAnswerScheduleButton = () => {
   const event = useRecoilValue(eventState);
   const { userId } = useLiff();
-  const [isAnsweredVoteList, setIsAnsweredVoteList] = useState(false);
+  const [isAnsweredVoteArray, setIsAnsweredVoteArray] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -26,14 +26,14 @@ export const MoveAnswerScheduleButton = () => {
       .filter((participant) => participant.isVote)
       .map((participant) => {
         if (participant.userId === userId) {
-          setIsAnsweredVoteList(true);
+          setIsAnsweredVoteArray(true);
         }
       });
   }, [event, userId]);
   return (
     <>
       <Button w="44" isLoading={isLoading} onClick={moveAnswerSchedule}>
-        {isAnsweredVoteList ? '予定を修正する' : ' 予定を入力する'}
+        {isAnsweredVoteArray ? '予定を修正する' : ' 予定を入力する'}
       </Button>
     </>
   );
