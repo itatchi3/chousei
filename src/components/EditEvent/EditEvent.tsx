@@ -19,7 +19,7 @@ export const EditEvent = () => {
     const description = event.description ? event.description : '';
     setOverView({ eventName: event.name, description: description });
 
-    let editingPossibleDateList: EditingPossibleDate[] = [];
+    let editingPossibleDates: EditingPossibleDate[] = [];
     let editingPossibleDate: EditingPossibleDate = {
       id: uuidv4(),
       date: [event.possibleDates[0].date],
@@ -51,7 +51,7 @@ export const EditEvent = () => {
       if (possibleDate.date.getTime() === beforeDate.getTime()) {
         pushTimeWidth();
       } else {
-        editingPossibleDateList.push(editingPossibleDate);
+        editingPossibleDates.push(editingPossibleDate);
         editingPossibleDate = {
           id: uuidv4(),
           date: [possibleDate.date],
@@ -61,8 +61,8 @@ export const EditEvent = () => {
         pushTimeWidth();
       }
     });
-    editingPossibleDateList.push(editingPossibleDate);
-    setPossibleDates(editingPossibleDateList);
+    editingPossibleDates.push(editingPossibleDate);
+    setPossibleDates(editingPossibleDates);
   }, [event, setOverView, setPossibleDates]);
   return <CreateEvent />;
 };
