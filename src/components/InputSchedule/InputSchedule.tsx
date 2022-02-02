@@ -31,6 +31,7 @@ export const InputSchedule = () => {
   const [minTime, setMinTime] = useState(0);
   const [maxTime, setMaxTime] = useState(24);
   const [viewTimeList, setViewTimeList] = useState<number[]>([]);
+  const [eventColumnNumArray, setEventColumnNumArray] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
   const { userId, idToken, isInClient } = useLiff();
@@ -180,15 +181,18 @@ export const InputSchedule = () => {
   };
 
   const fullCalendarStyle = () => {
-    const numberOfDates = dates.length;
+    let calendarWidth = 0;
+    let colomnWidthStyle = '';
+    dates.map((date, index) => {
+      const dataDate = date.toISOString().slice(0, 10);
+      const width = eventColumnNumArray[index] >= 2 ? 50 * eventColumnNumArray[index] : 100;
+      calendarWidth += width;
+      colomnWidthStyle += `[data-date='${dataDate}'] {width: ${width}px !important}`;
+    });
+
     let widthStyle = '';
-    if (
-      (isInClient && numberOfDates >= 4) ||
-      (!isInClient && windowWidth - 100 <= 100 * numberOfDates)
-    ) {
-      widthStyle = `.fc-scrollgrid, .fc-scrollgrid table {width: ${
-        100 * numberOfDates
-      }px !important;}`;
+    if (windowWidth - 100 <= calendarWidth) {
+      widthStyle = `.fc-scrollgrid {width: ${calendarWidth}px !important;}`;
     }
 
     let hiddenStyle = '';
@@ -200,6 +204,7 @@ export const InputSchedule = () => {
         {`
           ${widthStyle}
           ${hiddenStyle}
+          ${colomnWidthStyle}
           .fc-scrollgrid thead {
             display: none !important;
           }
@@ -214,7 +219,7 @@ export const InputSchedule = () => {
             display: none !important;
           }
           .fc-timegrid-slot {
-            height: 25px !important;
+            height: 30px !important;
           }
           .fc-event-title {
             text-align: center;
@@ -318,6 +323,47 @@ export const InputSchedule = () => {
     setDateWidth(dateWidth + 1);
     setHiddenDates(hiddenDates);
 
+    let eventColumnCount = 1;
+    let maxEventColumn = 1;
+    let comparisonIndex = 0;
+    let dateIndex = 0;
+    let newEventColumnNumArray: number[] = [];
+    for (let i = 1; i < event.possibleDates.length; i++) {
+      console.log(i);
+
+      if (event.possibleDates[i].dateString !== dateStringList[dateIndex]) {
+        newEventColumnNumArray.push(maxEventColumn);
+        eventColumnCount = 1;
+        maxEventColumn = 1;
+        comparisonIndex = i;
+        if (dateIndex < dateStringList.length - 1) {
+          dateIndex += 1;
+        }
+        console.log('next');
+        continue;
+      }
+
+      if (
+        event.possibleDates[i].startTime.getTime() <
+        event.possibleDates[comparisonIndex].endTime.getTime()
+      ) {
+        eventColumnCount += 1;
+        console.log('count');
+      } else {
+        comparisonIndex = i;
+        eventColumnCount = 1;
+      }
+      if (eventColumnCount > maxEventColumn) {
+        maxEventColumn = eventColumnCount;
+        console.log('maxUpdate');
+      }
+      console.log(i, eventColumnCount, 'hikaku', comparisonIndex);
+      console.log(i, maxEventColumn, 'hikaku', comparisonIndex);
+    }
+    newEventColumnNumArray.push(maxEventColumn);
+    setEventColumnNumArray(newEventColumnNumArray);
+    console.log(newEventColumnNumArray);
+
     const horizontalScroll = () => {
       if (!tickingX.current) {
         requestAnimationFrame(() => {
@@ -357,7 +403,9 @@ export const InputSchedule = () => {
           <Flex>
             {dateStrings.map((dateString, index) => (
               <Center
-                w={`${calendarWidth / dates.length}px`}
+                w={
+                  eventColumnNumArray[index] >= 2 ? 50 * eventColumnNumArray[index] + 'px' : '100px'
+                }
                 fontWeight="bold"
                 fontSize="sm"
                 key={index}
@@ -371,9 +419,9 @@ export const InputSchedule = () => {
 
       <Box height={windowHeight - 150} ref={scroll} overflow="scroll" zIndex="1" px="2" pt="3">
         <Flex>
-          <Flex flexDirection="column" mt="-1" pr="1" zIndex="1">
+          <Flex flexDirection="column" mt="-9px" pr="1" zIndex="1">
             {viewTimeList.map((viewTime) => (
-              <Center key={viewTime} fontSize="xs" h="50px">
+              <Center key={viewTime} fontSize="xs" h="60px">
                 {viewTime + ':00'}
               </Center>
             ))}
@@ -403,9 +451,9 @@ export const InputSchedule = () => {
           </Box>
 
           {dates.length >= 4 && (
-            <Flex flexDirection="column" mt="-1" pl="1" pr="2" zIndex="1">
+            <Flex flexDirection="column" mt="-9px" pl="1" pr="2" zIndex="1">
               {viewTimeList.map((viewTime) => (
-                <Center key={viewTime} fontSize="xs" h="50px">
+                <Center key={viewTime} fontSize="xs" h="60px">
                   {viewTime + ':00'}
                 </Center>
               ))}
