@@ -40,7 +40,11 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   const tickingY = useRef<boolean>(false);
 
   useEffect(() => {
-    if (!scroll.current || !table.current || !ref.current) return;
+    if (!scroll.current || !table.current || !ref.current || !event) return;
+    let count = 0;
+    event.participants.filter((participant) => participant.isVote).map(() => (count += 1));
+    setVotedCount(count);
+
     const tableHeight = table.current.getBoundingClientRect().height;
 
     const stickyHeader = () => {
@@ -93,13 +97,6 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
       window.removeEventListener('resize', updateWindowWidth);
       window.removeEventListener('resize', stickyHeader);
     };
-  }, []);
-
-  useEffect(() => {
-    if (!event) return;
-    let count = 0;
-    event.participants.filter((participant) => participant.isVote).map(() => (count += 1));
-    setVotedCount(count);
   }, [event]);
 
   return (

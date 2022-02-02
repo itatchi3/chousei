@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
@@ -7,19 +7,22 @@ import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { cloneDeep } from 'lodash';
 import { useLiff } from 'src/liff/auth';
+import { PossibleDate, Vote } from '@prisma/client';
 
 type EventFullCalendar = {
   start: Date;
   end: Date;
   id: string;
   color: string;
+  textColor: string;
+  title: string;
 };
 
 export const InputSchedule = () => {
   const [color, setColor] = useState('Red');
-  const [redVarient, setRedVarient] = useState<'solid' | 'outline'>('solid');
   const [greenVarient, setGreenVarient] = useState<'solid' | 'outline'>('outline');
-  const [blueVarient, setBlueVarient] = useState<'solid' | 'outline'>('outline');
+  const [yellowVarient, setYellowVarient] = useState<'solid' | 'outline'>('outline');
+  const [redVarient, setRedVarient] = useState<'solid' | 'outline'>('solid');
   const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState<Date[]>([]);
   const [dateStrings, setDateStrings] = useState<string[]>([]);
@@ -28,102 +31,127 @@ export const InputSchedule = () => {
   const [eventFullCalendar, setEventFullCalendar] = useState<EventFullCalendar[]>([]);
   const [minTime, setMinTime] = useState(0);
   const [maxTime, setMaxTime] = useState(24);
-  const [viewTimeList, setViewTimeList] = useState<number[]>([]);
+  const [viewTimes, setViewTimes] = useState<number[]>([]);
+  const [eventColumnNumArray, setEventColumnNumArray] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
-  const { userId, idToken, isInClient } = useLiff();
+  const { userId, idToken } = useLiff();
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
+  const ref = useRef<HTMLDivElement>(null);
+  const scroll = useRef<HTMLDivElement>(null);
+  const tickingX = useRef<boolean>(false);
+  const calendar = useRef<HTMLDivElement>(null);
+
   const router = useRouter();
 
   const eventColor = {
-    red: '#C53030',
-    green: '#2F855A',
-    blue: '#3182CE',
-    gray: '#000000',
+    green: '#9AE6B4',
+    yellow: '#FEF0B3',
+    red: '#FBDFDF',
+    gray: '#E2E8F0',
+  };
+
+  const eventTextColor = {
+    green: 'darkgreen',
+    yellow: 'chocolate',
+    red: 'crimson',
+    black: 'black',
   };
 
   const checkColor = (vote: string) => {
     switch (vote) {
       case '○':
-        return '#C53030';
+        return '#9AE6B4';
       case '△':
-        return '#2F855A';
+        return '#FEF0B3';
       case '×':
-        return '#3182CE';
+        return '#FBDFDF';
       default:
-        return '#000000';
-    }
-  };
-
-  const handleClickRed = () => {
-    if (color !== 'Red') {
-      setRedVarient('solid');
-      setGreenVarient('outline');
-      setBlueVarient('outline');
-      setColor('Red');
+        return '#E2E8F0';
     }
   };
 
   const handleClickGreen = () => {
     if (color !== 'Green') {
-      setRedVarient('outline');
       setGreenVarient('solid');
-      setBlueVarient('outline');
+      setYellowVarient('outline');
+      setRedVarient('outline');
       setColor('Green');
     }
   };
 
-  const handleClickBlue = () => {
-    if (color !== 'Blue') {
-      setRedVarient('outline');
+  const handleClickYellow = () => {
+    if (color !== 'Yellow') {
       setGreenVarient('outline');
-      setBlueVarient('solid');
-      setColor('Blue');
+      setYellowVarient('solid');
+      setRedVarient('outline');
+      setColor('Yellow');
+    }
+  };
+
+  const handleClickRed = () => {
+    if (color !== 'Red') {
+      setGreenVarient('outline');
+      setYellowVarient('outline');
+      setRedVarient('solid');
+      setColor('Red');
     }
   };
 
   const onClickVoteChange = (arg: EventClickArg) => {
     const newEventFullCalendar = cloneDeep(eventFullCalendar);
     let newEventColor = eventColor.green;
+    let newTextColor = eventTextColor.black;
+    let newTitle = '';
     switch (color) {
-      case 'Red':
-        newEventColor = eventColor.red;
-        break;
       case 'Green':
         newEventColor = eventColor.green;
+        newTextColor = eventTextColor.green;
+        newTitle = '○';
         break;
-      case 'Blue':
-        newEventColor = eventColor.blue;
+      case 'Yellow':
+        newEventColor = eventColor.yellow;
+        newTextColor = eventTextColor.yellow;
+        newTitle = '△';
+        break;
+      case 'Red':
+        newEventColor = eventColor.red;
+        newTextColor = eventTextColor.red;
+        newTitle = '×';
         break;
       default:
         newEventColor = eventColor.gray;
+        newTextColor = eventTextColor.black;
+        newTitle = '';
         break;
     }
 
     newEventFullCalendar[Number(arg.event.id)].color = newEventColor;
+    newEventFullCalendar[Number(arg.event.id)].textColor = newTextColor;
+    newEventFullCalendar[Number(arg.event.id)].title = newTitle;
     setEventFullCalendar(newEventFullCalendar);
   };
 
   const registerAttendances = async () => {
     if (!event) return;
     setLoading(true);
-    const voteList = eventFullCalendar.map((eventFullCalendar, index) => {
+    const votes = eventFullCalendar.map((eventFullCalendar, index) => {
       let vote = { id: event.possibleDates[index].id, vote: '' };
       switch (eventFullCalendar.color) {
-        case eventColor.red:
+        case eventColor.green:
           vote.vote = '○';
           break;
-        case eventColor.green:
+        case eventColor.yellow:
           vote.vote = '△';
           break;
-        case eventColor.blue:
+        case eventColor.red:
           vote.vote = '×';
           break;
         case eventColor.gray:
-          vote.vote = '△';
+          vote.vote = '';
         default:
         // do nothing
       }
@@ -132,7 +160,7 @@ export const InputSchedule = () => {
 
     try {
       const body = {
-        voteList: voteList,
+        votes: votes,
         eventId: event.id,
         idToken: idToken,
       };
@@ -154,15 +182,18 @@ export const InputSchedule = () => {
   };
 
   const fullCalendarStyle = () => {
-    const numberOfDates = dates.length;
+    let calendarWidth = 0;
+    let colomnWidthStyle = '';
+    dates.map((date, index) => {
+      const dataDate = date.toISOString().slice(0, 10);
+      const width = eventColumnNumArray[index] >= 2 ? 50 * eventColumnNumArray[index] : 100;
+      calendarWidth += width;
+      colomnWidthStyle += `[data-date='${dataDate}'] {width: ${width}px !important}`;
+    });
+
     let widthStyle = '';
-    if (
-      (isInClient && numberOfDates >= 4) ||
-      (!isInClient && windowWidth - 120 <= 100 * numberOfDates)
-    ) {
-      widthStyle = `.fc-scrollgrid, .fc-scrollgrid table {width: ${
-        100 * numberOfDates
-      }px !important;}`;
+    if (windowWidth - 100 <= calendarWidth) {
+      widthStyle = `.fc-scrollgrid {width: ${calendarWidth}px !important;}`;
     }
 
     let hiddenStyle = '';
@@ -174,6 +205,7 @@ export const InputSchedule = () => {
         {`
           ${widthStyle}
           ${hiddenStyle}
+          ${colomnWidthStyle}
           .fc-scrollgrid thead {
             display: none !important;
           }
@@ -188,7 +220,13 @@ export const InputSchedule = () => {
             display: none !important;
           }
           .fc-timegrid-slot {
-            height: 25px !important;
+            height: 30px !important;
+          }
+          .fc-event-title {
+            text-align: center;
+          }
+          .fc-event-time {
+            text-align: center;
           }
         `}
       </style>
@@ -196,14 +234,21 @@ export const InputSchedule = () => {
   };
 
   useEffect(() => {
-    if (!event || !userId) return;
-    let dateList: Date[] = [event.possibleDates[0].date];
-    let dateStringList: string[] = [event.possibleDates[0].dateString];
-    let dateTimeList: number[] = [event.possibleDates[0].date.getTime()];
+    if (!event || !userId || !scroll.current) return;
+    let dates: Date[] = [event.possibleDates[0].date];
+    let dateStrings: string[] = [event.possibleDates[0].dateString];
+    let dateTimes: number[] = [event.possibleDates[0].date.getTime()];
     let eventFullCalendar: EventFullCalendar[] = [];
     let newMinTime = 24;
     let newMaxTime = 0;
     let minutesWhenMaxTime = 0;
+    let isVote = false;
+
+    event.participants.map((participant) => {
+      if (participant.userId === userId && participant.isVote) {
+        isVote = true;
+      }
+    });
 
     event.possibleDates.map((possibleDate, index) => {
       if (possibleDate.startTime.getHours() < newMinTime) {
@@ -216,84 +261,173 @@ export const InputSchedule = () => {
         }
       }
 
-      let userVote = '△';
+      let userVote = isVote ? '' : '○';
       possibleDate.votes.map((vote) => {
         if (vote.userId === userId) {
           userVote = vote.vote;
         }
       });
 
+      let textColor = eventTextColor.black;
+      switch (userVote) {
+        case '○':
+          textColor = eventTextColor.green;
+          break;
+        case '△':
+          textColor = eventTextColor.yellow;
+          break;
+        case '×':
+          textColor = eventTextColor.red;
+          break;
+        default:
+          break;
+      }
+
       eventFullCalendar.push({
         start: possibleDate.startTime,
         end: possibleDate.endTime,
         id: index.toString(),
         color: checkColor(userVote),
+        textColor: textColor,
+        title: userVote,
       });
-      if (!dateStringList.includes(possibleDate.dateString)) {
-        dateList.push(possibleDate.date);
-        dateStringList.push(possibleDate.dateString);
+      if (!dateStrings.includes(possibleDate.dateString)) {
+        dates.push(possibleDate.date);
+        dateStrings.push(possibleDate.dateString);
       }
-      dateTimeList.push(possibleDate.date.getTime());
+      dateTimes.push(possibleDate.date.getTime());
     });
-    setDates(dateList);
-    setDateStrings(dateStringList);
+    setDates(dates);
+    setDateStrings(dateStrings);
     setEventFullCalendar(eventFullCalendar);
     setMinTime(newMinTime);
     if (minutesWhenMaxTime) {
       newMaxTime += 1;
     }
     setMaxTime(newMaxTime);
-    let newTimeList: number[] = [];
+    let newTimes: number[] = [];
     for (let i = newMinTime; i <= newMaxTime; i++) {
-      newTimeList.push(i);
+      newTimes.push(i);
     }
-    setViewTimeList(newTimeList);
+    setViewTimes(newTimes);
 
-    const dateWidth = (dateTimeList[dateTimeList.length - 1] - dateTimeList[0]) / 86400000;
+    const dateWidth = (dateTimes[dateTimes.length - 1] - dateTimes[0]) / 86400000;
     let hiddenDates: string[] = [];
     for (let i = 1; i < dateWidth; i++) {
-      let date = cloneDeep(dateList[0]);
+      let date = cloneDeep(dates[0]);
       date.setDate(date.getDate() + i);
-      if (!dateTimeList.includes(date.getTime())) {
+      if (!dateTimes.includes(date.getTime())) {
         const hiddenDate = date.toISOString().slice(0, 10);
         hiddenDates.push(hiddenDate);
       }
     }
     setDateWidth(dateWidth + 1);
     setHiddenDates(hiddenDates);
-  }, [event, userId]);
 
-  useEffect(() => {
+    let possibleDatesPerDayArray: (PossibleDate & {
+      votes: Vote[];
+    })[][] = [];
+    dateStrings.map((dateString) => {
+      let possibleDatesPerDay: (PossibleDate & {
+        votes: Vote[];
+      })[] = [];
+      event.possibleDates.map((possibleDate) => {
+        if (possibleDate.dateString === dateString) {
+          possibleDatesPerDay.push(possibleDate);
+        }
+      });
+      possibleDatesPerDayArray.push(possibleDatesPerDay);
+    });
+
+    let newEventColumnNumArray: number[] = [];
+    possibleDatesPerDayArray.map((possibleDatesPerDay) => {
+      let times: { time: Date; type: string }[] = [];
+      possibleDatesPerDay.map((possibleDate) => {
+        times.push({ time: possibleDate.startTime, type: 'start' });
+        times.push({ time: possibleDate.endTime, type: 'end' });
+      });
+
+      times = times.sort((time1, time2) => {
+        if (time1.time.getTime() > time2.time.getTime()) {
+          return 1;
+        }
+        if (time1.time.getTime() < time2.time.getTime()) {
+          return -1;
+        }
+        return 0;
+      });
+
+      let columnNumCount = 0;
+      let maxColumnNum = 0;
+      times.map((time) => {
+        if (time.type === 'start') {
+          columnNumCount += 1;
+        } else {
+          columnNumCount -= 1;
+        }
+        if (columnNumCount > maxColumnNum) {
+          maxColumnNum = columnNumCount;
+        }
+      });
+      newEventColumnNumArray.push(maxColumnNum);
+    });
+    setEventColumnNumArray(newEventColumnNumArray);
+
+    const horizontalScroll = () => {
+      if (!tickingX.current) {
+        requestAnimationFrame(() => {
+          tickingX.current = false;
+          if (!scroll.current || !ref.current) return;
+          const scrollLeft = scroll.current.scrollLeft;
+          ref.current.style.left = `${-scrollLeft}px`;
+        });
+        tickingX.current = true;
+      }
+    };
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
+    scroll.current.addEventListener('scroll', horizontalScroll, { passive: true });
     window.addEventListener('resize', handleResize);
     handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [event, userId]);
+
   return (
-    <Box p="3">
-      <Box height={windowHeight - 150} overflow="scroll">
+    <Box overflow="hidden">
+      <Box ref={ref} position="fixed" top="0px" zIndex="2" bg="white" px="46px">
+        {dateStrings.length > 0 && (
+          <Flex>
+            {dateStrings.map((dateString, index) => (
+              <Center
+                w={
+                  eventColumnNumArray[index] >= 2 ? 50 * eventColumnNumArray[index] + 'px' : '100px'
+                }
+                fontWeight="bold"
+                fontSize="sm"
+                key={index}
+              >
+                {dateString}
+              </Center>
+            ))}
+          </Flex>
+        )}
+      </Box>
+
+      <Box height={windowHeight - 150} ref={scroll} overflow="scroll" zIndex="1" px="2" pt="3">
         <Flex>
-          <Flex flexDirection="column" mt="-1" pr="2">
-            {viewTimeList.map((viewTime) => (
-              <Center key={viewTime} fontSize="xs" h="50px">
+          <Flex flexDirection="column" mt="-9px" pr="1" zIndex="1">
+            {viewTimes.map((viewTime) => (
+              <Center key={viewTime} fontSize="xs" h="60px">
                 {viewTime + ':00'}
               </Center>
             ))}
           </Flex>
-          <Box>
-            {dateStrings.length > 0 && (
-              <Flex>
-                {dateStrings.map((dateString, index) => (
-                  <Center w="100%" fontWeight="bold" fontSize="sm" key={index}>
-                    {dateString}
-                  </Center>
-                ))}
-              </Flex>
-            )}
-
+          <Box pt="5" ref={calendar}>
             {dateWidth > 0 && dates.length > 0 && (
               <FullCalendar
                 plugins={[timeGridPlugin]}
@@ -318,9 +452,9 @@ export const InputSchedule = () => {
           </Box>
 
           {dates.length >= 4 && (
-            <Flex flexDirection="column" mt="-1" pl="2">
-              {viewTimeList.map((viewTime) => (
-                <Center key={viewTime} fontSize="xs" h="50px">
+            <Flex flexDirection="column" mt="-9px" pl="1" pr="2" zIndex="1">
+              {viewTimes.map((viewTime) => (
+                <Center key={viewTime} fontSize="xs" h="60px">
                   {viewTime + ':00'}
                 </Center>
               ))}
@@ -333,22 +467,30 @@ export const InputSchedule = () => {
       <Center>
         <VStack pos="fixed" bottom="0" bg="white" w="100%" zIndex="1">
           <HStack p="4" spacing={4}>
-            <Button variant={redVarient} colorScheme="red" w="24" onClick={() => handleClickRed()}>
+            <Button
+              variant={greenVarient}
+              colorScheme="circle"
+              color={eventTextColor.green}
+              w="24"
+              onClick={() => handleClickGreen()}
+            >
               ○
             </Button>
             <Button
-              variant={greenVarient}
-              colorScheme="green"
+              variant={yellowVarient}
+              colorScheme="triangle"
+              color={eventTextColor.yellow}
               w="24"
-              onClick={() => handleClickGreen()}
+              onClick={() => handleClickYellow()}
             >
               △
             </Button>
             <Button
-              variant={blueVarient}
-              colorScheme="blue"
+              variant={redVarient}
+              colorScheme="x"
+              color={eventTextColor.red}
               w="24"
-              onClick={() => handleClickBlue()}
+              onClick={() => handleClickRed()}
             >
               ×
             </Button>

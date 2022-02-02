@@ -4,7 +4,7 @@ import {
   possibleDateState,
   EditingTimeWidth,
   isValidateDateState,
-  isValidateTimeListState,
+  isValidateTimeArrayState,
   eventState,
 } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
@@ -49,7 +49,7 @@ export const EventRegisterButton = () => {
   const [registerPossibleDates, setRegisterPossibleDates] = useState<RegisterPossibleDate[]>();
   const overView = useRecoilValue(overViewState);
   const isValidateDate = useRecoilValue(isValidateDateState);
-  const isValidateTimeList = useRecoilValue(isValidateTimeListState);
+  const isValidateTimeArray = useRecoilValue(isValidateTimeArrayState);
   const event = useRecoilValue(eventState);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -268,7 +268,7 @@ export const EventRegisterButton = () => {
         onClick={formatEvent}
         isDisabled={
           isValidateDate ||
-          isValidateTimeList.includes(true) ||
+          isValidateTimeArray.includes(true) ||
           overView.eventName === '' ||
           overView.eventName.length > 255 ||
           overView.description.length > 255

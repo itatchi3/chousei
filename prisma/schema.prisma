@@ -1,6 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+//TODO: onDelete, onUpdateのバグが修正されしだいCascadeにする．
+
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
@@ -9,7 +11,6 @@ generator client {
 datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
-  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
@@ -27,28 +28,31 @@ model Event {
 model PossibleDate {
   id              Int      @id @default(autoincrement())
   index           Int
-  event           Event    @relation(fields: [eventId], references: [id])
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   eventId         String
   date            DateTime @db.Date
   dateString      String
-  startTime       DateTime @db.DateTime
-  endTime         DateTime @db.DateTime
+  startTime       DateTime @db.DateTime(0)
+  endTime         DateTime @db.DateTime(0)
   timeWidthString String
   votes           Vote[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@index([eventId])
 }
 
 model Vote {
   vote           String       @db.Char(1)
-  possibleDate   PossibleDate @relation(fields: [possibleDateId], references: [id])
+  possibleDate   PossibleDate @relation(fields: [possibleDateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   possibleDateId Int
-  user           User         @relation(fields: [userId], references: [id])
+  user           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId         String       @db.VarChar(255)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
   @@id([possibleDateId, userId])
+  @@index([possibleDateId, userId])
 }
 
 model User {
@@ -64,20 +68,21 @@ model User {
 
 model Comment {
   comment   String   @db.VarChar(255)
-  event     Event    @relation(fields: [eventId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   eventId   String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId    String   @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@id([eventId, userId])
+  @@index([eventId, userId])
 }
 
 model EventParticipant {
-  event     Event    @relation(fields: [eventId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   eventId   String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId    String   @db.VarChar(255)
   isCheck   Boolean  @default(true)
   isCreate  Boolean  @default(false)
@@ -86,4 +91,5 @@ model EventParticipant {
   updatedAt DateTime @updatedAt
 
   @@id([eventId, userId])
+  @@index([eventId, userId])
 }
