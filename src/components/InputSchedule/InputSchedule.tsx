@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { eventState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
-import { Button, Box, HStack, VStack, Center, Flex } from '@chakra-ui/react';
+import { Button, Box, HStack, VStack, Center, Flex, Table, Tr, Th, Tbody } from '@chakra-ui/react';
 import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, sum } from 'lodash';
 import { useLiff } from 'src/liff/auth';
 import { PossibleDate, Vote } from '@prisma/client';
 
@@ -28,22 +28,18 @@ export const InputSchedule = () => {
   const [dateStrings, setDateStrings] = useState<string[]>([]);
   const [hiddenDates, setHiddenDates] = useState<string[]>([]);
   const [dateWidth, setDateWidth] = useState(0);
+  const [calendarWidth, setCalendarWidth] = useState(0);
+  const [dateColumnWidthArray, setDateColumnWidthArray] = useState<number[]>([]);
   const [eventFullCalendar, setEventFullCalendar] = useState<EventFullCalendar[]>([]);
   const [minTime, setMinTime] = useState(0);
   const [maxTime, setMaxTime] = useState(24);
   const [viewTimes, setViewTimes] = useState<number[]>([]);
-  const [eventColumnNumArray, setEventColumnNumArray] = useState<number[]>([]);
 
   const event = useRecoilValue(eventState);
   const { userId, idToken } = useLiff();
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-
-  const ref = useRef<HTMLDivElement>(null);
-  const scroll = useRef<HTMLDivElement>(null);
-  const tickingX = useRef<boolean>(false);
-  const calendar = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
 
@@ -54,12 +50,14 @@ export const InputSchedule = () => {
     gray: '#E2E8F0',
   };
 
-  const eventTextColor = {
-    green: 'darkgreen',
-    yellow: 'chocolate',
-    red: 'crimson',
-    black: 'black',
-  };
+  const eventTextColor = useMemo(() => {
+    return {
+      green: 'darkgreen',
+      yellow: 'chocolate',
+      red: 'crimson',
+      black: 'black',
+    };
+  }, []);
 
   const checkColor = (vote: string) => {
     switch (vote) {
@@ -182,19 +180,11 @@ export const InputSchedule = () => {
   };
 
   const fullCalendarStyle = () => {
-    let calendarWidth = 0;
     let colomnWidthStyle = '';
     dates.map((date, index) => {
       const dataDate = date.toISOString().slice(0, 10);
-      const width = eventColumnNumArray[index] >= 2 ? 50 * eventColumnNumArray[index] : 100;
-      calendarWidth += width;
-      colomnWidthStyle += `[data-date='${dataDate}'] {width: ${width}px !important}`;
+      colomnWidthStyle += `[data-date='${dataDate}'] {width: ${dateColumnWidthArray[index]}px !important}`;
     });
-
-    let widthStyle = '';
-    if (windowWidth - 100 <= calendarWidth) {
-      widthStyle = `.fc-scrollgrid {width: ${calendarWidth}px !important;}`;
-    }
 
     let hiddenStyle = '';
     hiddenDates.map((hiddenDate) => {
@@ -203,7 +193,6 @@ export const InputSchedule = () => {
     return (
       <style jsx>
         {`
-          ${widthStyle}
           ${hiddenStyle}
           ${colomnWidthStyle}
           .fc-scrollgrid thead {
@@ -234,7 +223,7 @@ export const InputSchedule = () => {
   };
 
   useEffect(() => {
-    if (!event || !userId || !scroll.current) return;
+    if (!event || !userId) return;
     let dates: Date[] = [event.possibleDates[0].date];
     let dateStrings: string[] = [event.possibleDates[0].dateString];
     let dateTimes: number[] = [event.possibleDates[0].date.getTime()];
@@ -339,7 +328,7 @@ export const InputSchedule = () => {
       possibleDatesPerDayArray.push(possibleDatesPerDay);
     });
 
-    let newEventColumnNumArray: number[] = [];
+    let eventColumnNumArray: number[] = [];
     possibleDatesPerDayArray.map((possibleDatesPerDay) => {
       let times: { time: Date; type: string }[] = [];
       possibleDatesPerDay.map((possibleDate) => {
@@ -369,109 +358,135 @@ export const InputSchedule = () => {
           maxColumnNum = columnNumCount;
         }
       });
-      newEventColumnNumArray.push(maxColumnNum);
-    });
-    setEventColumnNumArray(newEventColumnNumArray);
-
-    const horizontalScroll = () => {
-      if (!tickingX.current) {
-        requestAnimationFrame(() => {
-          tickingX.current = false;
-          if (!scroll.current || !ref.current) return;
-          const scrollLeft = scroll.current.scrollLeft;
-          ref.current.style.left = `${-scrollLeft}px`;
-        });
-        tickingX.current = true;
+      if (maxColumnNum === 1) {
+        maxColumnNum = 2;
       }
-    };
+      eventColumnNumArray.push(maxColumnNum);
+    });
+
+    let minCalendarWidth = 0;
+    eventColumnNumArray.map((eventColumnNum) => {
+      const dateColumnWidth = eventColumnNum * 50;
+      minCalendarWidth += dateColumnWidth;
+    });
 
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
+      const viewTableWidth =
+        eventColumnNumArray.length >= 4 ? window.innerWidth - 100 : window.innerWidth - 50;
+
+      let newDateColumnWidthArray: number[] = [];
+      if (viewTableWidth <= minCalendarWidth) {
+        eventColumnNumArray.map((eventColumnNum) => {
+          const dateColumnWidth = eventColumnNum * 50;
+          newDateColumnWidthArray.push(dateColumnWidth);
+        });
+        setDateColumnWidthArray(newDateColumnWidthArray);
+        setCalendarWidth(minCalendarWidth);
+      } else {
+        eventColumnNumArray.map((eventColumnNum) => {
+          const dateColumnWidth = (viewTableWidth * eventColumnNum) / sum(eventColumnNumArray);
+          newDateColumnWidthArray.push(dateColumnWidth);
+        });
+        setDateColumnWidthArray(newDateColumnWidthArray);
+        setCalendarWidth(viewTableWidth);
+      }
     };
-    scroll.current.addEventListener('scroll', horizontalScroll, { passive: true });
+
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [event, userId]);
+  }, [event, userId, eventTextColor]);
 
   return (
     <Box overflow="hidden">
-      <Box ref={ref} position="fixed" top="0px" zIndex="2" bg="white" px="46px">
-        {dateStrings.length > 0 && (
-          <Flex>
-            {dateStrings.map((dateString, index) => (
-              <Center
-                w={
-                  eventColumnNumArray[index] >= 2 ? 50 * eventColumnNumArray[index] + 'px' : '100px'
-                }
-                fontWeight="bold"
-                fontSize="sm"
-                key={index}
-              >
-                {dateString}
-              </Center>
-            ))}
-          </Flex>
-        )}
-      </Box>
+      <Box height={windowHeight - 110} overflow="scroll" zIndex="1" px="2">
+        <Table variant="unstyled">
+          <Tbody border="0px none">
+            <Tr>
+              <Th sx={{ position: 'sticky', top: 0 }} p="0" zIndex="2">
+                {dateStrings.length > 0 && dateColumnWidthArray.length && (
+                  <Box bg="white" pl="44px" pr={dateStrings.length >= 4 ? '44px' : '0px'} pt="1">
+                    <Flex>
+                      {dateStrings.map((dateString, index) => (
+                        <Center
+                          w={dateColumnWidthArray[index] + 'px'}
+                          fontWeight="bold"
+                          fontSize="sm"
+                          key={index}
+                        >
+                          {dateString}
+                        </Center>
+                      ))}
+                    </Flex>
+                  </Box>
+                )}
+              </Th>
+            </Tr>
 
-      <Box height={windowHeight - 150} ref={scroll} overflow="scroll" zIndex="1" px="2" pt="3">
-        <Flex>
-          <Flex flexDirection="column" mt="-9px" pr="1" zIndex="1">
-            {viewTimes.map((viewTime) => (
-              <Center key={viewTime} fontSize="xs" h="60px">
-                {viewTime + ':00'}
-              </Center>
-            ))}
-          </Flex>
-          <Box pt="5" ref={calendar}>
-            {dateWidth > 0 && dates.length > 0 && (
-              <FullCalendar
-                plugins={[timeGridPlugin]}
-                initialView="timeGrid"
-                duration={{ days: dateWidth }}
-                headerToolbar={false}
-                allDaySlot={false}
-                contentHeight={'auto'}
-                initialDate={dates[0]}
-                eventSources={[{ events: eventFullCalendar }]}
-                slotEventOverlap={false}
-                eventTimeFormat={{
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-                }}
-                eventClick={(arg) => onClickVoteChange(arg)}
-                slotMinTime={minTime + ':00:00'}
-                slotMaxTime={maxTime + ':00:00'}
-              />
-            )}
-          </Box>
+            <Tr>
+              <Th p="0">
+                <Flex>
+                  <Flex flexDirection="column" mt="-43px" pb="2" pr="1" zIndex="1">
+                    {viewTimes.map((viewTime) => (
+                      <Flex key={viewTime} fontSize="xs" alignItems="flex-end" h="60px">
+                        {viewTime + ':00'}
+                      </Flex>
+                    ))}
+                  </Flex>
 
-          {dates.length >= 4 && (
-            <Flex flexDirection="column" mt="-9px" pl="1" pr="2" zIndex="1">
-              {viewTimes.map((viewTime) => (
-                <Center key={viewTime} fontSize="xs" h="60px">
-                  {viewTime + ':00'}
-                </Center>
-              ))}
-            </Flex>
-          )}
-          {fullCalendarStyle()}
-        </Flex>
+                  <Box pt="2" width={calendarWidth}>
+                    {dateWidth > 0 && dates.length > 0 && (
+                      <FullCalendar
+                        plugins={[timeGridPlugin]}
+                        initialView="timeGrid"
+                        duration={{ days: dateWidth }}
+                        headerToolbar={false}
+                        allDaySlot={false}
+                        contentHeight={'auto'}
+                        initialDate={dates[0]}
+                        eventSources={[{ events: eventFullCalendar }]}
+                        slotEventOverlap={false}
+                        eventTimeFormat={{
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false,
+                        }}
+                        eventClick={(arg) => onClickVoteChange(arg)}
+                        slotMinTime={minTime + ':00:00'}
+                        slotMaxTime={maxTime + ':00:00'}
+                      />
+                    )}
+                  </Box>
+
+                  {dates.length >= 4 && (
+                    <Flex flexDirection="column" mt="-43px" pb="2" pl="1" pr="2" zIndex="1">
+                      {viewTimes.map((viewTime) => (
+                        <Flex key={viewTime} fontSize="xs" alignItems="flex-end" h="60px">
+                          {viewTime + ':00'}
+                        </Flex>
+                      ))}
+                    </Flex>
+                  )}
+                  {fullCalendarStyle()}
+                </Flex>
+              </Th>
+            </Tr>
+          </Tbody>
+        </Table>
       </Box>
 
       <Center>
-        <VStack pos="fixed" bottom="0" bg="white" w="100%" zIndex="1">
-          <HStack p="4" spacing={4}>
+        <VStack spacing={1} pos="fixed" bottom="0" bg="white" w="100%" zIndex="1">
+          <HStack p="2" spacing={4}>
             <Button
               variant={greenVarient}
               colorScheme="circle"
               color={eventTextColor.green}
-              w="24"
+              w={windowWidth > 330 ? '24' : '16'}
               onClick={() => handleClickGreen()}
             >
               ○
@@ -480,7 +495,7 @@ export const InputSchedule = () => {
               variant={yellowVarient}
               colorScheme="triangle"
               color={eventTextColor.yellow}
-              w="24"
+              w={windowWidth > 330 ? '24' : '16'}
               onClick={() => handleClickYellow()}
             >
               △
@@ -489,13 +504,13 @@ export const InputSchedule = () => {
               variant={redVarient}
               colorScheme="x"
               color={eventTextColor.red}
-              w="24"
+              w={windowWidth > 330 ? '24' : '16'}
               onClick={() => handleClickRed()}
             >
               ×
             </Button>
           </HStack>
-          <Box pb="4">
+          <Box pb="3">
             <Button onClick={() => registerAttendances()} isLoading={loading}>
               出欠を回答する
             </Button>

@@ -30,7 +30,7 @@ model PossibleDate {
   index           Int
   event           Event    @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   eventId         String
-  date            DateTime @db.Date
+  date            DateTime @db.DateTime(0)
   dateString      String
   startTime       DateTime @db.DateTime(0)
   endTime         DateTime @db.DateTime(0)

@@ -67,7 +67,7 @@ export const InputDate = ({ indexDate }: Props) => {
       </Box>
       <Input
         placeholder="タップしてください"
-        defaultValue={possibleDates[indexDate].dateString}
+        value={possibleDates[indexDate].dateString}
         onClick={onOpen}
         readOnly
         sx={{ _focus: { boxShadow: 'none', outline: 'none' } }}
