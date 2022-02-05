@@ -48,7 +48,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
           if (!scroll.current || !ref.current) return;
           const tableTop = scroll.current.getBoundingClientRect().top;
 
-          if (tableTop >= 0) {
+          if (tableTop >= -1.5) {
             ref.current.style.position = 'absolute';
             ref.current.style.top = '2px';
           } else if (tableTop < -tableHeight + 100) {
