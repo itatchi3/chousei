@@ -10,6 +10,8 @@ LINE上で動く，スマホ入力に特化した，時間ごとの調整アプ�
 日程調整の際の負担をなるべく少なくするように努力しています．
 
 ↓チョーセイの公式アカウント
+  
+https://lin.ee/fzOYqzQ
 
 ![M](https://user-images.githubusercontent.com/72689870/144077950-46a1bc9e-fb2d-4ac0-9371-4a8f409542fd.png)
 
