@@ -13,6 +13,13 @@ const MyDocument = () => {
         <meta property="og:site_name" content={title} />
         <meta property="og:image" content={`/ogp.PNG`} />
         <meta name="format-detection" content="telephone=no" />
+        <script
+          async
+          defer
+          data-website-id="3e4aeb18-d54f-44d3-be73-0c2bd5304e58"
+          src="https://itatchi3-umami.vercel.app/umami.js"
+          data-domains="chousei.vercel.app"
+        ></script>
       </Head>
       <body>
         <Main />
