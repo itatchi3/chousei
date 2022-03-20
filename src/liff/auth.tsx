@@ -25,8 +25,13 @@ export const LiffAuth: FC = ({ children }) => {
 
       await liffInit();
 
+      const redirectUri =
+        process.env.VERCEL_ENV === 'preview'
+          ? 'https://' + process.env.VERCEL_URL + router.asPath
+          : 'https://' + process.env.NEXT_PUBLIC_URL + router.asPath;
+
       if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
+        liff.login({ redirectUri: redirectUri });
       }
 
       try {
@@ -40,7 +45,7 @@ export const LiffAuth: FC = ({ children }) => {
       const checkIdToken = async () => {
         const reLogin = () => {
           liff.logout();
-          liff.login({ redirectUri: process.env.NEXT_PUBLIC_URL + router.asPath });
+          liff.login({ redirectUri: redirectUri });
         };
 
         if (!idToken) {
