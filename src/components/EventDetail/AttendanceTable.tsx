@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { EventType } from 'src/atoms/eventState';
-import { Count } from 'src/pages/event/[id]';
+import { Count } from 'src/components/EventDetail/EventDetail';
 
 type Props = {
   event: EventType;
