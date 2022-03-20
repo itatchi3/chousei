@@ -1,14 +1,15 @@
 import { FC, useEffect } from 'react';
 import type Liff from '@line/liff';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { liffObjState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 
 export const LiffAuth: FC = ({ children }) => {
-  const setLiffObj = useSetRecoilState(liffObjState);
+  const [liffObj, setLiffObj] = useRecoilState(liffObjState);
   const router = useRouter();
 
   useEffect(() => {
+    if (router.asPath === router.route || liffObj.liff !== undefined) return;
     const func = async () => {
       const liff = (await import('@line/liff')).default;
       let idToken: string | null | undefined;
@@ -68,7 +69,7 @@ export const LiffAuth: FC = ({ children }) => {
       });
     };
     func();
-  }, [setLiffObj, router.asPath]);
+  }, [setLiffObj, router, liffObj]);
 
   return <>{children}</>;
 };
