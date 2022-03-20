@@ -9,7 +9,7 @@ export const LiffAuth: FC = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.asPath === router.route || liffObj.liff !== undefined) return;
+    if (router.asPath === 'event/[id]' || liffObj.liff !== undefined) return;
     const func = async () => {
       const liff = (await import('@line/liff')).default;
       let idToken: string | null | undefined;
