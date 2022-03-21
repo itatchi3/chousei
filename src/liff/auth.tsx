@@ -1,15 +1,18 @@
 import { FC, useEffect } from 'react';
 import type Liff from '@line/liff';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { liffObjState } from 'src/atoms/eventState';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { liffObjState, userIdState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 
 export const LiffAuth: FC = ({ children }) => {
   const [liffObj, setLiffObj] = useRecoilState(liffObjState);
+  const setUserId = useSetRecoilState(userIdState);
   const router = useRouter();
 
   useEffect(() => {
-    if (router.asPath === 'event/[id]' || liffObj.liff !== undefined) return;
+    const isExistAsPath = router.asPath !== '/event/[id]';
+    const isExistLiff = typeof liffObj.liff !== 'undefined';
+    if (!isExistAsPath || isExistLiff) return;
     const func = async () => {
       const liff = (await import('@line/liff')).default;
       let idToken: string | null | undefined;
@@ -17,7 +20,10 @@ export const LiffAuth: FC = ({ children }) => {
 
       const liffInit = async () => {
         try {
-          await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
+          await liff.init({
+            liffId: process.env.NEXT_PUBLIC_LIFF_ID!,
+            withLoginOnExternalBrowser: true,
+          });
         } catch (error) {
           console.error(error);
         }
@@ -25,10 +31,13 @@ export const LiffAuth: FC = ({ children }) => {
 
       await liffInit();
 
-      const redirectUri =
-        process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview'
-          ? 'https://' + process.env.NEXT_PUBLIC_VERCEL_URL + router.asPath
-          : 'https://' + process.env.NEXT_PUBLIC_URL + router.asPath;
+      const idToken = liff.getIDToken();
+
+      setLiffObj({
+        liff: liff,
+        isInClient: liff.isInClient(),
+        idToken: idToken,
+      });
 
       if (!liff.isLoggedIn()) {
         liff.login({ redirectUri: redirectUri });
@@ -62,25 +71,20 @@ export const LiffAuth: FC = ({ children }) => {
           }),
         });
 
-        if (getProfile.status !== 200) reLogin();
+      const getUserId = async () => {
+        const profile = await liff.getProfile();
+        setUserId(profile.userId);
       };
-      checkIdToken();
-
-      setLiffObj({
-        liff: liff,
-        idToken: idToken,
-        userId: userId,
-        isInClient: liff.isInClient(),
-      });
+      getUserId();
     };
     func();
-  }, [setLiffObj, router, liffObj]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setLiffObj, setUserId, liffObj]);
 
   return <>{children}</>;
 };
 
 type UseLiffReturn = {
-  initialized: boolean;
   liff?: typeof Liff;
   isInClient?: boolean;
   userId?: string;
@@ -89,18 +93,11 @@ type UseLiffReturn = {
 
 export const useLiff = (): UseLiffReturn => {
   const liffObj = useRecoilValue(liffObjState);
-
-  if (!liffObj.liff) {
-    return {
-      initialized: false,
-    };
-  }
-
+  const userId = useRecoilValue(userIdState);
   return {
-    initialized: true,
     liff: liffObj.liff,
     isInClient: liffObj.isInClient,
-    userId: liffObj.userId,
+    userId: userId,
     idToken: liffObj.idToken,
   };
 };

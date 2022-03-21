@@ -53,7 +53,7 @@ export const AnswerComment = () => {
   };
 
   useEffect(() => {
-    if (!event || !event.comments.length) return;
+    if (!event || !event.comments.length || !userId) return;
 
     event.comments.map((_comment) => {
       if (_comment.userId === userId && _comment.comment !== '') {

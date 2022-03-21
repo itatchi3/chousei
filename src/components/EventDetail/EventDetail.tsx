@@ -35,7 +35,6 @@ export const EventDetail = () => {
   const { idToken, userId } = useLiff();
   const router = useRouter();
   const { id } = router.query;
-  const [isUpdateUser, setIsUpdateUser] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -61,7 +60,7 @@ export const EventDetail = () => {
   }, [id, setEvent]);
 
   useEffect(() => {
-    if (!event || !idToken || isUpdateUser) return;
+    if (!event || !idToken || !userId) return;
 
     const updateUser = async () => {
       try {
@@ -109,8 +108,7 @@ export const EventDetail = () => {
     if (!isCheckEvent) {
       createParticipate();
     }
-    setIsUpdateUser(true);
-  }, [event, idToken, userId, isUpdateUser]);
+  }, [event, idToken, userId]);
 
   return (
     <>

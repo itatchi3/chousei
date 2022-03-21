@@ -39,7 +39,6 @@ export type EditingTimeWidth = {
 export type RiffObj = {
   liff?: typeof Liff;
   idToken?: string | null;
-  userId?: string;
   isInClient?: boolean;
 };
 
@@ -80,14 +79,15 @@ export const isValidateTimeArrayState = atom<boolean[]>({
 
 export const liffObjState = atom<RiffObj>({
   key: 'liffState',
-  default: {
-    liff: undefined,
-    idToken: undefined,
-    userId: undefined,
-  },
+  default: {},
 });
 
 export const isCancelModalState = atom<boolean>({
   key: 'isCancelModalState',
   default: false,
+});
+
+export const userIdState = atom<string | undefined>({
+  key: 'userIdState',
+  default: undefined,
 });
