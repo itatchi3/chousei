@@ -23,7 +23,6 @@
     "@prisma/client": "^3.8.1",
     "@types/uuid": "^8.3.4",
     "babel-plugin-superjson-next": "^0.4.2",
-    "firebase": "^8.9.1",
     "framer-motion": "^4.1.17",
     "lodash": "^4.17.21",
     "next": "^12.0.3",
