@@ -15,8 +15,6 @@ export const LiffAuth: FC = ({ children }) => {
     if (!isExistAsPath || isExistLiff) return;
     const func = async () => {
       const liff = (await import('@line/liff')).default;
-      let idToken: string | null | undefined;
-      let userId: string | undefined;
 
       const liffInit = async () => {
         try {
