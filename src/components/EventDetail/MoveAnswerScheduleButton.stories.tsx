@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { MutableSnapshot, RecoilRoot } from 'recoil';
-import { eventState, liffObjState } from 'src/atoms/eventState';
+import { eventState, liffObjState, userIdState } from 'src/atoms/eventState';
 import { MoveAnswerScheduleButton } from './MoveAnswerScheduleButton';
 
 export default {
@@ -286,7 +286,8 @@ export const beforeVote = () => {
 
 const afterVoteInitialize = ({ set }: MutableSnapshot) => {
   set(eventState, event);
-  set(liffObjState, { liff: true as any, idToken: undefined, userId: 'user1' });
+  set(liffObjState, { liff: true as any, idToken: undefined });
+  set(userIdState, 'user1');
 };
 
 export const afterVote = () => {
