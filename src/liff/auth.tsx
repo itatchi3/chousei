@@ -26,8 +26,8 @@ export const LiffAuth: FC = ({ children }) => {
       await liffInit();
 
       const redirectUri =
-        process.env.VERCEL_ENV === 'preview'
-          ? 'https://' + process.env.VERCEL_URL + router.asPath
+        process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview'
+          ? 'https://' + process.env.NEXT_PUBLIC_VERCEL_URL + router.asPath
           : 'https://' + process.env.NEXT_PUBLIC_URL + router.asPath;
 
       if (!liff.isLoggedIn()) {
