@@ -36,18 +36,7 @@ export const LiffAuth: FC = ({ children }) => {
         isInClient: liff.isInClient(),
         idToken: idToken,
       });
-
-      if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: redirectUri });
-      }
-
-      try {
-        const profile = await liff.getProfile();
-        userId = profile.userId;
-        idToken = liff.getIDToken();
-      } catch (error) {
-        console.error(error);
-      }
+      
 
       const checkIdToken = async () => {
         const redirectUri =
