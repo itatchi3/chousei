@@ -102,13 +102,13 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               <Th fontSize="md" w="90px">
                 <Center w="90px">日程</Center>
               </Th>
-              <Th fontSize="md" minW="12">
+              <Th fontSize="md" minW="50px">
                 <Center>○</Center>
               </Th>
-              <Th fontSize="md" minW="12">
+              <Th fontSize="md" minW="50px">
                 <Center>△</Center>
               </Th>
-              <Th fontSize="md" minW="12">
+              <Th fontSize="md" minW="50px">
                 <Center>×</Center>
               </Th>
               {event
@@ -186,13 +186,13 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                           {possibleDate.dateString + '  ' + possibleDate.timeWidthString}
                         </Center>
                       </Td>
-                      <Td minW="12">
+                      <Td minW="50px">
                         <Center>{counts[i].positiveCount}</Center>
                       </Td>
-                      <Td minW="12">
+                      <Td minW="50px">
                         <Center>{counts[i].evenCount}</Center>
                       </Td>
-                      <Td minW="12">
+                      <Td minW="50px">
                         <Center>{counts[i].negativeCount}</Center>
                       </Td>
                       {event.participants
