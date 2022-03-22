@@ -74,8 +74,7 @@ export const LiffAuth: FC = ({ children }) => {
       getUserId();
     };
     func();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setLiffObj, setUserId, liffObj]);
+  }, [setLiffObj, setUserId, liffObj, router.asPath]);
 
   return <>{children}</>;
 };
