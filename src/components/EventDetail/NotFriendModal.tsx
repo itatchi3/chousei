@@ -49,7 +49,13 @@ export const NotFriendModal = () => {
             チョーセイ公式アカウントと友だちになると、イベントが作成できるようになります。
           </Box>
           <Flex direction="column" alignItems="center" pt="7">
-            <Image borderRadius="full" src="/chouseiIcon.PNG" alt="アイコン" width="80px" />
+            <Image
+              borderRadius="full"
+              src="/chouseiIcon.PNG"
+              alt="アイコン"
+              height="80px"
+              width="80px"
+            />
             <Box fontWeight="bold" pt="2" pb="5">
               チョーセイ
             </Box>
@@ -58,6 +64,7 @@ export const NotFriendModal = () => {
               <Image
                 src="https://scdn.line-apps.com/n/line_add_friends/btn/ja.png"
                 alt="友だち追加"
+                height="43.45px"
                 width="140px"
               />
             </Link>
