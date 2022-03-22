@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { MutableSnapshot, RecoilRoot } from 'recoil';
-import { eventState, liffObjState } from 'src/atoms/eventState';
+import { eventState, liffObjState, userIdState } from 'src/atoms/eventState';
 import { AnswerComment } from './AnswerComment';
 
 export default {
@@ -306,7 +306,8 @@ const afterCommentState = {
 
 const afterCommentInitialize = ({ set }: MutableSnapshot) => {
   set(eventState, afterCommentState);
-  set(liffObjState, { liff: true as any, idToken: undefined, userId: 'user1' });
+  set(liffObjState, { liff: true as any, idToken: undefined });
+  set(userIdState, 'user1');
 };
 
 export const afterComment = () => {

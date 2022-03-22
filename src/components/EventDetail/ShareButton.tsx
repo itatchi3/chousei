@@ -13,7 +13,7 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
-import { Count } from 'src/pages/event/[id]';
+import { Count } from 'src/components/EventDetail/EventDetail';
 
 type Props = {
   colors: string[];

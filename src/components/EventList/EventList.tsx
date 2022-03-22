@@ -23,7 +23,7 @@ type EventType = Event & {
 };
 
 export const EventList = () => {
-  const { idToken } = useLiff();
+  const { idToken, liff } = useLiff();
   const [isLoading, setIsLoading] = useState(true);
   const [eventList, setEventList] = useState<EventType[] | null>(null);
   const [avatarNumber, setAvatarNumber] = useState(0);
@@ -50,6 +50,7 @@ export const EventList = () => {
   };
 
   useEffect(() => {
+    if (!idToken) return;
     const func = async () => {
       const res = await fetch(`/api/getEventList`, {
         method: 'POST',
@@ -62,11 +63,11 @@ export const EventList = () => {
           const eventListData: EventType[] = superjson.parse(json.eventList);
           setEventList(eventListData);
           setIsEventLoadingArray(Array(eventListData.length).fill(false));
+          setIsLoading(false);
         }
       } else {
         console.error(json.error);
       }
-      setIsLoading(false);
     };
     func();
   }, [idToken]);
@@ -82,7 +83,7 @@ export const EventList = () => {
   }, []);
   return (
     <>
-      {isLoading ? (
+      {isLoading || !liff ? (
         <Center p="8">
           <Spinner color="green.400" />
         </Center>

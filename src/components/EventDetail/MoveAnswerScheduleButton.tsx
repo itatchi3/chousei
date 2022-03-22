@@ -21,7 +21,7 @@ export const MoveAnswerScheduleButton = () => {
   };
 
   useEffect(() => {
-    if (!event) return;
+    if (!event || !userId) return;
     event.participants
       .filter((participant) => participant.isVote)
       .map((participant) => {
