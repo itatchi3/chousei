@@ -20,7 +20,6 @@ export const LiffAuth: FC = ({ children }) => {
         try {
           await liff.init({
             liffId: process.env.NEXT_PUBLIC_LIFF_ID!,
-            withLoginOnExternalBrowser: true,
           });
         } catch (error) {
           console.error(error);
@@ -28,6 +27,15 @@ export const LiffAuth: FC = ({ children }) => {
       };
 
       await liffInit();
+
+      const redirectUri =
+        process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview'
+          ? 'https://' + process.env.NEXT_PUBLIC_VERCEL_URL + router.asPath
+          : 'https://' + process.env.NEXT_PUBLIC_URL + router.asPath;
+
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: redirectUri });
+      }
 
       const idToken = liff.getIDToken();
 
@@ -39,11 +47,6 @@ export const LiffAuth: FC = ({ children }) => {
       
 
       const checkIdToken = async () => {
-        const redirectUri =
-          process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview'
-            ? 'https://' + process.env.NEXT_PUBLIC_VERCEL_URL + router.asPath
-            : 'https://' + process.env.NEXT_PUBLIC_URL + router.asPath;
-
         const reLogin = () => {
           liff.logout();
           liff.login({ redirectUri: redirectUri });
