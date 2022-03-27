@@ -136,7 +136,16 @@ export const EventDetail = () => {
           <Spinner color="green.400" />
         </Center>
       ) : (
-        <Box overflow="scroll" h={windowHeight} w="100vw">
+        <Box
+          overflow="scroll"
+          h={windowHeight}
+          w="100vw"
+          sx={{
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
+          }}
+        >
           <Box p="3">
             <Box w={tableWidth + 12}>
               <Box w="calc(100vw - 24px)" position="sticky" left="3">
