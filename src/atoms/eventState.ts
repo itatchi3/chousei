@@ -91,3 +91,8 @@ export const userIdState = atom<string | undefined>({
   key: 'userIdState',
   default: undefined,
 });
+
+export const tableWidthState = atom<number>({
+  key: 'tableWidthState',
+  default: 0,
+});
