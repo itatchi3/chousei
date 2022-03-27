@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AttendanceTable } from 'src/components/EventDetail/AttendanceTable';
-import { useRecoilState } from 'recoil';
-import { eventState, EventType } from 'src/atoms/eventState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { eventState, EventType, tableWidthState } from 'src/atoms/eventState';
 import { Box, Center, Flex, Spinner, VStack } from '@chakra-ui/react';
 import { ShareButton } from 'src/components/EventDetail/ShareButton';
 import { MoveAnswerScheduleButton } from 'src/components/EventDetail/MoveAnswerScheduleButton';
@@ -29,10 +29,13 @@ export type Count = {
 
 export const EventDetail = () => {
   const [event, setEvent] = useRecoilState(eventState);
+  const tableWidth = useRecoilValue(tableWidthState);
   const [isCreate, setIsCreate] = useState(false);
   const [counts, setCounts] = useState<Count[]>();
   const [colors, setColors] = useState<string[]>();
+  const [windowHeight, setWindowHeight] = useState(0);
   const { idToken, userId } = useLiff();
+  const table = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { id } = router.query;
 
@@ -58,6 +61,10 @@ export const EventDetail = () => {
     };
     func();
   }, [id, setEvent]);
+
+  // console.log('event', event);
+  // console.log('idToken', idToken);
+  // console.log('userId', userId);
 
   useEffect(() => {
     if (!event || !idToken || !userId) return;
@@ -110,6 +117,18 @@ export const EventDetail = () => {
     }
   }, [event, idToken, userId]);
 
+  useEffect(() => {
+    setWindowHeight(window.innerHeight);
+    window.addEventListener('resize', () => {
+      setWindowHeight(window.innerHeight);
+    });
+    return () => {
+      window.removeEventListener('resize', () => {
+        setWindowHeight(window.innerHeight);
+      });
+    };
+  }, [event]);
+
   return (
     <>
       {!event || !counts || !colors ? (
@@ -117,27 +136,35 @@ export const EventDetail = () => {
           <Spinner color="green.400" />
         </Center>
       ) : (
-        <Box p="3">
-          <Box pb="4">
-            <EventOverview name={event.name} description={event.description} />
-          </Box>
-          {isCreate && (
-            <Flex justifyContent="flex-end" mt="-4" mr="-2">
-              <EditButton />
-            </Flex>
-          )}
-          <Box mx="-3">
-            <AttendanceTable event={event} counts={counts} colors={colors} />
-          </Box>
-          <CommentList comments={event.comments} />
-          <VStack justify="center" p="6">
-            <MoveAnswerScheduleButton />
-            <AnswerComment />
-            <Box pt="4">
-              <ShareButton colors={colors} counts={counts} />
+        <Box overflow="scroll" h={windowHeight} w="100vw">
+          <Box p="3">
+            <Box w={tableWidth + 12}>
+              <Box w="calc(100vw - 24px)" position="sticky" left="3">
+                <Box pb="4">
+                  <EventOverview name={event.name} description={event.description} />
+                </Box>
+                {isCreate && (
+                  <Flex justifyContent="flex-end" mt="-4" mr="-3">
+                    <EditButton />
+                  </Flex>
+                )}
+              </Box>
             </Box>
-          </VStack>
-          <NotFriendModal />
+            <AttendanceTable event={event} counts={counts} colors={colors} />
+            <Box w={tableWidth + 12}>
+              <Box w="calc(100vw - 24px)" position="sticky" left="3">
+                <CommentList comments={event.comments} />
+                <VStack justify="center" p="6">
+                  <MoveAnswerScheduleButton />
+                  <AnswerComment />
+                  <Box pt="4">
+                    <ShareButton colors={colors} counts={counts} />
+                  </Box>
+                </VStack>
+              </Box>
+            </Box>
+            <NotFriendModal />
+          </Box>
         </Box>
       )}
     </>
