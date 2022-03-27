@@ -86,8 +86,10 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               borderWidth: '0.5px 0',
             }}
           >
-            <Center h="32px" w="16px">
-              ○
+            <Center>
+              <Center h="32px" w="16px">
+                ○
+              </Center>
             </Center>
           </Th>
           <Th
@@ -106,8 +108,10 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               borderWidth: '0.5px 0',
             }}
           >
-            <Center h="32px" w="16px">
-              △
+            <Center>
+              <Center h="32px" w="16px">
+                △
+              </Center>
             </Center>
           </Th>
           <Th
@@ -126,8 +130,10 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               borderWidth: '0.5px 0',
             }}
           >
-            <Center h="32px" w="16px">
-              ×
+            <Center>
+              <Center h="32px" w="16px">
+                ×
+              </Center>
             </Center>
           </Th>
           {event
