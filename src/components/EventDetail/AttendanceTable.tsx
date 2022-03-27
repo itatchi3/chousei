@@ -51,10 +51,8 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   return (
     <Table size="sm" borderWidth="1px" ref={table}>
       <Thead>
-        <Tr>
+        <Tr h="50px">
           <Th
-            px="2"
-            py="1"
             fontSize="md"
             position="sticky"
             top="0"
@@ -73,8 +71,6 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
             <Center h="32px">日程</Center>
           </Th>
           <Th
-            px="2"
-            py="1"
             fontSize="md"
             position="sticky"
             top="0"
@@ -90,11 +86,11 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               borderWidth: '0.5px 0',
             }}
           >
-            <Center h="32px">○</Center>
+            <Center h="32px" w="16px">
+              ○
+            </Center>
           </Th>
           <Th
-            px="2"
-            py="1"
             fontSize="md"
             position="sticky"
             top="0"
@@ -110,11 +106,11 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               borderWidth: '0.5px 0',
             }}
           >
-            <Center h="32px">△</Center>
+            <Center h="32px" w="16px">
+              △
+            </Center>
           </Th>
           <Th
-            px="0"
-            py="1"
             fontSize="md"
             position="sticky"
             top="0"
@@ -130,14 +126,16 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               borderWidth: '0.5px 0',
             }}
           >
-            <Center h="32px">×</Center>
+            <Center h="32px" w="16px">
+              ×
+            </Center>
           </Th>
           {event
             ? event.participants
                 .filter((participant) => participant.isVote)
                 .map((participant, i) => (
                   <Th
-                    p="1"
+                    px="2"
                     key={i}
                     position="sticky"
                     top="0"
@@ -184,7 +182,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
         {event && counts.length
           ? event.possibleDates.map((possibleDate, i) => (
               <Tr key={i} bg={colors[i]}>
-                <Td px="2" py="1">
+                <Td>
                   <Center>
                     <Box>
                       <Box>{possibleDate.dateString}</Box>
@@ -192,20 +190,20 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                     </Box>
                   </Center>
                 </Td>
-                <Td px="0" py="1">
-                  <Center minW="32px">{counts[i].positiveCount}</Center>
+                <Td px="0">
+                  <Center> {counts[i].positiveCount}</Center>
                 </Td>
-                <Td px="0" py="1">
-                  <Center minW="32px">{counts[i].evenCount}</Center>
+                <Td px="0">
+                  <Center>{counts[i].evenCount}</Center>
                 </Td>
-                <Td px="0" py="1">
-                  <Center minW="32px">{counts[i].negativeCount}</Center>
+                <Td px="0">
+                  <Center>{counts[i].negativeCount}</Center>
                 </Td>
                 {event.participants
                   .filter((participant) => participant.isVote)
                   .map((participant) => {
                     return (
-                      <Td key={possibleDate.id + participant.userId} px="0">
+                      <Td key={possibleDate.id + participant.userId}>
                         {possibleDate.votes.map((_vote) => {
                           if (_vote.userId === participant.userId) {
                             return <Center key={_vote.userId}>{_vote.vote}</Center>;
