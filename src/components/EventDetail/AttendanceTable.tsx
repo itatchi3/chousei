@@ -29,6 +29,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   const table = useRef<HTMLTableElement>(null);
   const setTableWidth = useSetRecoilState(tableWidthState);
   const [isOpenArray, setIsOpenArray] = useState<boolean[]>([]);
+
   useEffect(() => {
     if (!table.current) return;
     setTableWidth(table.current.getBoundingClientRect().width);
@@ -152,11 +153,7 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                       borderWidth: '0.5px 0',
                     }}
                   >
-                    <Popover
-                      onOpen={() => triggerPopOver(i)}
-                      // onClose={() => triggerPopOver(i)}
-                      eventListeners={false}
-                    >
+                    <Popover onOpen={() => triggerPopOver(i)} eventListeners={false}>
                       <Center>
                         <PopoverTrigger>
                           <Avatar

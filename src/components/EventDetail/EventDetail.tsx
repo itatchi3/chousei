@@ -33,6 +33,7 @@ export const EventDetail = () => {
   const [isCreate, setIsCreate] = useState(false);
   const [counts, setCounts] = useState<Count[]>();
   const [colors, setColors] = useState<string[]>();
+  const [windowHeight, setWindowHeight] = useState(0);
   const { idToken, userId } = useLiff();
   const table = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -116,6 +117,18 @@ export const EventDetail = () => {
     }
   }, [event, idToken, userId]);
 
+  useEffect(() => {
+    setWindowHeight(window.innerHeight);
+    window.addEventListener('resize', () => {
+      setWindowHeight(window.innerHeight);
+    });
+    return () => {
+      window.removeEventListener('resize', () => {
+        setWindowHeight(window.innerHeight);
+      });
+    };
+  }, [event]);
+
   return (
     <>
       {!event || !counts || !colors ? (
@@ -123,7 +136,7 @@ export const EventDetail = () => {
           <Spinner color="green.400" />
         </Center>
       ) : (
-        <Box overflow="scroll" h="100vh" w="100vw">
+        <Box overflow="scroll" h={windowHeight} w="100vw">
           <Box p="3">
             <Box w={tableWidth + 12}>
               <Box w="calc(100vw - 24px)" position="sticky" left="3">
