@@ -50,7 +50,7 @@ https://user-images.githubusercontent.com/72689870/154558910-cec17fc0-a0d9-4de2-
 ## 使った技術は？？
 |  技術  |  理由  |
 | ---- | ---- |
-|  Next.js  |  SSRを行うため，簡易的なAPIを構築するため  |
+|  Next.js  |  現時点でのベストプラクティスをある程度ラップしてくれているため，簡易的なAPIを構築するため  |
 |Vercel| Next.jsとの相性が良いため|
 |  TypeScript  |  静的型付けの恩恵を受けるため  |
 |Recoil|シンプルな状態管理を行うため|
