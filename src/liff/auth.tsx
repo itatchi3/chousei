@@ -1,5 +1,6 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import type Liff from '@line/liff';
+import LIFFInspectorPlugin from '@line/liff-inspector';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { liffObjState, userIdState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
@@ -8,13 +9,22 @@ export const LiffAuth: FC = ({ children }) => {
   const [liffObj, setLiffObj] = useRecoilState(liffObjState);
   const setUserId = useSetRecoilState(userIdState);
   const router = useRouter();
+  const count = useRef(0);
 
   useEffect(() => {
     const isExistAsPath = router.asPath !== '/event/[id]';
     const isExistLiff = typeof liffObj.liff !== 'undefined';
+    console.log('router', !isExistAsPath, router.asPath);
+    console.log('liff', isExistLiff, liffObj.liff);
+    console.log('if', !isExistAsPath || isExistLiff);
     if (!isExistAsPath || isExistLiff) return;
+    count.current += 1;
+    console.log('count', count.current);
+    console.log('liffObj');
     const func = async () => {
+      console.log('func');
       const liff = (await import('@line/liff')).default;
+      liff.use(new LIFFInspectorPlugin());
 
       const liffInit = async () => {
         try {
@@ -27,6 +37,7 @@ export const LiffAuth: FC = ({ children }) => {
       };
 
       await liffInit();
+      console.log('liffInit');
 
       const redirectUri =
         process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview'
@@ -44,7 +55,7 @@ export const LiffAuth: FC = ({ children }) => {
         isInClient: liff.isInClient(),
         idToken: idToken,
       });
-      
+      console.log('setLiffObj');
 
       const checkIdToken = async () => {
         const reLogin = () => {
@@ -65,6 +76,8 @@ export const LiffAuth: FC = ({ children }) => {
             client_id: process.env.NEXT_PUBLIC_CLIENT_ID!,
           }),
         });
+
+        console.log('idCheck');
 
         if (getProfile.status !== 200) reLogin();
       };
