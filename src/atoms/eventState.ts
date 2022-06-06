@@ -1,21 +1,6 @@
 import { atom } from 'recoil';
 import type Liff from '@line/liff';
-import { Comment, Event, EventParticipant, PossibleDate, User, Vote } from '.prisma/client';
 import { v4 as uuidv4 } from 'uuid';
-
-export type EventType =
-  | (Event & {
-      possibleDates: (PossibleDate & {
-        votes: Vote[];
-      })[];
-      comments: (Comment & {
-        user: User;
-      })[];
-      participants: (EventParticipant & {
-        user: User;
-      })[];
-    })
-  | null;
 
 export type EditingOverViewType = {
   eventName: string;
@@ -41,11 +26,6 @@ export type RiffObj = {
   idToken?: string | null;
   isInClient?: boolean;
 };
-
-export const eventState = atom<EventType>({
-  key: 'eventState',
-  default: null,
-});
 
 export const overViewState = atom<EditingOverViewType>({
   key: 'overViewState',
@@ -95,4 +75,9 @@ export const userIdState = atom<string | undefined>({
 export const tableWidthState = atom<number>({
   key: 'tableWidthState',
   default: 0,
+});
+
+export const eventIdState = atom<string | string[] | undefined>({
+  key: 'eventIdState',
+  default: undefined,
 });

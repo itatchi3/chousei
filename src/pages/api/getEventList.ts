@@ -3,16 +3,25 @@ import { prisma } from 'prisma/prisma';
 import superjson from 'superjson';
 import { getPrifile } from 'src/liff/getProfile';
 import { Prisma } from '.prisma/client';
-import { Event, EventParticipant, User, PossibleDate } from '@prisma/client';
 
-type EventType =
-  | (Event & {
-      participants: (EventParticipant & {
-        user: User;
-      })[];
-      possibleDates: PossibleDate[];
-    })
-  | null;
+export type EventType = {
+  id: string;
+  name: string;
+  description: string | null;
+  participants: {
+    isVote: boolean;
+    userId: string;
+    user: {
+      name: string;
+      profileImg: string;
+    };
+  }[];
+  possibleDates: {
+    id: number;
+    dateString: string;
+    timeWidthString: string;
+  }[];
+} | null;
 
 type ReqestBody = {
   idToken: string | null | undefined;
@@ -33,6 +42,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   let eventList: EventType[];
   try {
     const eventIdList = await prisma.eventParticipant.findMany({
+      take: 5,
       where: {
         userId: userId,
         isCheck: true,
@@ -57,18 +67,33 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         where: {
           id: eventId.eventId,
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
           participants: {
             orderBy: {
               updatedAt: 'asc',
             },
-            include: {
-              user: true,
+            select: {
+              isVote: true,
+              userId: true,
+              user: {
+                select: {
+                  name: true,
+                  profileImg: true,
+                },
+              },
             },
           },
           possibleDates: {
             orderBy: {
               index: 'asc',
+            },
+            select: {
+              id: true,
+              dateString: true,
+              timeWidthString: true,
             },
           },
         },

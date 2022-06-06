@@ -1,35 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
 import { Button } from '@chakra-ui/react';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const MoveAnswerScheduleButton = () => {
-  const event = useRecoilValue(eventState);
+  const { data: eventDetail } = useEventDetailQuery();
   const { userId } = useLiff();
   const [isAnsweredVoteArray, setIsAnsweredVoteArray] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const moveAnswerSchedule = () => {
-    if (!event) return;
+    if (!eventDetail) return;
     setIsLoading(true);
     router.push({
-      pathname: `/event/${event.id}/input`,
+      pathname: `/event/${eventDetail.event.id}/input`,
     });
   };
 
   useEffect(() => {
-    if (!event || !userId) return;
-    event.participants
+    if (!eventDetail || !userId) return;
+    eventDetail.event.participants
       .filter((participant) => participant.isVote)
       .map((participant) => {
         if (participant.userId === userId) {
           setIsAnsweredVoteArray(true);
         }
       });
-  }, [event, userId]);
+  }, [eventDetail, userId]);
   return (
     <>
       <Button w="44" isLoading={isLoading} onClick={moveAnswerSchedule}>

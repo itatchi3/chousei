@@ -5,7 +5,6 @@ import {
   EditingTimeWidth,
   isValidateDateState,
   isValidateTimeArrayState,
-  eventState,
 } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
 import { useRecoilValue } from 'recoil';
@@ -25,6 +24,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import superjson from 'superjson';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 type SortedPossibleDate = {
   date: Date;
@@ -50,7 +50,7 @@ export const EventRegisterButton = () => {
   const overView = useRecoilValue(overViewState);
   const isValidateDate = useRecoilValue(isValidateDateState);
   const isValidateTimeArray = useRecoilValue(isValidateTimeArrayState);
-  const event = useRecoilValue(eventState);
+  const { data: eventDetail } = useEventDetailQuery();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
@@ -212,14 +212,14 @@ export const EventRegisterButton = () => {
 
   const handleUpdate = async () => {
     setIsLoading(true);
-    if (!liff || !event) return;
+    if (!liff || !eventDetail) return;
 
     try {
       const body = {
         name: overView.eventName,
         description: overView.description,
         registerPossibleDates: registerPossibleDates,
-        eventId: event.id,
+        eventId: eventDetail.event.id,
       };
       const res = await fetch(`/api/updateEvent`, {
         method: 'POST',
@@ -246,12 +246,12 @@ export const EventRegisterButton = () => {
                 'https://liff.line.me/' +
                 process.env.NEXT_PUBLIC_LIFF_ID +
                 '/event/' +
-                event.id,
+                eventDetail.event.id,
             },
           ]);
           liff.closeWindow();
         } else {
-          router.push(`/event/${event.id}`);
+          router.push(`/event/${eventDetail.event.id}`);
         }
       } else {
         throw new Error(json.error);
@@ -274,7 +274,7 @@ export const EventRegisterButton = () => {
           overView.description.length > 255
         }
       >
-        {!event ? 'イベントを作成する' : 'イベントを編集する'}
+        {!eventDetail ? 'イベントを作成する' : 'イベントを編集する'}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} size="xs" scrollBehavior={'inside'}>
         <ModalOverlay />

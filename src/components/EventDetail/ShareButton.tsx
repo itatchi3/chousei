@@ -1,5 +1,3 @@
-import { useRecoilValue } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
 import {
   Menu,
@@ -13,38 +11,35 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
-import { Count } from 'src/components/EventDetail/EventDetail';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
-type Props = {
-  colors: string[];
-  counts: Count[];
-};
-
-export const ShareButton = ({ colors, counts }: Props) => {
-  const event = useRecoilValue(eventState);
+export const ShareButton = () => {
+  const { data: eventDetail } = useEventDetailQuery();
   const { liff, isInClient } = useLiff();
   const { onCopy } = useClipboard(
-    event ? `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}` : '',
+    eventDetail
+      ? `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${eventDetail.event.id}`
+      : '',
   );
 
   const shareScheduleByLine = () => {
-    if (!event || !liff) return;
+    if (!eventDetail || !liff) return;
     if (liff.isApiAvailable('shareTargetPicker')) {
       let shareText =
         '【イベント名】\n' +
-        event.name +
+        eventDetail.event.name +
         '\n' +
         '【補足・備考】\n' +
-        event.description +
+        eventDetail.event.description +
         '\n' +
-        `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`;
+        `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${eventDetail.event.id}`;
 
-      if (colors.includes('green.100') || colors.includes('green.200')) {
+      if (eventDetail.colors.includes('green.100') || eventDetail.colors.includes('green.200')) {
         shareText += '\n【おすすめ】';
         let recomendePossibleDate = '';
-        colors.map((color, i) => {
+        eventDetail.colors.map((color, i) => {
           if (color !== 'white') {
-            recomendePossibleDate += `\n${event.possibleDates[i].dateString}${event.possibleDates[i].timeWidthString}\n○${counts[i].positiveCount} △${counts[i].evenCount} ×${counts[i].negativeCount}`;
+            recomendePossibleDate += `\n${eventDetail.event.possibleDates[i].dateString}${eventDetail.event.possibleDates[i].timeWidthString}\n○${eventDetail.counts[i].positiveCount} △${eventDetail.counts[i].evenCount} ×${eventDetail.counts[i].negativeCount}`;
           }
         });
         shareText += recomendePossibleDate;
@@ -75,8 +70,8 @@ export const ShareButton = ({ colors, counts }: Props) => {
               <Flex px="4" py="2">
                 <Input
                   value={
-                    event
-                      ? `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${event.id}`
+                    eventDetail
+                      ? `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/event/${eventDetail.event.id}`
                       : ''
                   }
                   isReadOnly

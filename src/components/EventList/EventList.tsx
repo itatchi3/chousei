@@ -9,18 +9,11 @@ import {
   Spinner,
   VStack,
 } from '@chakra-ui/react';
-import { Event, EventParticipant, PossibleDate, User } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useLiff } from 'src/liff/auth';
+import { EventType } from 'src/pages/api/getEventList';
 import superjson from 'superjson';
-
-type EventType = Event & {
-  participants: (EventParticipant & {
-    user: User;
-  })[];
-  possibleDates: PossibleDate[];
-};
 
 export const EventList = () => {
   const { idToken, liff } = useLiff();
@@ -94,67 +87,69 @@ export const EventList = () => {
           </Box>
           {eventList ? (
             <VStack>
-              {eventList &&
-                eventList.map((event, index) => (
-                  <Box
-                    key={event.id}
-                    borderWidth="2px"
-                    borderRadius="lg"
-                    w="100%"
-                    p="3"
-                    onClick={() => {
-                      eventClick(event.id, index);
-                    }}
-                    position="relative"
-                  >
-                    <Box fontWeight="bold" fontSize="lg" pb="2">
-                      {event.name}
-                    </Box>
-                    <Box pb="2">{event.description}</Box>
-                    <AvatarGroup size="sm" max={avatarNumber} spacing="-2px" pb="3">
-                      {event.participants
-                        .filter((participant) => participant.isVote === true)
-                        .map((participant) => (
-                          <Avatar
-                            key={participant.userId}
-                            name={participant.user.name}
-                            src={participant.user.profileImg}
-                          />
+              {eventList.map(
+                (event, index) =>
+                  event && (
+                    <Box
+                      key={event.id}
+                      borderWidth="2px"
+                      borderRadius="lg"
+                      w="100%"
+                      p="3"
+                      onClick={() => {
+                        eventClick(event.id, index);
+                      }}
+                      position="relative"
+                    >
+                      <Box fontWeight="bold" fontSize="lg" pb="2">
+                        {event.name}
+                      </Box>
+                      <Box pb="2">{event.description}</Box>
+                      <AvatarGroup size="sm" max={avatarNumber} spacing="-2px" pb="3">
+                        {event.participants
+                          .filter((participant) => participant.isVote === true)
+                          .map((participant) => (
+                            <Avatar
+                              key={participant.userId}
+                              name={participant.user.name}
+                              src={participant.user.profileImg}
+                            />
+                          ))}
+                      </AvatarGroup>
+                      <SimpleGrid columns={3} spacing="2px 2%">
+                        {event.possibleDates.map((possibleDate) => (
+                          <GridItem key={possibleDate.id}>
+                            <Center
+                              borderWidth="1px"
+                              fontSize="xs"
+                              w="100%"
+                              overflow="hidden"
+                              borderRadius="sm"
+                            >
+                              <Box mx="auto">
+                                {possibleDate.dateString}
+                                <br />
+                                {possibleDate.timeWidthString}
+                              </Box>
+                            </Center>
+                          </GridItem>
                         ))}
-                    </AvatarGroup>
-                    <SimpleGrid columns={3} spacing="2px 2%">
-                      {event.possibleDates.map((possibleDate) => (
-                        <GridItem key={possibleDate.id}>
-                          <Center
-                            borderWidth="1px"
-                            fontSize="xs"
-                            w="100%"
-                            overflow="hidden"
-                            borderRadius="sm"
-                          >
-                            <Box mx="auto">
-                              {possibleDate.dateString}
-                              <br />
-                              {possibleDate.timeWidthString}
-                            </Box>
-                          </Center>
-                        </GridItem>
-                      ))}
-                    </SimpleGrid>
-                    {isEventLoadingArray[index] && (
-                      <Center
-                        background="rgba(0,0,0,0.2)"
-                        position="absolute"
-                        top="0"
-                        right="0"
-                        left="0"
-                        bottom="0"
-                      >
-                        <Spinner color="green.400" thickness="6px" size="xl" />
-                      </Center>
-                    )}
-                  </Box>
-                ))}
+                      </SimpleGrid>
+                      {isEventLoadingArray[index] && (
+                        <Center
+                          background="rgba(0,0,0,0.2)"
+                          position="absolute"
+                          top="0"
+                          right="0"
+                          left="0"
+                          bottom="0"
+                        >
+                          <Spinner color="green.400" thickness="6px" size="xl" />
+                        </Center>
+                      )}
+                    </Box>
+                  ),
+              )}
             </VStack>
           ) : (
             <Center p="3">

@@ -16,16 +16,11 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { EventType, tableWidthState } from 'src/atoms/eventState';
-import { Count } from 'src/components/EventDetail/EventDetail';
+import { tableWidthState } from 'src/atoms/eventState';
+import { Event, Counts, Colors, useEventDetailQuery } from 'src/hooks/useEventDetail';
 
-type Props = {
-  event: EventType;
-  counts: Count[];
-  colors: string[];
-};
-
-export const AttendanceTable = ({ event, counts, colors }: Props) => {
+export const AttendanceTable = () => {
+  const { data: eventDetail } = useEventDetailQuery();
   const table = useRef<HTMLTableElement>(null);
   const setTableWidth = useSetRecoilState(tableWidthState);
   const [isOpenArray, setIsOpenArray] = useState<boolean[]>([]);
@@ -36,11 +31,13 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
   }, [setTableWidth]);
 
   useEffect(() => {
-    if (!event) return;
+    if (!eventDetail) return;
     setIsOpenArray(
-      Array(event.participants.filter((participant) => participant.isVote).length).fill(false),
+      Array(eventDetail.event.participants.filter((participant) => participant.isVote).length).fill(
+        false,
+      ),
     );
-  }, [event]);
+  }, [eventDetail]);
 
   const triggerPopOver = (index: number) => {
     const newIsOpen = [...isOpenArray];
@@ -136,8 +133,8 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
               </Center>
             </Center>
           </Th>
-          {event
-            ? event.participants
+          {eventDetail
+            ? eventDetail.event.participants
                 .filter((participant) => participant.isVote)
                 .map((participant, i) => (
                   <Th
@@ -185,9 +182,9 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
         </Tr>
       </Thead>
       <Tbody>
-        {event && counts.length
-          ? event.possibleDates.map((possibleDate, i) => (
-              <Tr key={i} bg={colors[i]}>
+        {eventDetail && eventDetail.counts.length
+          ? eventDetail.event.possibleDates.map((possibleDate, i) => (
+              <Tr key={i} bg={eventDetail.colors[i]}>
                 <Td>
                   <Center>
                     <Box>
@@ -197,15 +194,15 @@ export const AttendanceTable = ({ event, counts, colors }: Props) => {
                   </Center>
                 </Td>
                 <Td px="0">
-                  <Center> {counts[i].positiveCount}</Center>
+                  <Center> {eventDetail.counts[i].positiveCount}</Center>
                 </Td>
                 <Td px="0">
-                  <Center>{counts[i].evenCount}</Center>
+                  <Center>{eventDetail.counts[i].evenCount}</Center>
                 </Td>
                 <Td px="0">
-                  <Center>{counts[i].negativeCount}</Center>
+                  <Center>{eventDetail.counts[i].negativeCount}</Center>
                 </Td>
-                {event.participants
+                {eventDetail.event.participants
                   .filter((participant) => participant.isVote)
                   .map((participant) => {
                     return (

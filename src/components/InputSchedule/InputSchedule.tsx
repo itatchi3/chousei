@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
 import { Button, Box, HStack, VStack, Center, Flex, Table, Tr, Th, Tbody } from '@chakra-ui/react';
 import FullCalendar, { EventClickArg } from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { cloneDeep, sum } from 'lodash';
 import { useLiff } from 'src/liff/auth';
-import { PossibleDate, Vote } from '@prisma/client';
+import { PossibleDates, useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 type EventFullCalendar = {
   start: Date;
@@ -35,7 +33,7 @@ export const InputSchedule = () => {
   const [maxTime, setMaxTime] = useState(24);
   const [viewTimes, setViewTimes] = useState<number[]>([]);
 
-  const event = useRecoilValue(eventState);
+  const { data: eventDetail } = useEventDetailQuery();
   const { userId, idToken } = useLiff();
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -134,10 +132,10 @@ export const InputSchedule = () => {
   };
 
   const registerAttendances = async () => {
-    if (!event) return;
+    if (!eventDetail) return;
     setLoading(true);
     const votes = eventFullCalendar.map((eventFullCalendar, index) => {
-      let vote = { id: event.possibleDates[index].id, vote: '' };
+      let vote = { id: eventDetail.event.possibleDates[index].id, vote: '' };
       switch (eventFullCalendar.color) {
         case eventColor.green:
           vote.vote = '○';
@@ -159,7 +157,7 @@ export const InputSchedule = () => {
     try {
       const body = {
         votes: votes,
-        eventId: event.id,
+        eventId: eventDetail.event.id,
         idToken: idToken,
       };
 
@@ -171,7 +169,7 @@ export const InputSchedule = () => {
       if (!json.ok) {
         throw json.error;
       }
-      router.push(`/event/${event.id}`);
+      router.push(`/event/${eventDetail.event.id}`);
     } catch (error) {
       alert(error);
       console.error(error);
@@ -223,23 +221,23 @@ export const InputSchedule = () => {
   };
 
   useEffect(() => {
-    if (!event || !userId) return;
-    let dates: Date[] = [event.possibleDates[0].date];
-    let dateStrings: string[] = [event.possibleDates[0].dateString];
-    let dateTimes: number[] = [event.possibleDates[0].date.getTime()];
+    if (!eventDetail || !userId) return;
+    let dates: Date[] = [eventDetail.event.possibleDates[0].date];
+    let dateStrings: string[] = [eventDetail.event.possibleDates[0].dateString];
+    let dateTimes: number[] = [eventDetail.event.possibleDates[0].date.getTime()];
     let eventFullCalendar: EventFullCalendar[] = [];
     let newMinTime = 24;
     let newMaxTime = 0;
     let minutesWhenMaxTime = 0;
     let isVote = false;
 
-    event.participants.map((participant) => {
+    eventDetail.event.participants.map((participant) => {
       if (participant.userId === userId && participant.isVote) {
         isVote = true;
       }
     });
 
-    event.possibleDates.map((possibleDate, index) => {
+    eventDetail.event.possibleDates.map((possibleDate, index) => {
       if (possibleDate.startTime.getHours() < newMinTime) {
         newMinTime = possibleDate.startTime.getHours();
       }
@@ -313,14 +311,10 @@ export const InputSchedule = () => {
     setDateWidth(dateWidth + 1);
     setHiddenDates(hiddenDates);
 
-    let possibleDatesPerDayArray: (PossibleDate & {
-      votes: Vote[];
-    })[][] = [];
+    let possibleDatesPerDayArray: PossibleDates[] = [];
     dateStrings.map((dateString) => {
-      let possibleDatesPerDay: (PossibleDate & {
-        votes: Vote[];
-      })[] = [];
-      event.possibleDates.map((possibleDate) => {
+      let possibleDatesPerDay: PossibleDates = [];
+      eventDetail.event.possibleDates.map((possibleDate) => {
         if (possibleDate.dateString === dateString) {
           possibleDatesPerDay.push(possibleDate);
         }
@@ -399,7 +393,7 @@ export const InputSchedule = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [event, userId, eventTextColor]);
+  }, [eventDetail, userId, eventTextColor]);
 
   return (
     <Box overflow="hidden">

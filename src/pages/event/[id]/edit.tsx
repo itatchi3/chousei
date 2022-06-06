@@ -1,13 +1,12 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { useRecoilValue } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
 import { EditEvent } from 'src/components/EditEvent/EditEvent';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 const Edit = () => {
-  const event = useRecoilValue(eventState);
+  const { data: eventDetail } = useEventDetailQuery();
   return (
     <>
-      {event ? (
+      {eventDetail ? (
         <EditEvent />
       ) : (
         <Flex height="100vh" px="5" justifyContent="center" alignItems="center">

@@ -12,17 +12,11 @@ import {
   PopoverBody,
   PopoverArrow,
 } from '@chakra-ui/react';
-import { Comment, User } from '.prisma/client';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
-type Props = {
-  comments:
-    | (Comment & {
-        user: User;
-      })[]
-    | null;
-};
-export const CommentList = ({ comments }: Props) => {
-  return (
+export const CommentList = () => {
+  const { data: eventDetail } = useEventDetailQuery();
+  return eventDetail ? (
     <>
       <Table>
         <Tbody>
@@ -33,12 +27,12 @@ export const CommentList = ({ comments }: Props) => {
       </Table>
       <Table>
         <Tbody>
-          {comments &&
-            comments.map(
-              (_comment, i) =>
+          {eventDetail.event.comments &&
+            eventDetail.event.comments.map(
+              (_comment) =>
                 _comment.comment !== '' && (
-                  <Tr key={i}>
-                    <Td key={i} p="2" w="24">
+                  <Tr key={_comment.userId}>
+                    <Td p="2" w="24">
                       <Popover placement="top" flip={false}>
                         <PopoverTrigger>
                           <Center>
@@ -66,5 +60,5 @@ export const CommentList = ({ comments }: Props) => {
         </Tbody>
       </Table>
     </>
-  );
+  ) : null;
 };

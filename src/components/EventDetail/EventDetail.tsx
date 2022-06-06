@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AttendanceTable } from 'src/components/EventDetail/AttendanceTable';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { eventState, EventType, tableWidthState } from 'src/atoms/eventState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { eventIdState, tableWidthState } from 'src/atoms/eventState';
 import { Box, Center, Flex, Spinner, VStack } from '@chakra-ui/react';
 import { ShareButton } from 'src/components/EventDetail/ShareButton';
 import { MoveAnswerScheduleButton } from 'src/components/EventDetail/MoveAnswerScheduleButton';
@@ -12,68 +12,27 @@ import { useLiff } from 'src/liff/auth';
 import { NotFriendModal } from 'src/components/EventDetail/NotFriendModal';
 import { EditButton } from './EditButton';
 import { useRouter } from 'next/router';
-import superjson from 'superjson';
-
-type EventDetailType = {
-  eventData: EventType;
-  counts: Count[];
-  colors: string[];
-};
-
-export type Count = {
-  date: Date;
-  positiveCount: number;
-  evenCount: number;
-  negativeCount: number;
-};
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const EventDetail = () => {
-  const [event, setEvent] = useRecoilState(eventState);
   const tableWidth = useRecoilValue(tableWidthState);
   const [isCreate, setIsCreate] = useState(false);
-  const [counts, setCounts] = useState<Count[]>();
-  const [colors, setColors] = useState<string[]>();
   const [windowHeight, setWindowHeight] = useState(0);
   const { idToken, userId } = useLiff();
-  const table = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { id } = router.query;
+  const setEventIdState = useSetRecoilState(eventIdState);
+  setEventIdState(id);
+  const { isLoading, data: eventDetail } = useEventDetailQuery();
 
   useEffect(() => {
-    if (!id) return;
-    const func = async () => {
-      const res = await fetch(`/api/getEventDetail`, {
-        method: 'POST',
-        body: JSON.stringify({ id }),
-      });
-
-      const json: { ok?: boolean; eventDetailData?: string; error?: string } = await res.json();
-      if (json.ok) {
-        if (json.eventDetailData) {
-          const eventDetailData: EventDetailType = superjson.parse(json.eventDetailData);
-          setEvent(eventDetailData.eventData);
-          setCounts(eventDetailData.counts);
-          setColors(eventDetailData.colors);
-        }
-      } else {
-        console.error(json.error);
-      }
-    };
-    func();
-  }, [id, setEvent]);
-
-  // console.log('event', event);
-  // console.log('idToken', idToken);
-  // console.log('userId', userId);
-
-  useEffect(() => {
-    if (!event || !idToken || !userId) return;
-
+    if (!eventDetail || !idToken || !userId) return;
+    // TODO: updateUserが2回呼ばれるので、どうにかする
     const updateUser = async () => {
       try {
         const res = await fetch('/api/updateUser', {
           method: 'POST',
-          body: JSON.stringify({ idToken, eventId: event.id }),
+          body: JSON.stringify({ idToken, eventId: eventDetail.event.id }),
         });
 
         const json: { ok?: boolean; error?: string } = await res.json();
@@ -86,7 +45,7 @@ export const EventDetail = () => {
     };
 
     let isCheckEvent = false;
-    event.participants.map((participant) => {
+    eventDetail.event.participants.map((participant) => {
       if (participant.userId === userId) {
         isCheckEvent = true;
         updateUser();
@@ -100,7 +59,7 @@ export const EventDetail = () => {
       try {
         const res = await fetch('/api/createParticipate', {
           method: 'POST',
-          body: JSON.stringify({ idToken, eventId: event.id }),
+          body: JSON.stringify({ idToken, eventId: eventDetail.event.id }),
         });
 
         const json: { ok?: boolean; error?: string } = await res.json();
@@ -115,7 +74,7 @@ export const EventDetail = () => {
     if (!isCheckEvent) {
       createParticipate();
     }
-  }, [event, idToken, userId]);
+  }, [eventDetail, idToken, userId]);
 
   useEffect(() => {
     setWindowHeight(window.innerHeight);
@@ -127,11 +86,13 @@ export const EventDetail = () => {
         setWindowHeight(window.innerHeight);
       });
     };
-  }, [event]);
+  }, []);
+
+  //TODO: 404ページにリダイレクトする
 
   return (
     <>
-      {!event || !counts || !colors ? (
+      {isLoading ? (
         <Center p="8">
           <Spinner color="green.400" />
         </Center>
@@ -150,7 +111,7 @@ export const EventDetail = () => {
             <Box w={tableWidth + 12}>
               <Box w="calc(100vw - 24px)" position="sticky" left="3">
                 <Box pb="4">
-                  <EventOverview name={event.name} description={event.description} />
+                  <EventOverview />
                 </Box>
                 {isCreate && (
                   <Flex justifyContent="flex-end" mt="-4" mr="-3">
@@ -159,15 +120,15 @@ export const EventDetail = () => {
                 )}
               </Box>
             </Box>
-            <AttendanceTable event={event} counts={counts} colors={colors} />
+            <AttendanceTable />
             <Box w={tableWidth + 12}>
               <Box w="calc(100vw - 24px)" position="sticky" left="3">
-                <CommentList comments={event.comments} />
+                <CommentList />
                 <VStack justify="center" p="6">
                   <MoveAnswerScheduleButton />
                   <AnswerComment />
                   <Box pt="4">
-                    <ShareButton colors={colors} counts={counts} />
+                    <ShareButton />
                   </Box>
                 </VStack>
               </Box>

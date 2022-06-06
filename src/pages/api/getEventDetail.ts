@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from 'prisma/prisma';
 import superjson from 'superjson';
 import { Prisma } from '.prisma/client';
-import { EventType } from 'src/atoms/eventState';
 
 type ReqestBody = {
   id: string;
@@ -11,21 +10,36 @@ type ReqestBody = {
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { id }: ReqestBody = JSON.parse(req.body);
 
-  let eventData: EventType;
   try {
-    eventData = await prisma.event.findUnique({
+    const event = await prisma.event.findUnique({
       where: {
         id: id,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
         possibleDates: {
           orderBy: {
             index: 'asc',
           },
-          include: {
+          select: {
+            id: true,
+            index: true,
+            eventId: true,
+            date: true,
+            dateString: true,
+            startTime: true,
+            endTime: true,
+            timeWidthString: true,
             votes: {
               orderBy: {
                 updatedAt: 'asc',
+              },
+              select: {
+                vote: true,
+                possibleDateId: true,
+                userId: true,
               },
             },
           },
@@ -34,26 +48,42 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           orderBy: {
             updatedAt: 'asc',
           },
-          include: {
-            user: true,
+          select: {
+            comment: true,
+            userId: true,
+            user: {
+              select: {
+                name: true,
+                profileImg: true,
+              },
+            },
           },
         },
         participants: {
           orderBy: {
             updatedAt: 'asc',
           },
-          include: {
-            user: true,
+          select: {
+            userId: true,
+            isCreate: true,
+            isVote: true,
+            isCheck: true,
+            user: {
+              select: {
+                name: true,
+                profileImg: true,
+              },
+            },
           },
         },
       },
     });
 
-    if (!eventData) {
+    if (!event) {
       throw new Error('EventDate undefined');
     }
 
-    const attendanceCounts = eventData.possibleDates.map((possibleDate) => {
+    const attendanceCounts = event.possibleDates.map((possibleDate) => {
       return {
         date: possibleDate.date,
         positiveCount:
@@ -87,7 +117,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     });
 
     const eventDetailData = {
-      eventData,
+      event,
       counts: attendanceCounts,
       colors: evaluations,
     };

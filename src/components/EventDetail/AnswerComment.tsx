@@ -1,6 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
 import {
   Modal,
@@ -13,9 +11,10 @@ import {
   Button,
   Textarea,
 } from '@chakra-ui/react';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const AnswerComment = () => {
-  const event = useRecoilValue(eventState);
+  const { data: eventDetail } = useEventDetailQuery();
   const { userId, idToken } = useLiff();
   const [isAnsweredComment, setIsAnsweredComment] = useState(false);
   const [comment, setComment] = useState('');
@@ -28,12 +27,12 @@ export const AnswerComment = () => {
   };
 
   const registerComment = async () => {
-    if (!event) return;
+    if (!eventDetail) return;
     setIsLoading(true);
     try {
       const body = {
         comment: comment,
-        eventId: event.id,
+        eventId: eventDetail.event.id,
         idToken: idToken,
       };
 
@@ -53,15 +52,15 @@ export const AnswerComment = () => {
   };
 
   useEffect(() => {
-    if (!event || !event.comments.length || !userId) return;
+    if (!eventDetail || !eventDetail.event.comments || !userId) return;
 
-    event.comments.map((_comment) => {
+    eventDetail.event.comments.map((_comment) => {
       if (_comment.userId === userId && _comment.comment !== '') {
         setComment(_comment.comment);
         setIsAnsweredComment(true);
       }
     });
-  }, [event, userId]);
+  }, [eventDetail, userId]);
 
   return (
     <>

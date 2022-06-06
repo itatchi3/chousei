@@ -1,16 +1,15 @@
 import { Button } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const EditButton = () => {
   const router = useRouter();
-  const event = useRecoilValue(eventState);
+  const { data: eventDetail } = useEventDetailQuery();
 
   const moveAnswerSchedule = () => {
-    if (!event) return;
+    if (!eventDetail) return;
     router.push({
-      pathname: `/event/${event.id}/edit`,
+      pathname: `/event/${eventDetail.event.id}/edit`,
     });
   };
   return (

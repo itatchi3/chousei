@@ -1,17 +1,14 @@
 import { Box, Heading } from '@chakra-ui/react';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
-type Props = {
-  name: string | null;
-  description: string | null;
-};
-
-export const EventOverview = ({ name, description }: Props) => {
-  return (
+export const EventOverview = () => {
+  const { data: eventDetail } = useEventDetailQuery();
+  return eventDetail ? (
     <>
-      <Heading>{name}</Heading>
+      <Heading>{eventDetail.event.name}</Heading>
       <Box px="1" pt="2">
-        {description}
+        {eventDetail.event.description}
       </Box>
     </>
-  );
+  ) : null;
 };
