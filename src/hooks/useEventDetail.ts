@@ -69,7 +69,10 @@ export type Colors = Color[];
 
 type Color = string;
 
-const fetchEventDetail = async (id: string | string[] | undefined): Promise<EventDetail> => {
+const fetchEventDetail = async (id: string | string[] | undefined): Promise<EventDetail | null> => {
+  if (!id) {
+    return null;
+  }
   const res = await fetch(`/api/getEventDetail`, {
     method: 'POST',
     body: JSON.stringify({ id }),
@@ -83,5 +86,5 @@ const fetchEventDetail = async (id: string | string[] | undefined): Promise<Even
 
 export const useEventDetailQuery = () => {
   const id = useRecoilValue(eventIdState);
-  return useQuery(['todos'], () => fetchEventDetail(id));
+  return useQuery(['eventDetail'], () => fetchEventDetail(id));
 };
