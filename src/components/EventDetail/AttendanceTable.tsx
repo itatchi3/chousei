@@ -17,7 +17,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { tableWidthState } from 'src/atoms/eventState';
-import { Event, Counts, Colors, useEventDetailQuery } from 'src/hooks/useEventDetail';
+import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const AttendanceTable = () => {
   const { data: eventDetail } = useEventDetailQuery();
