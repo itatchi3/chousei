@@ -54,7 +54,7 @@ const firsrCommentState = [
 export const firsrComment = () => {
   return (
     <RecoilRoot>
-      <CommentList comments={firsrCommentState} />
+      <CommentList />
     </RecoilRoot>
   );
 };
@@ -107,7 +107,7 @@ const lastCommentState = [
 export const lastComment = () => {
   return (
     <RecoilRoot>
-      <CommentList comments={lastCommentState} />
+      <CommentList />
     </RecoilRoot>
   );
 };
@@ -115,7 +115,7 @@ export const lastComment = () => {
 export const noComment = () => {
   return (
     <RecoilRoot>
-      <CommentList comments={[]} />
+      <CommentList />
     </RecoilRoot>
   );
 };
@@ -140,7 +140,7 @@ const oneCommentState = [
 export const oneComment = () => {
   return (
     <RecoilRoot>
-      <CommentList comments={oneCommentState} />
+      <CommentList />
     </RecoilRoot>
   );
 };

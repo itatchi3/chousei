@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { MutableSnapshot, RecoilRoot } from 'recoil';
-import { eventState, liffObjState, userIdState } from 'src/atoms/eventState';
+import { liffObjState, userIdState } from 'src/atoms/eventState';
 import { InputSchedule } from './InputSchedule';
 
 export default {
@@ -268,7 +268,6 @@ const event = {
 };
 
 const inputScheduleInitialize = ({ set }: MutableSnapshot) => {
-  set(eventState, event);
   set(liffObjState, { liff: true as any, idToken: undefined });
   set(userIdState, 'user3');
 };

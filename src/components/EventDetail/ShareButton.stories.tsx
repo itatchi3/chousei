@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/react';
 import { MutableSnapshot, RecoilRoot } from 'recoil';
-import { eventState } from 'src/atoms/eventState';
 import { ShareButton } from './ShareButton';
 
 export default {
@@ -267,17 +266,6 @@ const event = {
   updatedAt: new Date(2021, 11, 1, 0, 0),
 };
 
-const shareButtonInitialize = ({ set }: MutableSnapshot) => {
-  set(eventState, event);
-};
-
 export const shareButton = () => {
-  return (
-    <RecoilRoot initializeState={shareButtonInitialize}>
-      <ShareButton
-        counts={[{ date: new Date(), positiveCount: 0, evenCount: 0, negativeCount: 0 }]}
-        colors={['white']}
-      />
-    </RecoilRoot>
-  );
+  return <ShareButton />;
 };

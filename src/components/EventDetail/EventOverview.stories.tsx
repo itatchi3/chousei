@@ -9,7 +9,7 @@ export default {
 export const eventOverview = () => {
   return (
     <RecoilRoot>
-      <EventOverview name={'test'} description={'testです。'} />
+      <EventOverview />
     </RecoilRoot>
   );
 };

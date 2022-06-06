@@ -365,11 +365,7 @@ const eventDetailData = {
 export const attendanceTable = () => {
   return (
     <RecoilRoot>
-      <AttendanceTable
-        event={eventDetailData.eventData}
-        counts={eventDetailData.counts}
-        colors={eventDetailData.colors}
-      />
+      <AttendanceTable />
     </RecoilRoot>
   );
 };
