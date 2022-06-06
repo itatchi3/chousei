@@ -1,6 +1,5 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect } from 'react';
 import type Liff from '@line/liff';
-import LIFFInspectorPlugin from '@line/liff-inspector';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { liffObjState, userIdState } from 'src/atoms/eventState';
 import { useRouter } from 'next/router';
@@ -9,16 +8,13 @@ export const LiffAuth: FC = ({ children }) => {
   const [liffObj, setLiffObj] = useRecoilState(liffObjState);
   const setUserId = useSetRecoilState(userIdState);
   const router = useRouter();
-  const count = useRef(0);
 
   useEffect(() => {
     const isExistAsPath = router.asPath !== '/event/[id]';
     const isExistLiff = typeof liffObj.liff !== 'undefined';
     if (!isExistAsPath || isExistLiff) return;
-    count.current += 1;
     const func = async () => {
       const liff = (await import('@line/liff')).default;
-      liff.use(new LIFFInspectorPlugin());
 
       const liffInit = async () => {
         try {
