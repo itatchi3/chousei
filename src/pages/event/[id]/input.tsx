@@ -1,9 +1,12 @@
 import { Box, Flex } from '@chakra-ui/react';
+import { useRecoilValue } from 'recoil';
+import { eventIdState } from 'src/atoms/eventState';
 import { InputSchedule } from 'src/components/InputSchedule/InputSchedule';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 const Input = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   return (
     <>
       {eventDetail ? (
