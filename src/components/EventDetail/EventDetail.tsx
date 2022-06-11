@@ -92,7 +92,7 @@ export const EventDetail = () => {
 
   return (
     <>
-      {eventDetail ? (
+      {!eventDetail ? (
         <Center p="8">
           <Spinner color="green.400" />
         </Center>
