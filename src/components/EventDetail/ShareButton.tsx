@@ -12,9 +12,12 @@ import {
 } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
+import { useRecoilValue } from 'recoil';
+import { eventIdState } from 'src/atoms/eventState';
 
 export const ShareButton = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   const { liff, isInClient } = useLiff();
   const { onCopy } = useClipboard(
     eventDetail

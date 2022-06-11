@@ -20,10 +20,10 @@ export const EventDetail = () => {
   const [windowHeight, setWindowHeight] = useState(0);
   const { idToken, userId } = useLiff();
   const router = useRouter();
-  const { id } = router.query;
+  const id = typeof router.query?.id === 'string' ? router.query.id : '';
   const setEventIdState = useSetRecoilState(eventIdState);
   setEventIdState(id);
-  const { isLoading, data: eventDetail } = useEventDetailQuery();
+  const { data: eventDetail } = useEventDetailQuery(id);
 
   useEffect(() => {
     if (!eventDetail || !idToken || !userId) return;
@@ -92,7 +92,7 @@ export const EventDetail = () => {
 
   return (
     <>
-      {isLoading ? (
+      {eventDetail ? (
         <Center p="8">
           <Spinner color="green.400" />
         </Center>

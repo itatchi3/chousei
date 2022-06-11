@@ -1,12 +1,18 @@
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { EditingPossibleDate, overViewState, possibleDateState } from 'src/atoms/eventState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  EditingPossibleDate,
+  eventIdState,
+  overViewState,
+  possibleDateState,
+} from 'src/atoms/eventState';
 import { CreateEvent } from '../CreateEvent/CreateEvent';
 import { v4 as uuidv4 } from 'uuid';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const EditEvent = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   const setOverView = useSetRecoilState(overViewState);
   const setPossibleDates = useSetRecoilState(possibleDateState);
 

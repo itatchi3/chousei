@@ -1,8 +1,11 @@
 import { Box, Heading } from '@chakra-ui/react';
+import { useRecoilValue } from 'recoil';
+import { eventIdState } from 'src/atoms/eventState';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const EventOverview = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   return eventDetail ? (
     <>
       <Heading>{eventDetail.event.name}</Heading>

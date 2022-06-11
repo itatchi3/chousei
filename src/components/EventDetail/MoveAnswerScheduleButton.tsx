@@ -3,9 +3,12 @@ import { useRouter } from 'next/router';
 import { useLiff } from 'src/liff/auth';
 import { Button } from '@chakra-ui/react';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
+import { useRecoilValue } from 'recoil';
+import { eventIdState } from 'src/atoms/eventState';
 
 export const MoveAnswerScheduleButton = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   const { userId } = useLiff();
   const [isAnsweredVoteArray, setIsAnsweredVoteArray] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

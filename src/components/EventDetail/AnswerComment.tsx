@@ -12,9 +12,12 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
+import { useRecoilValue } from 'recoil';
+import { eventIdState } from 'src/atoms/eventState';
 
 export const AnswerComment = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   const { userId, idToken } = useLiff();
   const [isAnsweredComment, setIsAnsweredComment] = useState(false);
   const [comment, setComment] = useState('');

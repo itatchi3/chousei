@@ -15,12 +15,13 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { tableWidthState } from 'src/atoms/eventState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { eventIdState, tableWidthState } from 'src/atoms/eventState';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const AttendanceTable = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   const table = useRef<HTMLTableElement>(null);
   const setTableWidth = useSetRecoilState(tableWidthState);
   const [isOpenArray, setIsOpenArray] = useState<boolean[]>([]);

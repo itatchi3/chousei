@@ -77,7 +77,7 @@ export const tableWidthState = atom<number>({
   default: 0,
 });
 
-export const eventIdState = atom<string | string[] | undefined>({
+export const eventIdState = atom<string>({
   key: 'eventIdState',
-  default: undefined,
+  default: '',
 });

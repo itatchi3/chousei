@@ -5,6 +5,7 @@ import {
   EditingTimeWidth,
   isValidateDateState,
   isValidateTimeArrayState,
+  eventIdState,
 } from 'src/atoms/eventState';
 import { useLiff } from 'src/liff/auth';
 import { useRecoilValue } from 'recoil';
@@ -50,7 +51,8 @@ export const EventRegisterButton = () => {
   const overView = useRecoilValue(overViewState);
   const isValidateDate = useRecoilValue(isValidateDateState);
   const isValidateTimeArray = useRecoilValue(isValidateTimeArrayState);
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'];
@@ -305,7 +307,7 @@ export const EventRegisterButton = () => {
           <ModalFooter pt="0">
             <Center>
               <HStack>
-                {!event ? (
+                {!eventDetail ? (
                   <Button colorScheme="blue" onClick={() => handleSubmit()} isLoading={isLoading}>
                     確認
                   </Button>

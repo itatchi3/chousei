@@ -12,10 +12,13 @@ import {
   PopoverBody,
   PopoverArrow,
 } from '@chakra-ui/react';
+import { useRecoilValue } from 'recoil';
+import { eventIdState } from 'src/atoms/eventState';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
 
 export const CommentList = () => {
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   return eventDetail ? (
     <>
       <Table>

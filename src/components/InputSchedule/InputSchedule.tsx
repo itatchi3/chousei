@@ -6,6 +6,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { cloneDeep, sum } from 'lodash';
 import { useLiff } from 'src/liff/auth';
 import { PossibleDates, useEventDetailQuery } from 'src/hooks/useEventDetail';
+import { eventIdState } from 'src/atoms/eventState';
+import { useRecoilValue } from 'recoil';
 
 type EventFullCalendar = {
   start: Date;
@@ -33,7 +35,8 @@ export const InputSchedule = () => {
   const [maxTime, setMaxTime] = useState(24);
   const [viewTimes, setViewTimes] = useState<number[]>([]);
 
-  const { data: eventDetail } = useEventDetailQuery();
+  const id = useRecoilValue(eventIdState);
+  const { data: eventDetail } = useEventDetailQuery(id);
   const { userId, idToken } = useLiff();
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);

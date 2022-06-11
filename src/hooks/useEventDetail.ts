@@ -1,5 +1,3 @@
-import { eventIdState } from './../atoms/eventState';
-import { useRecoilValue } from 'recoil';
 import { useQuery } from 'react-query';
 import superjson from 'superjson';
 
@@ -69,7 +67,7 @@ export type Colors = Color[];
 
 type Color = string;
 
-const fetchEventDetail = async (id: string | string[] | undefined): Promise<EventDetail | null> => {
+const fetchEventDetail = async (id: string): Promise<EventDetail | null> => {
   if (!id) {
     return null;
   }
@@ -84,7 +82,6 @@ const fetchEventDetail = async (id: string | string[] | undefined): Promise<Even
   return superjson.parse(json.eventDetailData);
 };
 
-export const useEventDetailQuery = () => {
-  const id = useRecoilValue(eventIdState);
-  return useQuery(['eventDetail'], () => fetchEventDetail(id));
+export const useEventDetailQuery = (id: string) => {
+  return useQuery(['eventDetail', id], () => fetchEventDetail(id));
 };
