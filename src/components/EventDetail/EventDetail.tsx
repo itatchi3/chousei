@@ -13,6 +13,7 @@ import { NotFriendModal } from 'src/components/EventDetail/NotFriendModal';
 import { EditButton } from './EditButton';
 import { useRouter } from 'next/router';
 import { useEventDetailQuery } from 'src/hooks/useEventDetail';
+import DefaultErrorPage from 'next/error';
 
 export const EventDetail = () => {
   const tableWidth = useRecoilValue(tableWidthState);
@@ -23,7 +24,7 @@ export const EventDetail = () => {
   const id = typeof router.query?.id === 'string' ? router.query.id : '';
   const setEventIdState = useSetRecoilState(eventIdState);
   setEventIdState(id);
-  const { data: eventDetail } = useEventDetailQuery(id);
+  const { data: eventDetail, isError } = useEventDetailQuery(id);
 
   useEffect(() => {
     if (!eventDetail || !idToken || !userId) return;
@@ -88,7 +89,9 @@ export const EventDetail = () => {
     };
   }, []);
 
-  //TODO: 404ページにリダイレクトする
+  if (isError) {
+    return <DefaultErrorPage statusCode={404} />;
+  }
 
   return (
     <>
