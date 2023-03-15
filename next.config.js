@@ -8,4 +8,7 @@ const withTM = require('next-transpile-modules')([
 
 module.exports = withTM({
   reactStrictMode: true,
+  experimental: {
+    runtime: 'edge',
+  },
 });
