@@ -20,7 +20,7 @@
     "@fullcalendar/react": "^5.9.0",
     "@fullcalendar/timegrid": "^5.9.0",
     "@line/liff": "^2.18.1",
-    "@prisma/client": "^3.8.1",
+    "@prisma/client": "^5.10.2",
     "@types/uuid": "^8.3.4",
     "babel-plugin-superjson-next": "^0.4.2",
     "framer-motion": "^4.1.17",
@@ -44,7 +44,7 @@
     "babel-loader": "^8.2.3",
     "eslint": "7.32.0",
     "eslint-config-next": "11.0.1",
-    "prisma": "^3.8.1",
+    "prisma": "^5.10.2",
     "typescript": "4.3.5"
   }
 }
