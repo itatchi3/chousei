@@ -89,8 +89,11 @@ export const EventList = () => {
         </Center>
       ) : (
         <Box p="3">
-          <Box fontWeight="bold" fontSize="xl" pb="2">
+          <Box fontWeight="bold" fontSize="xl">
             直近閲覧したイベント(最大5件)
+          </Box>
+          <Box fontSize="sm" pb="2">
+            イベントデータの保存期間は1年です
           </Box>
           {eventList ? (
             <VStack>
